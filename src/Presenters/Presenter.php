@@ -53,7 +53,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * Note that the model is public to allow for unit tests to determine if the
      * presenter and view are working correctly.
      *
-     * @var \Rhubarb\Crown\Modelling\ModelState
+     * @var \Rhubarb\Stem\ModelState
      */
     public $model = null;
 

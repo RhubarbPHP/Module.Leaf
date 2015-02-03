@@ -18,7 +18,7 @@
 
 namespace Rhubarb\Leaf\Presenters;
 
-use Rhubarb\Crown\Modelling\ModelState;
+use Rhubarb\Stem\ModelState;
 
 /**
  * A simple extension of Model to add some properties often used by presenters
