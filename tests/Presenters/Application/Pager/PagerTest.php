@@ -49,19 +49,19 @@ class PagerTest extends CoreTestCase
 		$this->mock = new TestPagerView();
 
 		$this->pager = new Pager( $this->collection, 50 );
-		$this->pager->AttachMockView( $this->mock );
+		$this->pager->attachMockView( $this->mock );
 	}
 
 	public function testPagesCalculatedCorrectly()
 	{
-		$this->pager->GenerateResponse();
+		$this->pager->generateResponse();
 
 		$this->assertEquals( 10, $this->mock->numberOfPages );
 		$this->assertEquals( 1, $this->mock->pageNumber );
 		$this->assertEquals( 50, $this->mock->numberPerPage );
 
 		$this->pager->setNumberPerPage( 30 );
-		$this->pager->GenerateResponse();
+		$this->pager->generateResponse();
 
 		$this->assertEquals( 17, $this->mock->numberOfPages );
 		$this->assertEquals( 1, $this->mock->pageNumber );
@@ -70,8 +70,8 @@ class PagerTest extends CoreTestCase
 
 	public function testPageNumberCanBeChanged()
 	{
-		$this->mock->SimulateEvent( "PageChanged", 2 );
-		$this->pager->GenerateResponse();
+		$this->mock->simulateEvent( "PageChanged", 2 );
+		$this->pager->generateResponse();
 		$this->assertEquals( 2, $this->mock->pageNumber );
 
 		$this->collection->rewind();
@@ -109,7 +109,7 @@ class PagerTest extends CoreTestCase
 
 		$this->CreateMocks();
 
-		$this->pager->Test();
+		$this->pager->test();
 
 		$this->assertEquals( 3, $this->mock->pageNumber );
 	}

@@ -78,7 +78,7 @@ class TableView extends JQueryView
         });
     }
 
-    protected function ConfigurePresenters()
+    protected function configurePresenters()
     {
         $this->presenters["pager"]->setCollection($this->raiseEvent("GetCollection"));
         $this->presenters["pager"]->setNumberPerPage($this->pageSize);

@@ -34,7 +34,7 @@ class MvpRestHandlerTest extends CoreTestCase
 		$request->Server( "HTTP_ACCEPT", "text/html" );
 		$request->Server( "REQUEST_METHOD", "get" );
 
-		$response = $this->rest->GenerateResponse( $request );
+		$response = $this->rest->generateResponse( $request );
 		$this->assertInstanceOf( "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Address", $response->GetGenerator() );
 
 		$mvp = $response->GetGenerator();
@@ -53,7 +53,7 @@ class MvpRestHandlerTest extends CoreTestCase
 		$request->Server( "HTTP_ACCEPT", "text/html" );
 		$request->Server( "REQUEST_METHOD", "get" );
 
-		$response = $this->rest->GenerateResponse( $request );
+		$response = $this->rest->generateResponse( $request );
 		$this->assertInstanceOf( "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Details", $response->GetGenerator() );
 
 		$mvp = $response->GetGenerator();
@@ -68,7 +68,7 @@ class MvpRestHandlerTest extends CoreTestCase
 		$request->Server( "HTTP_ACCEPT", "text/html" );
 		$request->Server( "REQUEST_METHOD", "get" );
 
-		$response = $this->rest->GenerateResponse( $request );
+		$response = $this->rest->generateResponse( $request );
 		$this->assertInstanceOf( "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Thanks", $response->GetGenerator() );
 	}
 }

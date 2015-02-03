@@ -1,5 +1,21 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\UrlHandlers;
 
 use Rhubarb\Crown\Request\Request;
@@ -9,113 +25,102 @@ use Rhubarb\Crown\UrlHandlers\UrlHandler;
 
 class MvpCollectionUrlHandler extends UrlHandler
 {
-	use CollectionUrlHandling;
+    use CollectionUrlHandling;
 
-	protected $_collectionPresenterClassName;
-	protected $_itemPresenterClassName;
-	protected $_additionalPresenterClassNameMap = [];
-	protected $_urlAction = "";
+    protected $collectionPresenterClassName;
+    protected $itemPresenterClassName;
+    protected $additionalPresenterClassNameMap = [];
+    protected $urlAction = "";
 
-	/**
-	 * @param string $collectionPresenterClassName The full namespaced class name of the presenter representing the collection
-	 * @param string $itemPresenterClassName The full namespaced class name of the presenter representing an individual item
-	 * @param array $additionalPresenterClassNameMap An optional associative array mapping 'actions' to other presenters.
-	 * @param array $children
-	 */
-	public function __construct(
-		$collectionPresenterClassName,
-		$itemPresenterClassName,
-		$additionalPresenterClassNameMap = [],
-		$children = [] )
-	{
-		parent::__construct( $children );
+    /**
+     * @param string $collectionPresenterClassName The full namespaced class name of the presenter representing the collection
+     * @param string $itemPresenterClassName The full namespaced class name of the presenter representing an individual item
+     * @param array $additionalPresenterClassNameMap An optional associative array mapping 'actions' to other presenters.
+     * @param array $children
+     */
+    public function __construct(
+        $collectionPresenterClassName,
+        $itemPresenterClassName,
+        $additionalPresenterClassNameMap = [],
+        $children = []
+    ) {
+        parent::__construct($children);
 
-		$this->_collectionPresenterClassName = $collectionPresenterClassName;
-		$this->_itemPresenterClassName = $itemPresenterClassName;
-		$this->_additionalPresenterClassNameMap = $additionalPresenterClassNameMap;
-	}
+        $this->collectionPresenterClassName = $collectionPresenterClassName;
+        $this->itemPresenterClassName = $itemPresenterClassName;
+        $this->additionalPresenterClassNameMap = $additionalPresenterClassNameMap;
+    }
 
-	/**
-	 * Should be implemented to return a true or false as to whether this handler supports the given request.
-	 *
-	 * Normally this involves testing the request URI.
-	 *
-	 * @param Request $request
-	 * @param string $currentUrlFragment
-	 * @return bool
-	 */
-	protected function GetMatchingUrlFragment( Request $request, $currentUrlFragment = "" )
-	{
-		$uri = $currentUrlFragment;
+    /**
+     * Should be implemented to return a true or false as to whether this handler supports the given request.
+     *
+     * Normally this involves testing the request URI.
+     *
+     * @param Request $request
+     * @param string $currentUrlFragment
+     * @return bool
+     */
+    protected function getMatchingUrlFragment(Request $request, $currentUrlFragment = "")
+    {
+        $uri = $currentUrlFragment;
 
-		$parentResponse = parent::GetMatchingUrlFragment( $request, $currentUrlFragment );
+        $parentResponse = parent::getMatchingUrlFragment($request, $currentUrlFragment);
 
-		if ( preg_match( "|^".$this->_url."([^/]+)/|", $uri, $match ) )
-		{
-			if ( isset( $this->_additionalPresenterClassNameMap[ $match[1] ] ) )
-			{
-				$this->_urlAction = $match[1];
-			}
-			else
-			{
-				$this->_resourceIdentifier = $match[1];
-				$this->_isCollection = false;
-			}
+        if (preg_match("|^" . $this->_url . "([^/]+)/|", $uri, $match)) {
+            if (isset($this->additionalPresenterClassNameMap[$match[1]])) {
+                $this->urlAction = $match[1];
+            } else {
+                $this->resourceIdentifier = $match[1];
+                $this->isCollection = false;
+            }
 
-			return $match[0];
-		}
+            return $match[0];
+        }
 
-		return $parentResponse;
-	}
+        return $parentResponse;
+    }
 
-	protected function GetPresenterClassName()
-	{
-		$mvpClass = false;
+    protected function getPresenterClassName()
+    {
+        $mvpClass = false;
 
-		if ( $this->_urlAction != "" )
-		{
-			if ( isset( $this->_additionalPresenterClassNameMap[ $this->_urlAction ] ) )
-			{
-				$mvpClass = $this->_additionalPresenterClassNameMap[ $this->_urlAction ];
-			}
-		}
+        if ($this->urlAction != "") {
+            if (isset($this->additionalPresenterClassNameMap[$this->urlAction])) {
+                $mvpClass = $this->additionalPresenterClassNameMap[$this->urlAction];
+            }
+        }
 
-		if ( $mvpClass === false )
-		{
-			if ( $this->IsCollection() )
-			{
-				$mvpClass = $this->_collectionPresenterClassName;
-			}
-			else
-			{
-				$mvpClass = $this->_itemPresenterClassName;
-			}
-		}
+        if ($mvpClass === false) {
+            if ($this->isCollection()) {
+                $mvpClass = $this->collectionPresenterClassName;
+            } else {
+                $mvpClass = $this->itemPresenterClassName;
+            }
+        }
 
-		return $mvpClass;
-	}
+        return $mvpClass;
+    }
 
-	/**
-	 * Return the response if appropriate or false if no response could be generated.
-	 *
-	 * @param mixed $request
-	 * @return bool
-	 */
-	protected function GenerateResponseForRequest( $request = null )
-	{
-		$mvpClass = $this->GetPresenterClassName();
-		$mvp = new $mvpClass();
-		$mvp->ItemIdentifier = $this->_resourceIdentifier;
+    /**
+     * Return the response if appropriate or false if no response could be generated.
+     *
+     * @param mixed $request
+     * @return bool
+     */
+    protected function generateResponseForRequest($request = null)
+    {
+        $mvpClass = $this->getPresenterClassName();
+        $mvp = new $mvpClass();
+        $mvp->ItemIdentifier = $this->resourceIdentifier;
 
-		$response = $mvp->GenerateResponse( $request );
+        $response = $mvp->generateResponse($request);
 
-		if ( is_string( $response ) )
-		{
-			$htmlResponse = new HtmlResponse( $mvp );
-			$htmlResponse->SetContent( $response );
-			$response = $htmlResponse;
-		}
+        if (is_string($response)) {
+            $htmlResponse = new HtmlResponse($mvp);
+            $htmlResponse->setContent($response);
+            $response = $htmlResponse;
+        }
 
-		return $response;
-	}
+        return $response;
+    }
 }

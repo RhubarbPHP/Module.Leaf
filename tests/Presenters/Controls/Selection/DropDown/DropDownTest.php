@@ -9,14 +9,14 @@ class DropDownTest extends CoreTestCase
 	public function testDropDownReturnsHtmlCorrectly()
 	{
 		$dropDown = new DropDown( "Type" );
-		$dropDown->SetSelectionItems( [ "a", [ "b", "bertie" ], "c" ] );
+		$dropDown->setSelectionItems( [ "a", [ "b", "bertie" ], "c" ] );
 
 		$selectedItem = new \stdClass();
 		$selectedItem->value = "b";
 
 		$dropDown->model->SelectedItems = [ $selectedItem ];
 
-		$html = $dropDown->GenerateResponse();
+		$html = $dropDown->generateResponse();
 
 		$this->assertEquals( '		<select name="Type" id="Type" presenter-name="Type">
 <option value="a" data-item="{&quot;value&quot;:&quot;a&quot;,&quot;label&quot;:&quot;a&quot;,&quot;data&quot;:[]}">a</option>

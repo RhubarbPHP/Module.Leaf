@@ -11,21 +11,21 @@ class TabsPresenterTest extends CoreTestCase
 	public function testTabDefinitionsAreSet()
 	{
 		$tabs = new TabsPresenter();
-		$tabs->SetTabDefinitions(
+		$tabs->setTabDefinitions(
 			[ "Tab 1" => 1, "Tab 2" => 2 ]
 		);
 
 		$this->assertEquals(
-			[ "Tab 1" => 1, "Tab 2" => 2 ], $tabs->GetTabDefinitions()
+			[ "Tab 1" => 1, "Tab 2" => 2 ], $tabs->getTabDefinitions()
 		);
 
-		$tabs->SetTabDefinitions(
+		$tabs->setTabDefinitions(
 			[ "Tab 1" => 1, new TabDefinition( "Tab 2", [ "size" => "big", "colour" => "red" ] ) ]
 		);
 
 		$view = new UnitTestingTabsView();
-		$tabs->AttachMockView( $view );
-		$tabs->GenerateResponse( new WebRequest() );
+		$tabs->attachMockView( $view );
+		$tabs->generateResponse( new WebRequest() );
 
 		$this->assertEquals(
 			[
@@ -40,6 +40,6 @@ class UnitTestingTabsView extends TabsView
 {
 	public function GetInflatedTabs()
 	{
-		return $this->_tabs;
+		return $this->tabs;
 	}
 }

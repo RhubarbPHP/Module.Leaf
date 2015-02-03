@@ -28,7 +28,7 @@ class Details extends Presenter
 
 	protected function createView()
 	{
-		$this->RegisterView( new DetailsView() );
+		$this->registerView( new DetailsView() );
 	}
 
 	public function TestChangingPresenterThroughEvent()

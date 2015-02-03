@@ -1,50 +1,60 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Views;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
+require_once __DIR__ . '/View.php';
+
 class UnitTestView extends View
 {
-	public function SimulateEvent( $eventCode )
-	{
-		$args = func_get_args();
+    public function simulateEvent($eventCode)
+    {
+        $args = func_get_args();
 
-		return call_user_func_array( array( $this, "RaiseEvent" ), $args );
-	}
+        return call_user_func_array(array($this, "raiseEvent"), $args);
+    }
 
-	private $_setData = [];
+    private $setData = [];
 
-	private $_methods = [];
+    private $methods = [];
 
-	public function AttachMethod( $method, $callBack )
-	{
-		$this->_methods[ $method ] = $callBack;
-	}
+    public function attachMethod($method, $callBack)
+    {
+        $this->methods[$method] = $callBack;
+    }
 
-	public function GetData( $setterName )
-	{
-		if ( isset( $this->_setData[ $setterName ] ) )
-		{
-			return $this->_setData[ $setterName ];
-		}
+    public function getData($setterName)
+    {
+        if (isset($this->setData[$setterName])) {
+            return $this->setData[$setterName];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function __call( $method, $arguments )
-	{
-		if ( isset( $this->_methods[ $method ] ) )
-		{
-			call_user_func_array( $this->_methods[ $method ], $arguments );
-		}
+    public function __call($method, $arguments)
+    {
+        if (isset($this->methods[$method])) {
+            call_user_func_array($this->methods[$method], $arguments);
+        }
 
-		if ( stripos( $method, "Set" ) === 0 )
-		{
-			$this->_setData[ substr( $method, 3 ) ] = $arguments[0];
-		}
-	}
+        if (stripos($method, "set") === 0) {
+            $this->setData[substr($method, 3)] = $arguments[0];
+        }
+    }
 }

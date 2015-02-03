@@ -1,151 +1,150 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Presenters\Controls\Buttons;
 
-require_once __DIR__ . "/../JQueryControlView.class.php";
+require_once __DIR__ . "/../JQueryControlView.php";
 
-use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\ClientSide\Validation\ValidatorClientSide;
 use Rhubarb\Crown\Context;
-use Rhubarb\Crown\Deployment\ResourceDeploymentHandler;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
-use Rhubarb\Leaf\Presenters\Controls\JQueryControlView;
-use Rhubarb\Crown\Request\Request;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 class Button extends ControlPresenter
 {
-	private $_temporaryButtonText = "";
+    private $temporaryButtonText = "";
 
-	private $_confirmMessage = "";
+    private $confirmMessage = "";
 
-	private $_buttonType = "submit";
+    private $buttonType = "submit";
 
-	public $validator = null;
+    public $validator = null;
 
-	public $validatorHostPresenterPath = "";
+    public $validatorHostPresenterPath = "";
 
-	public $useXhr = false;
+    public $useXhr = false;
 
-	public function __construct( $name = "", $buttonText = "", $onButtonPressed = null, $useXhr = false )
-	{
-		parent::__construct( $name );
+    public function __construct($name = "", $buttonText = "", $onButtonPressed = null, $useXhr = false)
+    {
+        parent::__construct($name);
 
-		$this->AddCssClassName( "btn" );
+        $this->addCssClassName("btn");
 
-		$this->_temporaryButtonText = $buttonText;
-		$this->useXhr = $useXhr;
+        $this->temporaryButtonText = $buttonText;
+        $this->useXhr = $useXhr;
 
-		$this->attachClientSidePresenterBridge = true;
+        $this->attachClientSidePresenterBridge = true;
 
-		if ( $onButtonPressed != null )
-		{
-			if ( !is_callable( $onButtonPressed ) )
-			{
-				throw new ImplementationException( 'onButtonPressed must be callable.' );
-			}
+        if ($onButtonPressed != null) {
+            if (!is_callable($onButtonPressed)) {
+                throw new ImplementationException('onButtonPressed must be callable.');
+            }
 
-			$this->attachEventHandler( "ButtonPressed", $onButtonPressed );
-		}
-	}
+            $this->attachEventHandler("ButtonPressed", $onButtonPressed);
+        }
+    }
 
-	protected function initialiseModel()
-	{
-		parent::initialiseModel();
+    protected function initialiseModel()
+    {
+        parent::initialiseModel();
 
-		if ( $this->model->ButtonText === null )
-		{
-			$this->SetButtonText( $this->_temporaryButtonText );
-		}
-	}
+        if ($this->model->ButtonText === null) {
+            $this->setButtonText($this->temporaryButtonText);
+        }
+    }
 
-	public function SetButtonText( $buttonText )
-	{
-		$this->model->ButtonText = $buttonText;
+    public function setButtonText($buttonText)
+    {
+        $this->model->ButtonText = $buttonText;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function SetValidator( ValidatorClientSide $validator )
-	{
-		$this->validator = $validator;
+    public function setValidator(ValidatorClientSide $validator)
+    {
+        $this->validator = $validator;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function SetConfirmMessage( $confirmMessage )
-	{
-		$this->_confirmMessage = $confirmMessage;
+    public function setConfirmMessage($confirmMessage)
+    {
+        $this->confirmMessage = $confirmMessage;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function SetButtonType( $type, $submitFormOnClick = false )
-	{
-		$this->_buttonType = $type;
+    public function setButtonType($type, $submitFormOnClick = false)
+    {
+        $this->buttonType = $type;
 
-		if ( $submitFormOnClick )
-		{
-			$this->AddCssClassName( "submit-on-click" );
-		}
+        if ($submitFormOnClick) {
+            $this->addCssClassName("submit-on-click");
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	protected function parseRequestForCommand()
-	{
-        $request = $request = Context::CurrentRequest();
-        $pushed = $request->Post( $this->getIndexedPresenterPath() );
+    protected function parseRequestForCommand()
+    {
+        $request = $request = Context::currentRequest();
+        $pushed = $request->Post($this->getIndexedPresenterPath());
 
-		if ( $pushed != null )
-		{
-			$this->RaiseDelayedEvent( "ButtonPressed", $this->_viewIndex );
-		}
-	}
+        if ($pushed != null) {
+            $this->raiseDelayedEvent("ButtonPressed", $this->viewIndex);
+        }
+    }
 
-	/**
-	 * Merely triggers the ButtonPressed event.
-	 *
-	 * Primarily used for unit testing.
-	 */
-	public function SimulateButtonPress()
-	{
-		$this->RaiseEvent( "ButtonPressed" );
-	}
+    /**
+     * Merely triggers the ButtonPressed event.
+     *
+     * Primarily used for unit testing.
+     */
+    public function simulateButtonPress()
+    {
+        $this->raiseEvent("ButtonPressed");
+    }
 
-	protected function WrapOuter($html)
-	{
-		$name = $this->getName();
+    protected function wrapOuter($html)
+    {
+        $name = $this->getName();
 
-		if ( $name != "" )
-		{
-			$html = str_replace( "<input ", "<input presenter-name=\"".htmlentities( $name )."\"", $html );
-		}
+        if ($name != "") {
+            $html = str_replace("<input ", "<input presenter-name=\"" . htmlentities($name) . "\"", $html);
+        }
 
-		return parent::WrapOuter($html);
-	}
+        return parent::wrapOuter($html);
+    }
 
-	protected function createView()
-	{
-		$view = new ButtonView();
+    protected function createView()
+    {
+        return new ButtonView();
+    }
 
-		$this->RegisterView( $view );
-	}
+    protected function applyModelToView()
+    {
+        $this->view->setButtonText($this->model->ButtonText);
+        $this->view->useXmlRpc = $this->useXhr;
+        $this->view->validator = $this->validator;
+        $this->view->validatorHostPresenterPath = $this->validatorHostPresenterPath;
+        $this->view->setConfirmMessage($this->confirmMessage);
+        $this->view->setButtonType($this->buttonType);
 
-	protected function applyModelToView()
-	{
-		$this->view->SetButtonText( $this->model->ButtonText );
-		$this->view->useXmlRpc = $this->useXhr;
-		$this->view->validator = $this->validator;
-		$this->view->validatorHostPresenterPath = $this->validatorHostPresenterPath;
-		$this->view->SetConfirmMessage( $this->_confirmMessage );
-		$this->view->SetButtonType( $this->_buttonType );
-
-		parent::applyModelToView();
-	}
+        parent::applyModelToView();
+    }
 }

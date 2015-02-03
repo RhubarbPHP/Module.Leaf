@@ -1,65 +1,79 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Presenters\Controls\Selection;
 
-require_once __DIR__."/../JQueryControlView.class.php";
+require_once __DIR__ . "/../JQueryControlView.php";
 
 use Rhubarb\Leaf\Presenters\Controls\JQueryControlView;
 
 class SelectionControlView extends JQueryControlView
 {
-	protected $_availableItems = [];
+    protected $availableItems = [];
 
-	public function SetAvailableItems( $items = [] )
-	{
-		$this->_availableItems = $items;
-	}
+    public function setAvailableItems($items = [])
+    {
+        $this->availableItems = $items;
+    }
 
-	protected $_selectedItems = [];
+    protected $selectedItems = [];
 
-	public function SetSelectedItems( $values = [] )
-	{
-		$this->_selectedItems = $values;
-	}
+    public function setSelectedItems($values = [])
+    {
+        $this->selectedItems = $values;
+    }
 
-	protected $_supportsMultiple = false;
+    protected $supportsMultiple = false;
 
-	public function SetSupportsMultiple( $value )
-	{
-		$this->_supportsMultiple = $value;
-	}
+    public function setSupportsMultiple($value)
+    {
+        $this->supportsMultiple = $value;
+    }
 
-	public function GetSpawnSettings()
-	{
-		$settings = parent::GetSpawnSettings();
-		$settings[ "AvailableItems" ] = $this->_availableItems;
+    public function getSpawnSettings()
+    {
+        $settings = parent::getSpawnSettings();
+        $settings["AvailableItems"] = $this->availableItems;
 
-		return $settings;
-	}
+        return $settings;
+    }
 
-	protected function getClientSideViewBridgeName()
-	{
-		return "SelectionControlViewBridge";
-	}
+    protected function getClientSideViewBridgeName()
+    {
+        return "SelectionControlViewBridge";
+    }
 
-	protected function IsValueSelected( $value )
-	{
-		foreach( $this->_selectedItems as $item )
-		{
-			if ( $item->value == $value )
-			{
-				return true;
-			}
-		}
+    protected function isValueSelected($value)
+    {
+        foreach ($this->selectedItems as $item) {
+            if ($item->value == $value) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public function getDeploymentPackage()
-	{
-		$package = parent::getDeploymentPackage();
-		$package->resourcesToDeploy[] = __DIR__."/SelectionControlViewBridge.js";
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . "/SelectionControlViewBridge.js";
 
-		return $package;
-	}
+        return $package;
+    }
 }

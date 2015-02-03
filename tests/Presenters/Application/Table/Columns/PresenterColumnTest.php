@@ -24,7 +24,7 @@ class PresenterColumnTest extends CoreTestCase
 		$example->Save();
 
 		$host = new HostPresenter();
-		$output = $host->GenerateResponse();
+		$output = $host->generateResponse();
 
 		$this->assertContains( "id=\"_Forename(1)\"", $output );
 		$this->assertContains( "value=\"Andrew\"", $output );

@@ -14,7 +14,7 @@ class SelectionControlPresenterTest extends CoreTestCase
 	{
 		$presenter = new TestSelectionControlPresenter();
 
-		$presenter->SetSelectionItems(
+		$presenter->setSelectionItems(
 			[
 				"Item 1",
 				"Item 2"
@@ -30,7 +30,7 @@ class SelectionControlPresenterTest extends CoreTestCase
 		$this->assertEquals( "Item 2", $items[1]->value );
 		$this->assertEquals( "Item 2", $items[1]->label );
 
-		$presenter->SetSelectionItems(
+		$presenter->setSelectionItems(
 			[
 				[ "Value 1", "Item 1" ],
 				[ "Value 2", "Item 2" ],
@@ -52,7 +52,7 @@ class SelectionControlPresenterTest extends CoreTestCase
 		$this->assertEquals( 8, $items[4]->label[1] );
 
 		// Now enums
-		$presenter->SetSelectionItems(
+		$presenter->setSelectionItems(
 			[
 				new Enum( "TestField", "a", array( "a", "b", "c" ) )
 			]
@@ -88,7 +88,7 @@ class SelectionControlPresenterTest extends CoreTestCase
 		$collection = new Collection( "Rhubarb\Stem\UnitTesting\User" );
 		$collection->Filter( new Equals( "Active", 1 ) );
 
-		$presenter->SetSelectionItems( [ $collection ] );
+		$presenter->setSelectionItems( [ $collection ] );
 
 		$items = $presenter->PublicGetCurrentlyAvailableSelectionItems();
 
@@ -106,6 +106,6 @@ class TestSelectionControlPresenter extends SelectionControlPresenter
 {
 	public function PublicGetCurrentlyAvailableSelectionItems()
 	{
-		return $this->GetCurrentlyAvailableSelectionItems();
+		return $this->getCurrentlyAvailableSelectionItems();
 	}
 }

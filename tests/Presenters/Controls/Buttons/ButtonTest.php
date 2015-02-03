@@ -20,7 +20,7 @@ class ButtonTest extends CoreTestCase
 			$trigger = true;
 		});
 
-		$button->SimulateButtonPress();
+		$button->simulateButtonPress();
 
 		$this->assertTrue( $trigger );
 	}

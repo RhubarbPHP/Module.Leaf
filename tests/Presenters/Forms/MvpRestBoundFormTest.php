@@ -28,7 +28,7 @@ class MvpRestBoundFormTest extends CoreTestCase
 		$request->Server( "HTTP_ACCEPT", "text/html" );
 		$request->Server( "REQUEST_METHOD", "get" );
 
-		$response = $restHandler->GenerateResponse( $request );
+		$response = $restHandler->generateResponse( $request );
 
 		$mvp = $response->GetGenerator();
 		$restModel = $mvp->GetRestModel();
@@ -49,7 +49,7 @@ class MvpRestBoundFormTest extends CoreTestCase
 	public function testControlCreation()
 	{
 		$mvp = new ModelBoundTestForm();
-		$mvp->SetRestModel( new User() );
+		$mvp->setRestModel( new User() );
 
 		$control = $mvp->PublicCreatePresenterByName( "NonExistant" );
 
@@ -71,7 +71,7 @@ class MvpRestBoundFormTest extends CoreTestCase
 
 		$this->assertInstanceOf( "Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown", $control );
 
-		$items = $control->GetSelectionItems();
+		$items = $control->getSelectionItems();
 
 		$this->assertEquals( [ "", "Please Select" ], $items[0] );
 		$this->assertInstanceOf( "Rhubarb\Stem\Repositories\MySql\Schema\Columns\Enum", $items[1] );
@@ -80,7 +80,7 @@ class MvpRestBoundFormTest extends CoreTestCase
 
 		$this->assertInstanceOf( "Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown", $control );
 
-		$items = $control->GetSelectionItems();
+		$items = $control->getSelectionItems();
 
 		$this->assertEquals( [ "", "Please Select" ], $items[0] );
 		$this->assertInstanceOf( "Rhubarb\Stem\Collections\Collection", $items[1] );
@@ -91,12 +91,12 @@ class ModelBoundTestForm extends MvpRestBoundForm
 {
 	public function PublicSetDataFromPresenter( $dataKey, $value )
 	{
-		$this->SetDataFromPresenter( $dataKey, $value );
+		$this->setDataFromPresenter( $dataKey, $value );
 	}
 
 	public function PublicCreatePresenterByName( $presenterName )
 	{
-		return $this->CreatePresenterByName( $presenterName );
+		return $this->createPresenterByName( $presenterName );
 	}
 
 	protected function initialiseModel()

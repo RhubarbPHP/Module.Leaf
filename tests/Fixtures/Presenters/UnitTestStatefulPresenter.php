@@ -12,6 +12,6 @@ class UnitTestStatefulPresenter extends Presenter
 {
 	protected function createView()
 	{
-		$this->RegisterView( new TestView() );
+		$this->registerView( new TestView() );
 	}
 }

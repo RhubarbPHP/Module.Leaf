@@ -14,7 +14,7 @@ class PlaceholderTest extends CoreTestCase
 	{
 		$mvp = new Simple();
 		$view = new PlaceholderTestView();
-		$mvp->AttachMockView( $view );
+		$mvp->attachMockView( $view );
 
 		$placeholder = new Placeholder( "Forename", $view );
 

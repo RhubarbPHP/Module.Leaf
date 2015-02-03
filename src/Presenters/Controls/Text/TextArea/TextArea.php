@@ -1,55 +1,64 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: acuthbert
- * Date: 04/03/13
- * Time: 16:33
- * To change this template use File | Settings | File Templates.
+
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 namespace Rhubarb\Leaf\Presenters\Controls\Text\TextArea;
 
-require_once __DIR__."/../TextBox/TextBox.class.php";
+require_once __DIR__ . "/../TextBox/TextBox.php";
 
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 
 class TextArea extends TextBox
 {
-	public $_rows;
-	public $_cols;
+    public $rows;
+    public $cols;
 
-	public function __construct( $name = "", $rows = 5, $cols = 40 )
-	{
-		parent::__construct( $name );
+    public function __construct($name = "", $rows = 5, $cols = 40)
+    {
+        parent::__construct($name);
 
-		$this->_rows = $rows;
-		$this->_cols = $cols;
-	}
+        $this->rows = $rows;
+        $this->cols = $cols;
+    }
 
-	public function SetRows( $rows )
-	{
-		$this->_rows = $rows;
+    public function setRows($rows)
+    {
+        $this->rows = $rows;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function SetCols( $cols )
-	{
-		$this->_cols = $cols;
+    public function setCols($cols)
+    {
+        $this->cols = $cols;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	protected function createView()
-	{
-		return new TextAreaView();
-	}
+    protected function createView()
+    {
+        return new TextAreaView();
+    }
 
-	protected function configureView()
-	{
-		parent::configureView();
+    protected function configureView()
+    {
+        parent::configureView();
 
-		$this->view->rows = $this->_rows;
-		$this->view->cols = $this->_cols;
-	}
+        $this->view->rows = $this->rows;
+        $this->view->cols = $this->cols;
+    }
 }

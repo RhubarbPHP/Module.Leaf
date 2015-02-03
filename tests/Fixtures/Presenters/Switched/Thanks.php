@@ -11,6 +11,6 @@ class Thanks extends \Rhubarb\Leaf\Presenters\Presenter
 {
 	protected function createView()
 	{
-		$this->RegisterView( new \Rhubarb\Leaf\UnitTesting\Presenters\TestView() );
+		$this->registerView( new \Rhubarb\Leaf\UnitTesting\Presenters\TestView() );
 	}
 }

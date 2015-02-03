@@ -12,7 +12,7 @@ class SearchControlTest extends CoreTestCase
 		$view = new UnitTestView();
 
 		$testSearch = new UnitTestSearchControl();
-		$testSearch->AttachMockView( $view );
+		$testSearch->attachMockView( $view );
 
 		$items = $testSearch->SimulateSearchPressed( "test" );
 
@@ -27,7 +27,7 @@ class SearchControlTest extends CoreTestCase
 		$view = new UnitTestView();
 
 		$testSearch = new UnitTestSearchControl();
-		$testSearch->AttachMockView( $view );
+		$testSearch->attachMockView( $view );
 
 		$response = $testSearch->SimulateItemSelected( 4 );
 
@@ -45,7 +45,7 @@ class UnitTestSearchControl extends SearchControl
 
 	public function SimulateSearchPressed( $phrase )
 	{
-        $this->SetSelectionItems(
+        $this->setSelectionItems(
         [
             [ 0, "a" ],
             [ 1, "b" ],
@@ -55,7 +55,7 @@ class UnitTestSearchControl extends SearchControl
 		return $this->view->RaiseEvent( "SearchPressed", $phrase );
 	}
 
-    protected function GetResultColumns()
+    protected function getResultColumns()
     {
         return [];
     }

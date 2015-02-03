@@ -21,7 +21,7 @@ class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 		parent::setUp();
 
 		$this->host = new UnitTestSwitchedPresenter();
-		$this->host->Initialise();
+		$this->host->initialise();
 	}
 
 	public function testDefaultPresenterIsTheFirst()

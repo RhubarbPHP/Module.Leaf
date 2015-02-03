@@ -33,11 +33,11 @@ class UnitTestDate extends Date
 {
 	public function PublicApplyBoundData( $data )
 	{
-		$this->ApplyBoundData( $data );
+		$this->applyBoundData( $data );
 	}
 
 	public function PublicExtractBoundData()
 	{
-		return $this->ExtractBoundData();
+		return $this->extractBoundData();
 	}
 }

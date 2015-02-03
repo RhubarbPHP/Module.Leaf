@@ -57,7 +57,7 @@ class PresenterTest extends CoreTestCase
 		$simple = new Simple();
 
 		// Simple has two sub presenters both called forename - let's check they have unique ids
-		$simple->GenerateResponse();
+		$simple->generateResponse();
 
 		$subPresenters = $simple->GetSubPresenters();
 
@@ -71,9 +71,9 @@ class PresenterTest extends CoreTestCase
 	public function testPresenterHandlesCommand()
 	{
 		$simple = new Simple();
-		$simple->DispatchCommand( "UpdateText" );
+		$simple->dispatchCommand( "UpdateText" );
 
-		$html = $simple->GenerateResponse();
+		$html = $simple->generateResponse();
 
 		$this->assertEquals( "The text has changed!", $html );
 	}
@@ -81,9 +81,9 @@ class PresenterTest extends CoreTestCase
 	public function testPresenterHandlesCommandWithParameter()
 	{
 		$simple = new Simple();
-		$simple->DispatchCommand( "UpdateText", "Some param text" );
+		$simple->dispatchCommand( "UpdateText", "Some param text" );
 
-		$html = $simple->GenerateResponse();
+		$html = $simple->generateResponse();
 
 		$this->assertEquals( "Some param text", $html );
 	}
@@ -91,7 +91,7 @@ class PresenterTest extends CoreTestCase
 	public function testPresenterCanBePrintedWithToString()
 	{
 		$simple = new Simple();
-		$simple->DispatchCommand( "UpdateText", "Some param text" );
+		$simple->dispatchCommand( "UpdateText", "Some param text" );
 
 		$html = (string) $simple;
 
@@ -105,7 +105,7 @@ class PresenterTest extends CoreTestCase
 		// Simple has two events. The first is delayed, the second isn't.
 		// We should see that the last event to run was actually the first event.
 
-		$simple->GenerateResponse( Context::CurrentRequest() );
+		$simple->generateResponse( Context::CurrentRequest() );
 
 		$this->assertEquals( "FirstEvent", $simple->lastEventProcessed );
 	}
@@ -125,7 +125,7 @@ class PresenterTest extends CoreTestCase
 		$request->Post( $simple->getPresenterPath()."State", $state );
 
 		$simple = new UnitTestStatefulPresenter();
-		$simple->Initialise();
+		$simple->initialise();
 
 		$this->assertEquals( "abc123", $simple->model->TestValue );
 	}
@@ -138,7 +138,7 @@ class PresenterTest extends CoreTestCase
 		// Test model binding 'get'
 		$host = new UnitTestSwitchedPresenter();
 
-		$host->GenerateResponse( $request );
+		$host->generateResponse( $request );
 
 		// The switched presenters model has Forename initialised to John. This test make sures that
 		// the text box on the details presenter shows John.
@@ -150,7 +150,7 @@ class PresenterTest extends CoreTestCase
 
 		$host = new UnitTestSwitchedPresenter();
 
-		$host->GenerateResponse( $request );
+		$host->generateResponse( $request );
 
 		$this->assertEquals( "Jeremy", $host->model->Forename );
 	}
@@ -184,15 +184,15 @@ class PresenterTest extends CoreTestCase
 		$presenter = new Simple();
 		$presenter->RemoveEventHandlers();
 
-		$this->assertFalse( $presenter->IsConfigured() );
+		$this->assertFalse( $presenter->isConfigured() );
 
 		$presenter->ModelSetting = "abc";
 
-		$this->assertFalse( $presenter->IsConfigured() );
+		$this->assertFalse( $presenter->isConfigured() );
 
 		$presenter->ConfiguredSetting = "abc";
 
-		$this->assertTrue( $presenter->IsConfigured() );
+		$this->assertTrue( $presenter->isConfigured() );
 	}
 
 	public function testPresenterGetsChangedModels()
@@ -201,12 +201,12 @@ class PresenterTest extends CoreTestCase
 		SubPresenterTest::$hostedView = new UnitTestView();
 
 		$presenter = new Host();
-		$presenter->GenerateResponse();
+		$presenter->generateResponse();
 
 		$hosted = SubPresenterTest::$hosted;
 		$hosted->NumberOfGoats = 999;
 
-		$models = $presenter->GetChangedPresenterModels();
+		$models = $presenter->getChangedPresenterModels();
 
 		$this->assertCount( 1, $models );
 		$this->assertArrayHasKey( "_Goats", $models );
@@ -216,7 +216,7 @@ class PresenterTest extends CoreTestCase
 	public function testDisplayWithIndex()
 	{
 		$host = new UnitTestSwitchedPresenter();
-		$host->Test();
+		$host->test();
 
 		$presenter = DetailsView::$forename;
 
@@ -231,8 +231,8 @@ class PresenterTest extends CoreTestCase
 		$this->assertContains( "value=\"def\"", $content );
 
 		$host = new TestViewIndexPresenter();
-		$host->Test();
-		$content = $host->GenerateResponse();
+		$host->test();
+		$content = $host->generateResponse();
 
 		$this->assertContains( "Test(0)_Forename", $content );
 	}
@@ -266,7 +266,7 @@ class SubPresenterTest extends CoreTestCase
 	public function testAutoBindingGet()
 	{
 		$host = new Host();
-		$host->Initialise();
+		$host->initialise();
 
 		$this->assertEquals( 3, (int) self::$hosted->model->NumberOfGoats );
 	}
@@ -274,8 +274,8 @@ class SubPresenterTest extends CoreTestCase
 	public function testAutoBindingSet()
 	{
 		$host = new Host();
-		$host->Initialise();
-		$host->ProcessUserInterfaceEvents();
+		$host->initialise();
+		$host->processUserInterfaceEvents();
 
 		self::$hosted->SimulateChangeOfGoats();
 
@@ -285,7 +285,7 @@ class SubPresenterTest extends CoreTestCase
 	public function testSubPresenterGetsPath()
 	{
 		$host = new Host();
-		$host->Initialise();
+		$host->initialise();
 
 		$this->assertEquals( "_1Goats", self::$hosted->getPresenterPath() );
 	}
@@ -296,7 +296,7 @@ class SubPresenterTest extends CoreTestCase
 		$_REQUEST[ "_mvpEventTarget" ] = "_1Goats";
 
 		$host = new Host();
-		$host->GenerateResponse();
+		$host->generateResponse();
 
 		$this->assertEquals( "received", $host->model->MvpEvent );
 	}
@@ -314,7 +314,7 @@ class SubPresenterTest extends CoreTestCase
 			$response = true;
 		});
 
-		$host->GenerateResponse( new WebRequest() );
+		$host->generateResponse( new WebRequest() );
 
 		$this->assertTrue( $response );
 	}
@@ -327,7 +327,7 @@ class SubPresenterTest extends CoreTestCase
 		$_SERVER[ "HTTP_X_REQUESTED_WITH" ] = "xmlhttprequest";
 
 		$host = new Host();
-		$response = $host->GenerateResponse();
+		$response = $host->generateResponse();
 
 		$this->assertEquals( "<?xml version=\"1.0\"?>\r\n", $response );
 	}
@@ -340,7 +340,7 @@ class SubPresenterTest extends CoreTestCase
 		$_SERVER[ "HTTP_X_REQUESTED_WITH" ] = "xmlhttprequest";
 
 		$host = new Host();
-		$response = $host->GenerateResponse();
+		$response = $host->generateResponse();
 
 		$this->assertEquals( "<?xml version=\"1.0\"?>
 <htmlupdate id=\"\">
@@ -356,7 +356,7 @@ Some output
 		$_SERVER[ "HTTP_X_REQUESTED_WITH" ] = "xmlhttprequest";
 
 		$host = new Host();
-		$response = $host->GenerateResponse();
+		$response = $host->generateResponse();
 
 		$this->assertEquals( "<?xml version=\"1.0\"?>
 <eventresponse event=\"EventWithDataResponse\" sender=\"_1Goats\">
@@ -401,7 +401,7 @@ class Host extends Presenter
 
 	protected function createView()
 	{
-		$this->RegisterView( new AutoBindingViewTest() );
+		$this->registerView( new AutoBindingViewTest() );
 	}
 }
 
@@ -415,12 +415,12 @@ class Hosted extends ControlPresenter
 		return $properties;
 	}
 
-	protected function ApplyBoundData( $data )
+	protected function applyBoundData( $data )
 	{
 		$this->model->NumberOfGoats = $data;
 	}
 
-	protected function ExtractBoundData()
+	protected function extractBoundData()
 	{
 		return $this->model->NumberOfGoats;
 	}
@@ -428,7 +428,7 @@ class Hosted extends ControlPresenter
 	public function SimulateChangeOfGoats()
 	{
 		$this->model->NumberOfGoats = 4;
-		$this->SetBoundData();
+		$this->setBoundData();
 	}
 
 	protected function configureView()
@@ -446,7 +446,7 @@ class Hosted extends ControlPresenter
 
 	protected function createView()
 	{
-		$this->RegisterView( SubPresenterTest::$hostedView );
+		$this->registerView( SubPresenterTest::$hostedView );
 	}
 }
 

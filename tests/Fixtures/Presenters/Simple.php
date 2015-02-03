@@ -51,7 +51,7 @@ class Simple extends Presenter
 		parent::parseRequestForCommand();
 
 		// Fire two events for our unit test.
-		$this->RaiseDelayedEvent( "FirstEvent" );
+		$this->raiseDelayedEvent( "FirstEvent" );
 		$this->RaiseEvent( "SecondEvent" );
 	}
 

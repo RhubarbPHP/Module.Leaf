@@ -31,7 +31,7 @@ class SearchPanelTest extends CoreTestCase
 		$this->_view = new UnitTestView();
 
 		$this->_panel = new UnitTestSearchPanel();
-		$this->_panel->AttachMockView( $this->_view );
+		$this->_panel->attachMockView( $this->_view );
 	}
 
 	public function testSearchTriggersEvent()
@@ -43,7 +43,7 @@ class SearchPanelTest extends CoreTestCase
 			$triggered = true;
 		});
 
-		$this->_view->SimulateEvent( "Search" );
+		$this->_view->simulateEvent( "Search" );
 
 		// If the search event was triggered from the view then the presenter should emit a similar event
 		$this->assertTrue( $triggered );
@@ -60,7 +60,7 @@ class SearchPanelTest extends CoreTestCase
 		$context = new Context();
 		$context->Request = $request;
 
-		$search->GenerateResponse( $request );
+		$search->generateResponse( $request );
 
 		$values = $search->getSearchControlValues();
 
@@ -72,7 +72,7 @@ class SearchPanelTest extends CoreTestCase
 
 		$search->phraseTextBox->AttachMockView( $textBoxView = new UnitTestSearchPanelTextBoxView() );
 
-		$search->GenerateResponse( new WebRequest() );
+		$search->generateResponse( new WebRequest() );
 
 		$this->assertEquals( "123456", $textBoxView->GetText() );
 	}

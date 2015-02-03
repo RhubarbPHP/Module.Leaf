@@ -48,7 +48,7 @@ class TableTest extends CoreTestCase
 		$table = new Table( $list );
 		$mockView = new MockTableView();
 
-		$table->AttachMockView( $mockView );
+		$table->attachMockView( $mockView );
 
 		$table->Columns = array(
 			"Forename",
@@ -62,7 +62,7 @@ class TableTest extends CoreTestCase
 			"MyTestValue"
 		);
 
-		$table->GenerateResponse();
+		$table->generateResponse();
 
 		$this->assertCount( 9, $mockView->columns );
 		$this->assertInstanceOf( "Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn", $mockView->columns[0] );
@@ -85,7 +85,7 @@ class TableTest extends CoreTestCase
 		$table = new Table( $list );
 		$mockView = new MockTableView();
 
-		$table->AttachMockView( $mockView );
+		$table->attachMockView( $mockView );
 
 		$table->Columns = array(
 			"Forename",
@@ -97,22 +97,22 @@ class TableTest extends CoreTestCase
 			"KeyContact"
 		);
 
-		$table->Initialise();
+		$table->initialise();
 
-		$mockView->SimulateEvent( "ColumnClicked", 0 );
-		$table->GenerateResponse( Context::CurrentRequest() );
+		$mockView->simulateEvent( "ColumnClicked", 0 );
+		$table->generateResponse( Context::CurrentRequest() );
 		$sorts = $list->GetSorts();
 		$this->assertEquals( [ "Forename" => true ], $sorts );
 
 
-		$mockView->SimulateEvent( "ColumnClicked", 0 );
-		$table->GenerateResponse( Context::CurrentRequest() );
+		$mockView->simulateEvent( "ColumnClicked", 0 );
+		$table->generateResponse( Context::CurrentRequest() );
 		$sorts = $list->GetSorts();
 		$this->assertEquals( [ "Forename" => false ], $sorts );
 
 
-		$mockView->SimulateEvent( "ColumnClicked", 1 );
-		$table->GenerateResponse( Context::CurrentRequest() );
+		$mockView->simulateEvent( "ColumnClicked", 1 );
+		$table->generateResponse( Context::CurrentRequest() );
 		$sorts = $list->GetSorts();
 		$this->assertEquals( [ "Surname" => true ], $sorts );
 	}

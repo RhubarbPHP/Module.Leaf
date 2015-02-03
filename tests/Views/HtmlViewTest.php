@@ -13,7 +13,7 @@ class HtmlViewTest extends CoreTestCase
 	public function testWrappers()
 	{
 		$presenter = new TestPresenter( "Forename", true, true );
-		$output = $presenter->GenerateResponse();
+		$output = $presenter->generateResponse();
 
 		// Careful now! The format of this string is important - dont' be tidying it up!
 		$this->assertEquals( '<div id="Forename" class="TestView" presenter-name="Forename">
@@ -25,13 +25,13 @@ Dummy Output
 	public function testRaisingEventOnViewBridge()
 	{
 		$presenter = new TestPresenter( "Forename", true, true );
-		$presenter->Test();
+		$presenter->test();
 
 		$_SERVER[ 'HTTP_X_REQUESTED_WITH' ] = 'xmlhttprequest';
 
 		$view = $presenter->testView;
 		$view->TestRaiseEventOnViewBridge();
-		$response = $presenter->GenerateResponse( new WebRequest() );
+		$response = $presenter->generateResponse( new WebRequest() );
 
 		$content = $response->GetContent();
 
@@ -58,6 +58,6 @@ class TestPresenter extends Presenter
 	protected function createView()
 	{
 		$this->testView = new TestView( $this->_requiresContainer, $this->_requiresStateInputs );
-		$this->RegisterView( $this->testView );
+		$this->registerView( $this->testView );
 	}
 }

@@ -1,96 +1,112 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Presenters\Controls\Text\TextBox;
 
-use \Rhubarb\Leaf\Presenters\Controls\ControlView;
-use Rhubarb\Leaf\Presenters\PresenterDeploymentPackage;
+require_once __DIR__ . '/../../ControlView.php';
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class TextBoxView extends ControlView implements ITextBoxView
+use Rhubarb\Leaf\Presenters\Controls\ControlView;
+
+class TextBoxView extends ControlView
 {
-	protected $htmlType = "text";
+    protected $htmlType = "text";
 
-	protected $_placeholderText = "";
+    protected $placeholderText = "";
 
-	protected $_allowBrowserAutoComplete = true;
+    protected $allowBrowserAutoComplete = true;
 
-	public function __construct( $htmlType = "text" )
-	{
-		$this->htmlType = $htmlType;
+    public function __construct($htmlType = "text")
+    {
+        $this->htmlType = $htmlType;
 
-		$this->_requiresContainer = false;
-		$this->_requiresStateInputs = false;
-	}
+        $this->requiresContainer = false;
+        $this->requiresStateInputs = false;
+    }
 
-	public function getDeploymentPackage()
-	{
-		$package = parent::getDeploymentPackage();
-		$package->resourcesToDeploy[] = __DIR__."/TextBoxViewBridge.js";
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . "/TextBoxViewBridge.js";
 
-		return $package;
-	}
+        return $package;
+    }
 
-	protected function getClientSideViewBridgeName()
-	{
-		return "TextBoxViewBridge";
-	}
+    protected function getClientSideViewBridgeName()
+    {
+        return "TextBoxViewBridge";
+    }
 
-	protected $text = "";
+    protected $text = "";
 
-	public function SetText( $text )
-	{
-		$this->text = $text;
-	}
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
 
-	public function SetAllowBrowserAutoComplete( $allowBrowserAutoComplete )
-	{
-		$this->_allowBrowserAutoComplete = $allowBrowserAutoComplete;
-	}
+    public function setAllowBrowserAutoComplete($allowBrowserAutoComplete)
+    {
+        $this->allowBrowserAutoComplete = $allowBrowserAutoComplete;
+    }
 
-	/**
-	 * @param string $placeholderText
-	 */
-	public function SetPlaceholderText( $placeholderText )
-	{
-		$this->_placeholderText = $placeholderText;
-	}
+    /**
+     * @param string $placeholderText
+     */
+    public function setPlaceholderText($placeholderText)
+    {
+        $this->placeholderText = $placeholderText;
+    }
 
-	public function printViewContent()
-	{
-		$maxLength = ( $this->_maxLength ) ? "maxlength=\"".$this->_maxLength."\"" : "";
-		$autoCompleteAttribute = ( !$this->_allowBrowserAutoComplete ) ? " autocomplete=\"off\"" : "";
+    public function printViewContent()
+    {
+        $maxLength = ($this->maxLength) ? "maxlength=\"" . $this->maxLength . "\"" : "";
+        $autoCompleteAttribute = (!$this->allowBrowserAutoComplete) ? " autocomplete=\"off\"" : "";
 
-		$placeholderText = $this->_placeholderText ? ' placeholder="'.\htmlentities( $this->_placeholderText ).'"' : "";
-		?>
-		<input type="<?=\htmlentities( $this->htmlType );?>" size="<?=$this->_size;?>" <?=$maxLength;?> name="<?=\htmlentities( $this->GetIndexedPresenterPath() );?>" value="<?=\htmlentities( $this->text );?>" id="<?=\htmlentities( $this->GetIndexedPresenterPath() );?>" presenter-name="<?=\htmlentities( $this->presenterName );?>"<?= $autoCompleteAttribute.$this->GetHtmlAttributeTags().$placeholderText.$this->GetClassTag() ?> />
-		<?php
-	}
+        $placeholderText = $this->placeholderText ? ' placeholder="' . \htmlentities($this->placeholderText) . '"' : "";
+        ?>
+        <input type="<?= \htmlentities($this->htmlType); ?>" size="<?= $this->size; ?>" <?= $maxLength; ?>
+               name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" value="<?= \htmlentities($this->text); ?>"
+               id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" presenter-name="<?= \htmlentities(
+            $this->presenterName
+        ); ?>"<?= $autoCompleteAttribute . $this->getHtmlAttributeTags() . $placeholderText . $this->getClassTag() ?> />
+    <?php
+    }
 
-	private $_size;
+    private $size;
 
-	public function SetSize( $size )
-	{
-		$this->_size = $size;
-	}
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
 
-	private $_maxLength;
+    private $maxLength;
 
-	public function SetMaxLength( $length )
-	{
-		$this->_maxLength = $length;
-	}
+    public function setMaxLength($length)
+    {
+        $this->maxLength = $length;
+    }
 
-	public function GetSpawnSettings()
-	{
-		$settings = parent::GetSpawnSettings();
-		$settings[ "size" ] = $this->_size;
-		$settings[ "maxLength" ] = $this->_maxLength;
-		$settings[ "allowBrowserAutoComplete" ] = $this->_allowBrowserAutoComplete;
+    public function getSpawnSettings()
+    {
+        $settings = parent::getSpawnSettings();
+        $settings["size"] = $this->size;
+        $settings["maxLength"] = $this->maxLength;
+        $settings["allowBrowserAutoComplete"] = $this->allowBrowserAutoComplete;
 
-		return $settings;
-	}
+        return $settings;
+    }
 }

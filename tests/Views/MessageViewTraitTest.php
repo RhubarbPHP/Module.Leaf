@@ -12,21 +12,21 @@ class MessageViewTraitTest extends CoreTestCase
 	{
 		$presenter = new UnitTestingMessagePresenter();
 		$view = new UnitTestingMessageView();
-		$presenter->AttachMockView( $view );
+		$presenter->attachMockView( $view );
 
-		$output = $presenter->Test();
+		$output = $presenter->test();
 
 		$this->assertContains( "Normal content", $output );
 
-		$view->SimulateEvent( "ActivateMessage", "Sent" );
+		$view->simulateEvent( "ActivateMessage", "Sent" );
 
-		$output = $presenter->Test();
+		$output = $presenter->test();
 
 		$this->assertContains( "Message was sent", $output );
 
-		$view->SimulateEvent( "ActivateMessage", "Failed" );
+		$view->simulateEvent( "ActivateMessage", "Failed" );
 
-		$output = $presenter->Test();
+		$output = $presenter->test();
 
 		$this->assertContains( "The message failed", $output );
 	}
@@ -68,7 +68,7 @@ class UnitTestingMessageView extends UnitTestView
 	 *
 	 * @return string[]
 	 */
-	protected function GetMessages()
+	protected function getMessages()
 	{
 		return
 		[

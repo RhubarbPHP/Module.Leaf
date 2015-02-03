@@ -19,7 +19,7 @@ class MvpUrlHandlerTest extends CoreTestCase
 		$request = new WebRequest();
 		$request->UrlPath = "/normal/";
 
-		$response = $handler->GenerateResponse( $request );
+		$response = $handler->generateResponse( $request );
 
 		$this->assertEquals( 'My New View', $response );
 	}

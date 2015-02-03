@@ -12,6 +12,6 @@ class Complete extends \Rhubarb\Leaf\Presenters\Presenter
 {
 	protected function createView()
 	{
-		$this->RegisterView( new CompleteView() );
+		$this->registerView( new CompleteView() );
 	}
 }

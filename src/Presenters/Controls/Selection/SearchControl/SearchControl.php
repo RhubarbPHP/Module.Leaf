@@ -1,8 +1,24 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Presenters\Controls\Selection\SearchControl;
 
-require_once __DIR__."/../SelectionControlPresenter.class.php";
+require_once __DIR__."/../SelectionControlPresenter.php";
 
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Context;
@@ -24,7 +40,7 @@ abstract class SearchControl extends SelectionControlPresenter
 		$this->attachClientSidePresenterBridge = true;
 	}
 
-	protected function IsValueSelectable( $value )
+	protected function isValueSelectable( $value )
 	{
 		// Search controls are often bound to int columns where the default value will be zero.
 		// This should not be considered a selected item.
@@ -33,7 +49,7 @@ abstract class SearchControl extends SelectionControlPresenter
 			return false;
 		}
 
-		return parent::IsValueSelectable( $value );
+		return parent::isValueSelectable( $value );
 	}
 
 	protected function initialiseModel()
@@ -42,7 +58,7 @@ abstract class SearchControl extends SelectionControlPresenter
 
 		$this->model->ResultsWidth = "match";
 		$this->model->AutoSubmitSearch = true;
-		$this->ResultColumns = $this->GetResultColumns();
+		$this->ResultColumns = $this->getResultColumns();
 	}
 
 	protected function createView()
@@ -60,7 +76,7 @@ abstract class SearchControl extends SelectionControlPresenter
 	 *
 	 * @param $width
 	 */
-	public function SetResultsWidth( $width )
+	public function setResultsWidth( $width )
 	{
 		$this->model->ResultsWidth = $width;
 	}
@@ -75,7 +91,7 @@ abstract class SearchControl extends SelectionControlPresenter
 
 			// Note the pattern here is not to engage with the phrase directly, but purely to record it in the
 			// model and let the standard method that returns items decide how to handle it.
-			return $this->GetCurrentlyAvailableSelectionItems();
+			return $this->getCurrentlyAvailableSelectionItems();
 		});
 
 		$this->view->attachEventHandler( "ItemSelected", function( $selectedId )
@@ -86,7 +102,7 @@ abstract class SearchControl extends SelectionControlPresenter
 		});
 	}
 
-	protected abstract function GetResultColumns();
+	protected abstract function getResultColumns();
 
 	protected function getPublicModelPropertyList()
 	{

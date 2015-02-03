@@ -13,7 +13,7 @@ class UnitTestSwitchedPresenter extends \Rhubarb\Leaf\Presenters\SwitchedPresent
 {
 	use ModelProvider;
 
-	protected function GetSwitchedPresenters()
+	protected function getSwitchedPresenters()
 	{
 		return [
 			"Details" => "\Rhubarb\Leaf\UnitTesting\Presenters\Switched\Details",
@@ -24,9 +24,9 @@ class UnitTestSwitchedPresenter extends \Rhubarb\Leaf\Presenters\SwitchedPresent
 
 	private $details;
 
-	protected function OnPresenterAdded( \Rhubarb\Leaf\Presenters\Presenter $presenter )
+	protected function onPresenterAdded( \Rhubarb\Leaf\Presenters\Presenter $presenter )
 	{
-		parent::OnPresenterAdded( $presenter );
+		parent::onPresenterAdded( $presenter );
 
 		if ( is_a( $presenter, "\Rhubarb\Leaf\UnitTesting\Presenters\Switched\Details" ) )
 		{
@@ -41,17 +41,17 @@ class UnitTestSwitchedPresenter extends \Rhubarb\Leaf\Presenters\SwitchedPresent
 
 	public function TestPresenterIsChanged( $presenterName )
 	{
-		$this->ChangePresenter( $presenterName );
+		$this->changePresenter( $presenterName );
 	}
 
 	public function TestGetDefaultPresenterName()
 	{
-		return $this->GetDefaultPresenterName();
+		return $this->getDefaultPresenterName();
 	}
 
 	public function TestGetCurrentPresenterName()
 	{
-		return $this->GetCurrentPresenterName();
+		return $this->getCurrentPresenterName();
 	}
 
 	protected function initialiseModel()

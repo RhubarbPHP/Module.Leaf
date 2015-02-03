@@ -25,7 +25,7 @@ class SimpleHtmlFileUploadTest extends CoreTestCase
 			"error" => UPLOAD_ERR_OK
 		]);
 
-		$upload->GenerateResponse( $request );
+		$upload->generateResponse( $request );
 
 		$this->assertEquals( "goats-boats.jpg", $eventFilename );
 		$this->assertEquals( "/temporary/path/abc123", $eventPath );

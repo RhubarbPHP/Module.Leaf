@@ -16,7 +16,7 @@ class SearchPanelTabsPresenterTest extends CoreTestCase
 	{
 		$tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->SetTabDefinitions(
+		$tabs->setTabDefinitions(
 			[
 				"Big" => [ "Phrase" => "This is a big phrase" ]
 			]
@@ -38,24 +38,24 @@ class SearchPanelTabsPresenterTest extends CoreTestCase
 		$panel = new UnitTestSearchPanel();
 		$tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->SetTabDefinitions(
+		$tabs->setTabDefinitions(
 			[
 				"Big" => new SearchPanelTabDefinition( "Big", [ "Phrase" => "This is a big phrase" ] ),
 				"Small" => new SearchPanelTabDefinition( "Small", [ "Phrase" => "Small Phrase" ] )
 			]
 		);
 
-		$tabs->BindEventsWith( $panel );
+		$tabs->bindEventsWith( $panel );
 
 		// Let's simulate going big.
-		$tabs->SelectTabByIndex( 0 );
-		$tabs->Test();
+		$tabs->selectTabByIndex( 0 );
+		$tabs->test();
 
 		$this->assertEquals( "This is a big phrase", $panel->model->Phrase );
 
 		// Let's simulate going small.
-		$tabs->SelectTabByIndex( 1 );
-		$tabs->Test();
+		$tabs->selectTabByIndex( 1 );
+		$tabs->test();
 
 		$this->assertEquals( "Small Phrase", $panel->model->Phrase );
 	}
@@ -65,7 +65,7 @@ class SearchPanelTabsPresenterTest extends CoreTestCase
 		$panel = new UnitTestSearchPanel();
 		$tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->SetTabDefinitions(
+		$tabs->setTabDefinitions(
 			[
 				"Big" => new SearchPanelTabDefinition( "Big", [ "Phrase" => "This is a big phrase" ] ),
 				"Small" => new SearchPanelTabDefinition( "Small", [ "Phrase" => "Small Phrase" ] )
@@ -75,18 +75,18 @@ class SearchPanelTabsPresenterTest extends CoreTestCase
 		$capturedTabDefinitions = [];
 
 		$mockView = new UnitTestView();
-		$mockView->AttachMethod( "SetTabDefinitions", function( $tabDefinitions ) use ( &$capturedTabDefinitions )
+		$mockView->attachMethod( "SetTabDefinitions", function( $tabDefinitions ) use ( &$capturedTabDefinitions )
 		{
 			$capturedTabDefinitions = $tabDefinitions;
 		});
 
-		$tabs->AttachMockView( $mockView );
+		$tabs->attachMockView( $mockView );
 
-		$tabs->BindEventsWith( $panel );
+		$tabs->bindEventsWith( $panel );
 
 		$panel->model->Phrase = "A different Phrase";
 
-		$tabs->GenerateResponse( new WebRequest() );
+		$tabs->generateResponse( new WebRequest() );
 
 		$this->assertEquals( "Search Results", $capturedTabDefinitions[ sizeof( $capturedTabDefinitions ) - 1 ]->label );
 	}
@@ -96,8 +96,8 @@ class UnitTestSearchPanelTabsPresenter extends SearchPanelTabsPresenter
 {
 	public function PublicInflateTabDefinitions()
 	{
-		$tabs = $this->InflateTabDefinitions();
-		$this->MarkSelectedTab( $tabs );
+		$tabs = $this->inflateTabDefinitions();
+		$this->markSelectedTab( $tabs );
 
 		return $tabs;
 	}

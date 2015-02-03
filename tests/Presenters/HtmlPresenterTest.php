@@ -28,12 +28,12 @@ class UnitTestHtmlPresenter extends HtmlPresenter
 {
 	public function PublicCreateDefaultClientSideValidator()
 	{
-		return $this->CreateDefaultClientSideValidator();
+		return $this->createDefaultClientSideValidator();
 	}
 
 	public $testInvalidTypes = false;
 
-	protected function CreateDefaultValidator()
+	protected function createDefaultValidator()
 	{
 		if ( $this->testInvalidTypes )
 		{

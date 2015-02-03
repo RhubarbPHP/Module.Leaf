@@ -12,8 +12,8 @@ class ControlViewTest extends CoreTestCase
 
 		$controlPresenter = new ControlPresenter();
 		$controlPresenter->CssClassNames = [ "billy-goat", "chicken" ];
-		$controlPresenter->AttachMockView( $mockView );
-		$controlPresenter->GenerateResponse();
+		$controlPresenter->attachMockView( $mockView );
+		$controlPresenter->generateResponse();
 
 		$this->assertEquals( " class=\"billy-goat chicken\"", $mockView->PublicGetClassTag() );
 	}
@@ -28,6 +28,6 @@ class ControlMockView extends ControlView
 {
 	public function PublicGetClassTag()
 	{
-		return $this->GetClassTag();
+		return $this->getClassTag();
 	}
 }

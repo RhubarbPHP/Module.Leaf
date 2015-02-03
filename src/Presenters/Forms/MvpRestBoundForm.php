@@ -1,8 +1,28 @@
 <?php
 
+/*
+ *	Copyright 2015 RhubarbPHP
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 namespace Rhubarb\Leaf\Presenters\Forms;
 
-require_once __DIR__."/Form.class.php";
+require_once __DIR__."/Form.php";
+require_once __DIR__."/../CreatePresentersFromSchemaTrait.php";
+
+use Rhubarb\Crown\Context;
+use Rhubarb\Leaf\Presenters\CreatePresentersFromSchemaTrait;
 
 /**
  * Provides an automatic way for a form to get the model object provided by the MvpRestHandler
@@ -10,9 +30,6 @@ require_once __DIR__."/Form.class.php";
  * Also replaces data bindings so that the rest supplied model is bound to instead.
  *
  */
-use Rhubarb\Crown\Context;
-use Rhubarb\Leaf\Presenters\CreatePresentersFromSchemaTrait;
-
 abstract class MvpRestBoundForm extends Form
 {
 	use CreatePresentersFromSchemaTrait;
@@ -22,50 +39,50 @@ abstract class MvpRestBoundForm extends Form
 	 *
 	 * @var \Rhubarb\Stem\Models\Model
 	 */
-	protected $_restModel;
+	protected $restModel;
 
 	/**
 	 * The Collection supplied by the RestHandler
 	 *
 	 * @var \Rhubarb\Stem\Collections\Collection
 	 */
-	protected $_restCollection;
+	protected $restCollection;
 
-	public function SetRestModel( $restModel )
+	public function setRestModel( $restModel )
 	{
-		$this->_restModel = $restModel;
+		$this->restModel = $restModel;
 
 		// Add the unique identifier to the presenter model. This allows validation, which only uses the
 		// presenter model to access the rest model unique identifier for doing duplication checks for example.
 		$this->model->RestModelUniqueIdentifier = $restModel->UniqueIdentifier;
 	}
 
-	public function GetRestModel()
+	public function getRestModel()
 	{
-		return $this->_restModel;
+		return $this->restModel;
 	}
 
-	public function IsConfigured()
+	public function isConfigured()
 	{
 		// As the rest model data is sucked into the form's model, this stops the configured state
 		// being flagged.
 		return false;
 	}
 
-	public function GetXmlRpcUrl()
+	public function getXmlRpcUrl()
 	{
-		$request = Context::CurrentRequest();
+		$request = Context::currentRequest();
 		return $request->UrlPath;
 	}
 
-	public function SetRestCollection( $restCollection )
+	public function setRestCollection( $restCollection )
 	{
-		$this->_restCollection = $restCollection;
+		$this->restCollection = $restCollection;
 	}
 
-	public function GetRestCollection()
+	public function getRestCollection()
 	{
-		return $this->_restCollection;
+		return $this->restCollection;
 	}
 
 	/**
@@ -74,26 +91,26 @@ abstract class MvpRestBoundForm extends Form
 	 * @param string $dataKey
 	 * @param $data
 	 */
-	protected function SetDataFromPresenter( $dataKey, $data, $viewIndex = false )
+	protected function setDataFromPresenter( $dataKey, $data, $viewIndex = false )
 	{
-		$this->SetData( $dataKey, $data, $viewIndex );
+		$this->setData( $dataKey, $data, $viewIndex );
 	}
 
-	protected function SetData( $dataKey, $data, $viewIndex = false )
+	protected function setData( $dataKey, $data, $viewIndex = false )
 	{
 		if ( $viewIndex )
 		{
-			if ( $this->_restModel )
+			if ( $this->restModel )
 			{
-				if ( !isset( $this->_restModel[ $dataKey ] ) )
+				if ( !isset( $this->restModel[ $dataKey ] ) )
 				{
-					$this->_restModel[ $dataKey ] = [];
+					$this->restModel[ $dataKey ] = [];
 				}
 
-				$existingData = $this->_restModel[ $dataKey ];
+				$existingData = $this->restModel[ $dataKey ];
 				$existingData[ $viewIndex ] = $data;
 
-				$this->_restModel[ $dataKey ] = $existingData;
+				$this->restModel[ $dataKey ] = $existingData;
 			}
 
 			if ( !isset( $this->model[ $dataKey ] ) )
@@ -108,9 +125,9 @@ abstract class MvpRestBoundForm extends Form
 		}
 		else
 		{
-			if ( $this->_restModel )
+			if ( $this->restModel )
 			{
-				$this->_restModel[ $dataKey ] = $data;
+				$this->restModel[ $dataKey ] = $data;
 			}
 
 			$this->model[ $dataKey ] = $data;
@@ -136,16 +153,16 @@ abstract class MvpRestBoundForm extends Form
 			return $this->model[ $dataKey ];
 		}
 
-		if( isset( $this->_restModel[ $dataKey ] ) )
+		if( isset( $this->restModel[ $dataKey ] ) )
 		{
-			return $this->_restModel[ $dataKey ];
+			return $this->restModel[ $dataKey ];
 		}
 
 		return null;
 	}
 
-	protected function GetModel()
+	protected function getModel()
 	{
-		return $this->_restModel;
+		return $this->restModel;
 	}
 }
