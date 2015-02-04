@@ -39,7 +39,7 @@ class UnitTestingMessagePresenter extends Presenter
 		return new UnitTestingMessageView();
 	}
 
-	private $_message = false;
+	private $message = false;
 
 	protected function configureView()
 	{
@@ -47,7 +47,7 @@ class UnitTestingMessagePresenter extends Presenter
 
 		$this->view->attachEventHandler( "ActivateMessage", function( $message )
 		{
-			$this->_message = $message;
+			$this->message = $message;
 		});
 	}
 
@@ -55,7 +55,7 @@ class UnitTestingMessagePresenter extends Presenter
 	{
 		parent::applyModelToView();
 
-		$this->view->message = $this->_message;
+		$this->view->message = $this->message;
 	}
 }
 

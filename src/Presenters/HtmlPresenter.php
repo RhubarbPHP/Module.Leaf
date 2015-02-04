@@ -20,8 +20,8 @@ namespace Rhubarb\Leaf\Presenters;
 
 require_once __DIR__ . "/Presenter.php";
 
-use Rhubarb\Crown\ClientSide\Validation\ClientSideValidation;
-use Rhubarb\Crown\ClientSide\Validation\ValidatorClientSide;
+use Rhubarb\Leaf\Validation\ClientSideValidation;
+use Rhubarb\Leaf\Validation\ValidatorClientSide;
 use Rhubarb\Stem\Models\Validation\Validation;
 
 class HtmlPresenter extends Presenter

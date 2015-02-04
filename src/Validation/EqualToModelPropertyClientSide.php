@@ -16,17 +16,23 @@
  *  limitations under the License.
  */
 
-namespace Rhubarb\Leaf\Presenters;
+namespace Rhubarb\Leaf\Validation;
 
-use Rhubarb\Crown\Modelling\ModelState;
+use Rhubarb\Stem\Models\Validation\EqualToModelProperty;
 
-/**
- * A simple extension of Model to add some properties often used by presenters
- *
- * @property string $PresenterName    An optional name for a presenter
- * @property string $PresenterPath    The path within the hierarchy of sub presenters to identify this one.
- */
-class PresenterModel extends ModelState
+class EqualToModelPropertyClientSide extends EqualToModelProperty
 {
+    use ClientSideValidation;
 
+    protected function getValidationSettings()
+    {
+        return [
+            "propertyName" => $this->equalTo
+        ];
+    }
+
+    public static function cloneFromModelValidation(EqualToModelProperty $validation)
+    {
+        return new EqualToClientSide($validation->name, $validation->equalTo);
+    }
 }

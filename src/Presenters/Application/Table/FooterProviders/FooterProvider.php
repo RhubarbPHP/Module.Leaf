@@ -13,12 +13,12 @@ abstract class FooterProvider
 	/**
 	 * @var Table
 	 */
-	protected $_table;
+	protected $table;
 
 	public abstract function printFooter();
 
 	public function setTable( $table )
 	{
-		$this->_table = $table;
+		$this->table = $table;
 	}
 }

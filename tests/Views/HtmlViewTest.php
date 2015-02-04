@@ -43,21 +43,21 @@ Dummy Output
 
 class TestPresenter extends Presenter
 {
-	private $_requiresContainer = true;
-	private $_requiresStateInputs = true;
+	private $requiresContainer = true;
+	private $requiresStateInputs = true;
 	public $testView;
 
 	public function __construct( $name = "", $requireContainer = true, $requireState = true )
 	{
 		parent::__construct( $name );
 
-		$this->_requiresContainer = $requireContainer;
-		$this->_requiresStateInputs = $requireState;
+		$this->requiresContainer = $requireContainer;
+		$this->requiresStateInputs = $requireState;
 	}
 
 	protected function createView()
 	{
-		$this->testView = new TestView( $this->_requiresContainer, $this->_requiresStateInputs );
+		$this->testView = new TestView( $this->requiresContainer, $this->requiresStateInputs );
 		$this->registerView( $this->testView );
 	}
 }

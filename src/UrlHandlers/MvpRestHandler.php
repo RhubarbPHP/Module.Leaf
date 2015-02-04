@@ -78,7 +78,7 @@ class MvpRestHandler extends ModelCollectionHandler
 
         $parentResponse = parent::getMatchingUrlFragment($request, $currentUrlFragment);
 
-        if (preg_match("|^" . $this->_url . "([^/]+)/|", $uri, $match)) {
+        if (preg_match("|^" . $this->url . "([^/]+)/|", $uri, $match)) {
             if (is_numeric($match[1]) || isset($this->additionalPresenterClassNameMap[$match[1]])) {
                 $this->urlAction = $match[1];
                 $this->isCollection = false;

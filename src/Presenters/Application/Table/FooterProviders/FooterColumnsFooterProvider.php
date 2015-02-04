@@ -85,7 +85,7 @@ class FooterColumnsFooterProvider extends FooterProvider
                 print " class=\"" . implode(" ", $classes) . "\"";
             }
 
-            print ">" . $column->getCellValue($this->_table) . "</th>";
+            print ">" . $column->getCellValue($this->table) . "</th>";
 
         }
 

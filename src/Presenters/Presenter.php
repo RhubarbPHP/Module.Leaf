@@ -255,7 +255,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     public function validate(Validator $validator)
     {
         try {
-            $validator->Validate($this->model);
+            $validator->validate($this->model);
 
             return true;
         } catch (ModelConsistencyValidationException $er) {

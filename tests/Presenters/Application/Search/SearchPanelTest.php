@@ -17,33 +17,33 @@ class SearchPanelTest extends CoreTestCase
 	/**
 	 * @var UnitTestSearchPanel
 	 */
-	private $_panel;
+	private $panel;
 
 	/**
 	 * @var UnitTestView
 	 */
-	private $_view;
+	private $view;
 
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->_view = new UnitTestView();
+		$this->view = new UnitTestView();
 
-		$this->_panel = new UnitTestSearchPanel();
-		$this->_panel->attachMockView( $this->_view );
+		$this->panel = new UnitTestSearchPanel();
+		$this->panel->attachMockView( $this->view );
 	}
 
 	public function testSearchTriggersEvent()
 	{
 		$triggered = false;
 
-		$this->_panel->attachEventHandler( "Search", function() use(&$triggered)
+		$this->panel->attachEventHandler( "Search", function() use(&$triggered)
 		{
 			$triggered = true;
 		});
 
-		$this->_view->simulateEvent( "Search" );
+		$this->view->simulateEvent( "Search" );
 
 		// If the search event was triggered from the view then the presenter should emit a similar event
 		$this->assertTrue( $triggered );
@@ -94,11 +94,11 @@ class SearchPanelTest extends CoreTestCase
 
 	public function testConfigureFiltersEventIsHandled()
 	{
-		$this->_panel->Phrase = "test";
+		$this->panel->Phrase = "test";
 
 		$filter = null;
 
-		$result = $this->_panel->TestConfigureFilters( $filter );
+		$result = $this->panel->TestConfigureFilters( $filter );
 		$this->assertInstanceOf( "Rhubarb\Stem\Filters\Group", $result );
 		$filters = $result->GetFilters();
 		$this->assertCount( 1, $filters );
@@ -106,7 +106,7 @@ class SearchPanelTest extends CoreTestCase
 
 		$filter = new Equals( "CompanyID", "1" );
 
-		$result = $this->_panel->TestConfigureFilters( $filter );
+		$result = $this->panel->TestConfigureFilters( $filter );
 		$this->assertInstanceOf( "Rhubarb\Stem\Filters\Group", $result );
 		$filters = $result->GetFilters();
 		$this->assertCount( 2, $filters );
@@ -117,11 +117,11 @@ class SearchPanelTest extends CoreTestCase
 		$this->assertCount( 1, $filters );
 		$this->assertInstanceOf( "Rhubarb\Stem\Filters\Contains", $filters[0] );
 
-		$this->_panel->Phrase = "";
+		$this->panel->Phrase = "";
 
 		$filter = new Equals( "CompanyID", "1" );
 
-		$result = $this->_panel->TestConfigureFilters( $filter );
+		$result = $this->panel->TestConfigureFilters( $filter );
 		$this->assertFalse( $result, "The panel should not want to filter as phrase is blank. False should indicate this." );
 	}
 }
