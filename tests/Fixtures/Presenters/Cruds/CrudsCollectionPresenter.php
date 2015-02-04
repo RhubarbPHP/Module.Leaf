@@ -3,7 +3,7 @@
 namespace Rhubarb\Leaf\UnitTesting\Presenters\Cruds;
 
 use Rhubarb\Leaf\Views\HtmlView;
-use Rhubarb\Crown\Patterns\Mvp\Crud\ModelForm\ModelFormPresenter;
+use Rhubarb\Patterns\Mvp\Crud\ModelForm\ModelFormPresenter;
 
 class CrudsCollectionPresenter extends ModelFormPresenter
 {
