@@ -1,5 +1,5 @@
 {
-  "name": "rhubarbphp/module.leaf",
+  "name": "rhubarbphp/module-leaf",
   "description": "A nestable user interface building module for the Rhubarb PHP framework based upon the model-view-presenter pattern.",
   "keywords": [ "mvp", "presenter", "leaf", "rhubarb", "php", "framework" ],
   "homepage": "http://www.rhubarbphp.com/",
