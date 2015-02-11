@@ -114,7 +114,8 @@ searchControl.prototype.setWidth = function( width )
 	this.resultsContainer.height( width );
 };
 
-searchControl.prototype.setValue = function ( value ) {
+searchControl.prototype.setValue = function ( value )
+{
 	if ( this.viewNode && ( "value" in this.viewNode ) ) {
 		this.viewNode.value = value;
 	}
@@ -124,8 +125,19 @@ searchControl.prototype.setValue = function ( value ) {
 		this.changeState( 'unselected' );
 		this.phraseBox.val( '' );
 	}
+    else
+    {
+        this.selectedLabel.text( "Retrieving...");
+        var self = this;
 
+        this.raiseServerEvent( "GetItemForSingleValue", value, function( item )
+        {
+            self.setSelectedItems( [ item ] );
+            self.valueChanged();
+        });
 
+        this.changeState( 'selected' );
+    }
 };
 
 searchControl.prototype.hasKeyboardSelection = function()

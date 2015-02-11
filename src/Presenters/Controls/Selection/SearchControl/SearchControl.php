@@ -100,6 +100,16 @@ abstract class SearchControl extends SelectionControlPresenter
 
 			return $selectedId;
 		});
+
+		$this->view->AttachEventHandler( "GetItemForSingleValue", function( $value )
+		{
+			$value = $this->ConvertValueToModel( $value );
+			$optionValue = ( $value instanceof Model ) ? $value->UniqueIdentifier : $value;
+
+			$item = $this->MakeItem( $optionValue, $this->GetLabelForItem( $value ), $this->GetDataForItem( $value ) );
+
+			return $item;
+		});
 	}
 
 	protected abstract function getResultColumns();
