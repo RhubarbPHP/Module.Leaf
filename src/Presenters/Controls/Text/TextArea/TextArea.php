@@ -54,9 +54,9 @@ class TextArea extends TextBox
         return new TextAreaView();
     }
 
-    protected function configureView()
+    protected function applyModelToView()
     {
-        parent::configureView();
+        parent::applyModelToView();
 
         $this->view->rows = $this->rows;
         $this->view->cols = $this->cols;

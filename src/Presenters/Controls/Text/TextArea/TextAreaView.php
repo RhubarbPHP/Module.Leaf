@@ -29,11 +29,13 @@ class TextAreaView extends TextBoxView
 
     public function printViewContent()
     {
+        $placeholderText = $this->placeholderText ? ' placeholder="' . \htmlentities($this->placeholderText) . '"' : "";
+
         ?>
         <textarea rows="<?= $this->rows; ?>" cols="<?= $this->cols; ?>"
                   name="<?= \htmlentities($this->presenterPath); ?>" id="<?= \htmlentities($this->presenterPath); ?>"
                   presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags(
-        ) . $this->getClassTag() ?>><?= $this->text; ?></textarea>
+        ) . $this->getClassTag().$placeholderText ?>><?= $this->text; ?></textarea>
     <?php
     }
 }
