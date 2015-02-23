@@ -10,14 +10,8 @@
       "Rhubarb\\Leaf\\Tests\\": "tests/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/acuthbert/rhubarb"
-    }
-  ],
   "require": {
-    "rhubarbphp/rhubarb": "dev-crown"
+    "rhubarbphp/rhubarb": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "3.*"
