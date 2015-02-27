@@ -302,12 +302,23 @@ class SelectionControlPresenter extends ControlPresenter
                     $items[] = $this->makeItem($enumValue, $enumValue);
                 }
             } elseif (is_array($item)) {
-                $value = $item[0];
-                $label = (sizeof($item) == 1) ? $item[0] : $item[1];
+                if (is_array($item[0])) {
+                    foreach ($item as $subItem) {
+                        $value = $subItem[0];
+                        $label = (sizeof($subItem) == 1) ? $subItem[0] : $subItem[1];
 
-                $data = (sizeof($item) > 2) ? $item[2] : [];
+                        $data = (sizeof($subItem) > 2) ? $subItem[2] : [];
 
-                $items[] = $this->makeItem($value, $label, $data);
+                        $items[] = $this->makeItem($value, $label, $data);
+                    }
+                } else {
+                    $value = $item[0];
+                    $label = (sizeof($item) == 1) ? $item[0] : $item[1];
+
+                    $data = (sizeof($item) > 2) ? $item[2] : [];
+
+                    $items[] = $this->makeItem($value, $label, $data);
+                }
             } else {
                 $items[] = $this->makeItem($item, $item);
             }
