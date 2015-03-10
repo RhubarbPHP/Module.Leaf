@@ -22,12 +22,13 @@ require_once __DIR__ . "/Presenter.php";
 
 use Rhubarb\Leaf\Exceptions\InvalidPresenterNameException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
+use Rhubarb\Leaf\Presenters\Forms\Form;
 
 
 /**
  * The switched presenter hosts a number of sub presenters and manages selection of the appropriate presenter.
  */
-class SwitchedPresenter extends Presenter
+class SwitchedPresenter extends Form
 {
     /**
      * A collection of presenter names and class names to use.
@@ -60,11 +61,20 @@ class SwitchedPresenter extends Presenter
         throw new RequiresViewReconfigurationException();
     }
 
+    protected function getPublicModelPropertyList()
+    {
+        $list = parent::getPublicModelPropertyList();
+        $list[] = "CurrentPresenterName";
+
+        return $list;
+    }
+
+
     protected function createView()
     {
         $this->switchedPresenters = $this->getSwitchedPresenters();
 
-        $this->registerView(new SwitchedPresenterView());
+        $this->registerView(new SwitchedPresenterView($this->switchedPresenters));
     }
 
     protected function configureView()
@@ -74,7 +84,11 @@ class SwitchedPresenter extends Presenter
             function () {
                 $class = $this->switchedPresenters[$this->getCurrentPresenterName()];
 
-                $object = new $class();
+                if (is_string($class)) {
+                    $object = new $class();
+                } else {
+                    $object = $class;
+                }
 
                 return $object;
             }

@@ -376,7 +376,15 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             }
         );
 
-        $presenter->initialise();
+        try {
+            $presenter->initialise();
+        }
+        catch( RequiresViewReconfigurationException $er ){
+            // Some presenters can throw the RequiresViewReconfigurationException during their intialisation
+            // e.g. BackgroundTaskFullFocusPresenter
+            // However as we're still in the middle of the initialisation we don't need to handle it here
+        }
+
         $presenter->hosted = true;
         $presenter->onHosted();
 
@@ -800,6 +808,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             $this->initialise();
         }
 
+        $this->processStartupEvents();
+
         $path = $this->getIndexedPresenterPath();
 
         $request = Context::currentRequest();
@@ -871,6 +881,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
                 foreach ($_REQUEST["_mvpEventArguments"] as $argument) {
                     $eventArguments[] = json_decode($argument);
                 }
+            }
+
+            if (isset($_REQUEST["_mvpEventArgumentsJson"])) {
+                array_push( $eventArguments, json_decode($_REQUEST["_mvpEventArgumentsJson"], true));
             }
 
             // Provide a callback for the event processing.
@@ -1078,14 +1092,25 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
                 print "<?xml version=\"1.0\"?><mvp>\r\n";
             }
 
-            try {
-                $this->processEvents();
-            } catch (RequiresViewReconfigurationException $er) {
-                $this->initialiseView();
-            }
+            // Process events and if based on those events our view setup might change we
+            // will reinitialise them and run the events again. This is because a new view
+            // configuration may involve different presenters that will need a chance to run their
+            // events. It's important therefore that if throwing the RequiresViewReconfiguration you
+            // allow for other events also to be executed more than once (that would normally be quite
+            // rare anyway).
+            do {
+                $continue = false;
+                try {
+                    $this->processEvents();
+                } catch (RequiresViewReconfigurationException $er) {
+                    $this->initialiseView(false);
+                    $continue = true;
+                }
+            } while ($continue);
         }
 
         if ($this->isExecutionTarget && $isAjax) {
+            $this->applyModelsToViews();
             $this->recursiveRePresent();
             $modelChanges = $this->getChangedPresenterModels();
         } else {
@@ -1158,6 +1183,14 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     }
 
     /**
+     * Override to perform custom event firing during the presenters configuration stage.
+     */
+    protected function processStartupEvents()
+    {
+
+    }
+
+    /**
      * Initialises the presenter's model, view and any hosted presenters
      */
     public final function initialise()
@@ -1166,7 +1199,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             $this->initialised = true;
             $this->initialiseModel();
             $this->initialiseView();
-            $this->restoreModel();
 
             // Snapshot the model so we can track if it changes during execution.
             $this->model->takeChangeSnapshot();
@@ -1180,7 +1212,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * @see Presenter::configureView()
      * @throws \Rhubarb\Leaf\Exceptions\NoViewException
      */
-    protected function initialiseView()
+    protected function initialiseView( $andRestoreModel = true )
     {
         if (!$this->view) {
             $response = $this->createView();
@@ -1195,6 +1227,16 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         }
 
         $this->hostedPresenterCount = 0;
+
+        if ( $andRestoreModel ) {
+            // Now we have the view we can restore our model (the view is required to do this as the view is
+            // responsible for encoding the public state of our model). We must do this before configureView()
+            // as sometimes the restored model has a bearing on how our view will configure itself.
+            //
+            // We only do this if $andRestoreModel is set to true (default) as when we're representing we do
+            // not want to restore the model again.
+            $this->restoreModel();
+        }
 
         $this->configureView();
 

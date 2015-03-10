@@ -20,13 +20,13 @@ namespace Rhubarb\Leaf\Presenters;
 
 require_once __DIR__ . "/../Views/View.php";
 
-use Rhubarb\Leaf\Views\View;
+use Rhubarb\Leaf\Views\HtmlView;
 
 /**
  * This simple view presents a single sub presenter for the 'step' that should
  * current be shown.
  */
-class SwitchedPresenterView extends View
+class SwitchedPresenterView extends HtmlView
 {
     private $presenter;
 
