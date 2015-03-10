@@ -842,6 +842,113 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function( eventName, file, onPr
     return xmlhttp;
 };
 
+HtmlViewBridge.prototype.raisePostBackEvent = function( eventName )
+{
+	var argumentsArray = [];
+	var callback = false;
+
+	// Get the arguments into a proper array while stripping any closure found to become a callback.
+
+	for( var i = 0; i < arguments.length; i++ )
+	{
+		argumentsArray[ i ] = arguments[ i ];
+
+		if ( arguments[i] instanceof Function )
+		{
+			callback = arguments[ i ];
+		}
+	}
+
+	// Give the client side a first look at the event.
+	this.raiseClientEvent.apply( this, argumentsArray );
+
+	// Standardise the arguments list by ensuring the targeted viewBridge is the last parameter.
+
+	if ( argumentsArray[ argumentsArray.length - 1 ] instanceof HtmlViewBridge )
+	{
+		targetHtmlViewBridge = argumentsArray[ argumentsArray.length - 1 ];
+	}
+	else
+	{
+		targetHtmlViewBridge = this;
+		argumentsArray[ argumentsArray.length ] = targetHtmlViewBridge;
+	}
+
+	if ( !this.eventHost )
+	{
+		this.eventHost = this.findEventHost();
+	}
+
+	// If we're not the host we need to find the host and call it's raise event instead.
+	var hostPresenter = this.eventHost;
+
+	var presenter = this;
+
+	var target = targetHtmlViewBridge.presenterPath;
+	var index = targetHtmlViewBridge.getViewIndex();
+
+	if ( index )
+	{
+		target = target.replace( "[_" + index + "]", "" );
+	}
+
+	if( hostPresenter )
+	{
+		var createOrFindHiddenInput = function( inputName ){
+
+			if ( document.getElementById( inputName ) ){
+				return document.getElementById( inputName );
+			} else {
+				var newInput = document.createElement( 'input' );
+				newInput.type = "hidden";
+				newInput.id = inputName;
+				newInput.name = inputName;
+				hostPresenter.viewNode.appendChild( newInput );
+
+				return newInput;
+			}
+		};
+
+		var eventNameInput = createOrFindHiddenInput( "_mvpEventName");
+		var eventTargetInput = createOrFindHiddenInput( "_mvpEventTarget");
+		var eventTargetIndexInput = createOrFindHiddenInput( "_mvpTargetIndex");
+		var eventClassInput = createOrFindHiddenInput( "_mvpClass");
+		var eventPresenterPathInput = createOrFindHiddenInput( "_mvpPresenterPath");
+		var eventArgumentsInput = createOrFindHiddenInput( "_mvpEventArgumentsJson");
+
+		eventNameInput.value = eventName;
+		eventTargetInput.value = target;
+
+		if ( index )
+		{
+			eventTargetIndexInput.value = index;
+		}
+
+		if ( hostPresenter.eventHostClassName != "" )
+		{
+			eventClassInput.value = hostPresenter.eventHostClassName;
+			eventPresenterPathInput.value = hostPresenter.presenterPath;
+		}
+
+		var flatArguments = [];
+
+		for( var i = 1; i < arguments.length; i++ )
+		{
+			var argument = arguments[ i ];
+
+			if ( !(argument instanceof HtmlViewBridge ) && !( argument instanceof Function ) )
+			{
+				flatArguments.push( argument );
+			}
+		}
+
+		eventArgumentsInput.value = JSON.stringify( flatArguments );
+
+		// Our parent should be the form tag.
+		hostPresenter.viewNode.parentNode.submit();
+	}
+};
+
 /**
  * Raises an event via an XMLHttpRequest
  *
@@ -1079,6 +1186,7 @@ HtmlViewBridge.prototype.parseEventResponse = function( eventName, responseXml, 
 		}
 
 		var viewNode = document.getElementById( target );
+
 		if( viewNode && viewNode.viewBridge )
 		{
 			viewNode.viewBridge.modelUpdatedByEvent();
@@ -1173,6 +1281,14 @@ HtmlViewBridge.prototype.onBeforeUpdateDomUpdateFromServer = function()
 HtmlViewBridge.prototype.modelUpdatedByEvent = function()
 {
 	this.loadState();
+	this.onModelUpdatedByEvent();
+};
+
+/**
+ * Override this to handle detection of changes to the public model passed back from the server.
+ */
+HtmlViewBridge.prototype.onModelUpdatedByEvent = function()
+{
 };
 
 HtmlViewBridge.prototype.reAttachHtmlViewBridges = function()
