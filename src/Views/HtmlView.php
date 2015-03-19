@@ -250,7 +250,7 @@ class HtmlView extends View
                 $wrappers[] = function () {
                     $deploymentPackage = $this->getDeploymentPackage();
                     $urls = $deploymentPackage->getDeployedUrls();
-                    $urls = array_merge($urls, $this->getAdditionalResourceUrls());
+                    $urls = array_merge($this->getAdditionalResourceUrls(),$urls);
 
                     $jsAndCssUrls = [];
 

@@ -64,10 +64,6 @@ function HtmlViewBridge( presenter )
 		this.presenterName = this.viewNode.id;
 	}
 
-    // parentViewBridge and containingViewBridge will be set in onParentsReady()
-    this.parentViewBridge = false;
-    this.containingViewBridge = false;
-
     if ( this.viewNode )
     {
         if ( this.viewNode.viewBridge )
@@ -246,25 +242,6 @@ HtmlViewBridge.prototype.registerPresenter = function()
 
     this.onRegistered();
     this.attachEvents();
-
-	for( var path in window.gcd.core.mvp.registeredPresenters )
-	{
-		var presenter = window.gcd.core.mvp.registeredPresenters[ path ];
-
-		if ( path.indexOf( '_' ) == -1 )
-		{
-			// This is a root presenter and as such, all children should now be registered
-			// We now inform them all of this situation so they can determine their event host.
-
-			for( var subPath in window.gcd.core.mvp.registeredPresenters )
-			{
-				if ( ( subPath != path ) && ( subPath.indexOf( path ) == 0 ) )
-				{
-					window.gcd.core.mvp.registeredPresenters[ subPath ].onParentsReady();
-				}
-			}
-		}
-	}
 };
 
 HtmlViewBridge.prototype.onReattached = function()
@@ -284,21 +261,6 @@ HtmlViewBridge.prototype.onParentsReady = function()
 	{
     	this.eventHost = this.findEventHost();
 	}
-
-	if ( !this.parentViewBridge )
-	{
-    	this.parentViewBridge = this.findParent();
-	}
-};
-
-HtmlViewBridge.prototype.getContainingViewBridge = function()
-{
-	if ( !this.containingViewBridge )
-	{
-		this.containingViewBridge = this.findContainingViewBridge();
-	}
-
-	return this.containingViewBridge;
 };
 
 HtmlViewBridge.prototype.findContainingViewBridge = function()
@@ -318,31 +280,9 @@ HtmlViewBridge.prototype.findContainingViewBridge = function()
     return false;
 };
 
-HtmlViewBridge.prototype.findParent = function()
-{
-    var presenterPaths = [];
+HtmlViewBridge.prototype.getContainingViewBridge = HtmlViewBridge.prototype.findContainingViewBridge;
 
-    for( var i in window.gcd.core.mvp.registeredPresenters )
-    {
-        presenterPaths[ presenterPaths.length ] = i;
-    }
-
-    presenterPaths.sort();
-
-    for( var i in presenterPaths )
-    {
-        var presenter = window.gcd.core.mvp.registeredPresenters[ presenterPaths[ i ] ];
-
-        // Check for a parent by subtracting the test presenter name away from this one.
-        // The remainder should have no underscores.
-        var residualPath = this.presenterPath.replace( presenter.presenterPath + "_", '' );
-
-        if ( residualPath.indexOf( "_" ) == -1 )
-        {
-            return presenter;
-        }
-    }
-};
+HtmlViewBridge.prototype.findParent = HtmlViewBridge.prototype.findContainingViewBridge;
 
 HtmlViewBridge.prototype.attachServerEventResponseHandlerTo = function( domElement, event, callback )
 {
@@ -1313,22 +1253,6 @@ HtmlViewBridge.prototype.reAttachHtmlViewBridges = function()
             }
         }
     }
-
-    for( var path in window.gcd.core.mvp.registeredPresenters )
-    {
-        if ( path.indexOf( '_' ) == -1 )
-        {
-            // This is a root viewBridge and as such, all children should now be registered
-            // We now inform them all of this situation so they can determine their event host.
-            for( var subPath in window.gcd.core.mvp.registeredPresenters )
-            {
-                if ( ( subPath != path ) && ( subPath.indexOf( path ) == 0 ) )
-                {
-                    window.gcd.core.mvp.registeredPresenters[ subPath ].onParentsReady();
-                }
-            }
-        }
-    }
 };
 
 /**
@@ -1479,46 +1403,9 @@ HtmlViewBridge.prototype.setFocus = function()
 
 window.gcd.core.mvp.waitForPresenters = function( presenterNames, callback, containingPresenter )
 {
-    var allReady = true;
+	var presenters = window.gcd.core.mvp.getPresentersByName( presenterNames, containingPresenter )
 
-    for( var i = 0; i < presenterNames.length; i++ )
-    {
-        var dom = presenterNames[ i ];
-
-		if ( typeof dom == "string" || ( typeof dom == "object" && dom.constructor === String ) )
-		{
-			// The item passed was the name of the viewBridge node, not the node itself.
-			var presenters = window.gcd.core.mvp.getPresentersByName( dom, containingPresenter );
-
-			if ( presenters.length == 0 )
-			{
-				allReady = false;
-				break;
-			}
-		}
-		else
-		{
-			if ( !dom.viewBridge )
-			{
-				allReady = false;
-				break;
-			}
-		}
-    }
-
-    if ( !allReady )
-    {
-        setTimeout( function()
-        {
-            window.gcd.core.mvp.waitForPresenters( presenterNames, callback, containingPresenter );
-        }, 100 );
-    }
-    else
-    {
-	    var presenters = window.gcd.core.mvp.getPresentersByName( presenterNames, containingPresenter )
-
-        callback.apply( this, presenters );
-    }
+	callback.apply( this, presenters );
 };
 
 /**

@@ -57,7 +57,7 @@ bridge.prototype.updateDom = function()
 		{
 			if ( entry[i].viewBridge )
 			{
-				entry[i].viewBridge.onParentsReady();
+				entry[i].viewBridge.onRegistered();
 			}
 		}
 

@@ -25,13 +25,13 @@ use Rhubarb\Leaf\Presenters\Controls\Text\NumericTextBox\NumericTextBox;
 use Rhubarb\Leaf\Presenters\Controls\Text\Password\Password;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextArea\TextArea;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\Decimal;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\Enum;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MediumText;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
+use Rhubarb\Stem\Schema\Columns\Decimal;
 use Rhubarb\Stem\Schema\Columns\Boolean;
 use Rhubarb\Stem\Schema\Columns\Date;
 use Rhubarb\Stem\Schema\Columns\DateTime;
 use Rhubarb\Stem\Schema\Columns\Integer;
+use Rhubarb\Stem\Schema\Columns\LongString;
 use Rhubarb\Stem\Schema\Columns\Money;
 use Rhubarb\Stem\Schema\Columns\String;
 use Rhubarb\Stem\Schema\Columns\Time;
@@ -111,7 +111,7 @@ trait CreatePresentersFromSchemaTrait
         }
 
         // Drop Downs
-        if ($column instanceof Enum) {
+        if ($column instanceof MySqlEnum) {
             $dropDown = new DropDown($presenterName, $column->defaultValue);
             $dropDown->setSelectionItems(
                 [
@@ -124,7 +124,7 @@ trait CreatePresentersFromSchemaTrait
         }
 
         // TextArea
-        if ($column instanceof MediumText) {
+        if ($column instanceof LongString) {
             $textArea = new TextArea($presenterName, 5, 40);
 
             return $textArea;
@@ -137,7 +137,7 @@ trait CreatePresentersFromSchemaTrait
             }
 
             $textBox = new TextBox($presenterName);
-            $textBox->setMaxLength($column->stringLength);
+            $textBox->setMaxLength($column->maximumLength);
 
             return $textBox;
         }

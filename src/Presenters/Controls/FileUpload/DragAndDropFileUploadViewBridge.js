@@ -49,9 +49,9 @@ bridge.prototype.getOrCreateDropZoneElement = function()
     return this.dropZone;
 };
 
-bridge.prototype.onParentsReady = function()
+bridge.prototype.onRegistered = function()
 {
-	window.gcd.core.mvp.viewBridgeClasses.MultipleHtmlFileUploadViewBridge.prototype.onParentsReady.apply( this, arguments );
+	window.gcd.core.mvp.viewBridgeClasses.MultipleHtmlFileUploadViewBridge.prototype.onRegistered.apply( this, arguments );
 
     var self = this;
 

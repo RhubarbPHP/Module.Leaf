@@ -30,20 +30,13 @@ class DateView extends TextBoxView
         return "DatePicker";
     }
 
-    protected function getAdditionalResourceUrls()
-    {
-        return [
-            ResourceLoader::getJqueryUrl("1.9.1"),
-            ResourceLoader::getJqueryUIUrl("1.10.1"),
-            "/client/jquery/css/jquery-ui.css",
-            "/client/jquery/css/jquery.ui.theme.css"
-        ];
-    }
-
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = __DIR__ . "/../../../ClientSide/Resources/jquery-presenter.js";
+        $package->resourcesToDeploy[] = "vendor/components/jquery/jquery.js";
+        $package->resourcesToDeploy[] = "vendor/components/jqueryui/jqueryui.js";
+        $package->resourcesToDeploy[] = "vendor/components/jqueryui/themes/base/jquery-ui.css";
+        $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = __DIR__ . "/date-picker.js";
 
         return $package;
