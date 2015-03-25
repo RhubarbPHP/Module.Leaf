@@ -10,7 +10,7 @@
 namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
 
 
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\DateTime;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTime;
 use Rhubarb\Stem\UnitTesting\Company;
 use Rhubarb\Crown\UnitTesting\CoreTestCase;
 

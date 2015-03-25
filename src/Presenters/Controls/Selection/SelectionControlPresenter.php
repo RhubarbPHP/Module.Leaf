@@ -24,7 +24,7 @@ use Rhubarb\Crown\Context;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\Enum;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
 
 /**
  * A base class for all controls implementing a range of options to pick from.
@@ -295,7 +295,7 @@ class SelectionControlPresenter extends ControlPresenter
                 foreach ($item as $key => $model) {
                     $items[] = $this->makeItem($key, $model->GetLabel(), $this->getDataForItem($model));
                 }
-            } elseif ($item instanceof Enum) {
+            } elseif ($item instanceof MySqlEnum) {
                 $enumValues = $item->enumValues;
 
                 foreach ($enumValues as $enumValue) {

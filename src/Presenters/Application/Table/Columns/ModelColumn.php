@@ -23,7 +23,7 @@ require_once __DIR__ . "/SortableColumn.php";
 
 use Rhubarb\Stem\Decorators\DataDecorator;
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\DateTime;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTime;
 use Rhubarb\Stem\Schema\Columns\Boolean;
 use Rhubarb\Stem\Schema\Columns\Column;
 use Rhubarb\Stem\Schema\Columns\Date;
@@ -88,7 +88,7 @@ class ModelColumn extends TableColumn implements SortableColumn
             new TimeColumn($column->columnName, $label);
         }
 
-        if ($column instanceof Date || $column instanceof DateTime) {
+        if ($column instanceof Date || $column instanceof MySqlDateTime) {
             return new DateColumn($column->columnName, $label);
         }
 
