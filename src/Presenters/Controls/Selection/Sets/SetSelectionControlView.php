@@ -75,7 +75,7 @@ abstract class SetSelectionControlView extends SelectionControlView
 
     public function getInputId($name, $value)
     {
-        return $name . '-' . $value;
+        return $this->getIndexedPresenterPath() . '-' . $value;
     }
 
     protected function printViewContent()

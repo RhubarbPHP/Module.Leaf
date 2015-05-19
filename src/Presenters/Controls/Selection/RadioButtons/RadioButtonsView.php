@@ -32,7 +32,7 @@ class RadioButtonsView extends SetSelectionControlView
             $checked = ' checked="checked"';
         }
 
-        return '<input type="radio" name="' . htmlentities($name) . '" value="' . htmlentities(
+        return '<input type="radio" name="' . htmlentities($this->getIndexedPresenterPath()) . '" value="' . htmlentities(
             $value
         ) . '" id="' . htmlentities($this->getInputId($name, $value)) . '"' . $checked . '>';
     }
