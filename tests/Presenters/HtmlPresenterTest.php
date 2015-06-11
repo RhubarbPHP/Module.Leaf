@@ -2,18 +2,19 @@
 
 namespace Rhubarb\Leaf\Presenters;
 
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Validation\ValidatorClientSide;
 use Rhubarb\Stem\Models\Validation\HasValue;
 use Rhubarb\Stem\Models\Validation\Validator;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
 
-class HtmlPresenterTest extends CoreTestCase
+class HtmlPresenterTest extends RhubarbTestCase
 {
 	public function testClientSideValidationCreatedFromModelValidation()
 	{
 		$presenter = new UnitTestHtmlPresenter();
 		$clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
 
-		$this->assertInstanceOf( "Rhubarb\Crown\ClientSide\Validation\ValidatorClientSide", $clientSideValidation );
+		$this->assertInstanceOf( ValidatorClientSide::class, $clientSideValidation );
 		$this->assertCount( 2, $clientSideValidation->validations );
 
 		$presenter->testInvalidTypes = true;
