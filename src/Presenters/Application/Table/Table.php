@@ -21,7 +21,7 @@ namespace Rhubarb\Leaf\Presenters\Application\Table;
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
 use Rhubarb\Crown\Exceptions\ForceResponseException;
-use Rhubarb\Crown\Integration\DataStreams\CsvStream;
+use Rhubarb\Crown\DataStreams\CsvStream;
 use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
