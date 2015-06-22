@@ -6,8 +6,8 @@ use Rhubarb\Leaf\Views\HtmlView;
 
 class CrudsDetailsView extends HtmlView
 {
-	public function printViewContent()
-	{
-		print "The details view";
-	}
+    public function printViewContent()
+    {
+        print "The details view";
+    }
 }

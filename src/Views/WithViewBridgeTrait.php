@@ -30,8 +30,7 @@ trait WithViewBridgeTrait
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = $this->getDeploymentPackageDirectory(
-            ) . "/" . $this->getClientSideViewBridgeName() . ".js";
+        $package->resourcesToDeploy[] = $this->getDeploymentPackageDirectory() . "/" . $this->getClientSideViewBridgeName() . ".js";
 
         return $package;
     }

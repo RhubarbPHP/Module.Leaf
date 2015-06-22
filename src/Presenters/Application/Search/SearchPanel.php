@@ -178,8 +178,8 @@ class SearchPanel extends HtmlPresenter
 
     protected function bindEvents(Presenter $presenter)
     {
-        $presenter->attachEventHandler("ConfigureFilters", array($this, "OnConfigureFilters"));
-        $presenter->attachEventHandler("GetSearchControlValues", array($this, "GetSearchControlValues"));
+        $presenter->attachEventHandler("ConfigureFilters", [$this, "OnConfigureFilters"]);
+        $presenter->attachEventHandler("GetSearchControlValues", [$this, "GetSearchControlValues"]);
     }
 
     /**

@@ -53,8 +53,7 @@ class DropDownView extends SelectionControlView
 
         ?>
     <select name="<?= \htmlentities($name); ?>" id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
-            presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags(
-    ) . $this->getClassTag() ?>>
+            presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() ?>>
         <?php
         foreach ($this->availableItems as $item) {
             $itemList = [$item];

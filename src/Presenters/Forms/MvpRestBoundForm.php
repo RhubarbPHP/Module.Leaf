@@ -150,7 +150,7 @@ abstract class MvpRestBoundForm extends Form
         }
 
         if ($viewIndex && $data !== null && is_array($data)) {
-            if ( isset( $data[ $viewIndex ] )) {
+            if (isset($data[$viewIndex])) {
                 $data = $data[$viewIndex];
             } else {
                 $data = null;

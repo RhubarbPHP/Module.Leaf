@@ -6,9 +6,9 @@ use Rhubarb\Patterns\Mvp\Crud\ModelForm\ModelFormPresenter;
 
 class Cruds2EditPresenter extends ModelFormPresenter
 {
-	protected function CreateView()
-	{
-		return new Cruds2EditView();
-	}
+    protected function CreateView()
+    {
+        return new Cruds2EditView();
+    }
 
 }

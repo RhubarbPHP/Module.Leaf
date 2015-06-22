@@ -25,31 +25,27 @@ use Rhubarb\Crown\Imaging\ImageProcessResize;
 
 class SimpleImageUploadView extends SimpleHtmlFileUploadView
 {
-	public $currentImagePath;
+    public $currentImagePath;
 
-	public $previewImageWidth = 200;
+    public $previewImageWidth = 200;
 
-	public $previewImageHeight = 150;
+    public $previewImageHeight = 150;
 
-	public function printViewContent()
-	{
-		if ( $this->currentImagePath != "" )
-		{
-			try
-			{
-				$image = new Image( $this->currentImagePath );
-				$image->AddProcess( new ImageProcessResize( $this->previewImageWidth, $this->previewImageHeight, true, true ) );
+    public function printViewContent()
+    {
+        if ($this->currentImagePath != "") {
+            try {
+                $image = new Image($this->currentImagePath);
+                $image->AddProcess(new ImageProcessResize($this->previewImageWidth, $this->previewImageHeight, true, true));
 
-				$url = $image->DeployImage();
+                $url = $image->DeployImage();
 
-				print "<div><img src='$url' /></div>";
-			}
-			catch( \Exception $er )
-			{
+                print "<div><img src='$url' /></div>";
+            } catch (\Exception $er) {
 
-			}
-		}
+            }
+        }
 
-		parent::printViewContent();
-	}
+        parent::printViewContent();
+    }
 }

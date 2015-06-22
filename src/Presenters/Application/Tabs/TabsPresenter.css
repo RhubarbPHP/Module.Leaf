@@ -1,11 +1,9 @@
 
-ul.application-tabs
-{
+ul.application-tabs {
     list-style: none;
 }
 
-ul.application-tabs li
-{
+ul.application-tabs li {
     display: inline-block;
     padding: 10px;
     border: 1px solid #999;
@@ -14,7 +12,6 @@ ul.application-tabs li
     cursor: pointer;
 }
 
-ul.application-tabs li:hover, ul.application-tabs li.selected
-{
+ul.application-tabs li:hover, ul.application-tabs li.selected {
     background: #FFF;
 }

@@ -25,10 +25,10 @@ use Rhubarb\Leaf\Presenters\ModelProvider;
 
 class CompositeControlPresenter extends ControlPresenter
 {
-	use ModelProvider;
+    use ModelProvider;
 
-	protected function onModelUpdatedFromSubPresenter()
-	{
-		$this->setBoundData();
-	}
+    protected function onModelUpdatedFromSubPresenter()
+    {
+        $this->setBoundData();
+    }
 }

@@ -11,17 +11,16 @@ use Rhubarb\Crown\UnitTesting\CoreTestCase;
  */
 class ButtonTest extends CoreTestCase
 {
-	public function testButtonPressedEventIsPassedThroughConstructor()
-	{
-		$trigger = false;
+    public function testButtonPressedEventIsPassedThroughConstructor()
+    {
+        $trigger = false;
 
-		$button = new Button( "TestButton", "Any Text", function() use ( &$trigger )
-		{
-			$trigger = true;
-		});
+        $button = new Button("TestButton", "Any Text", function () use (&$trigger) {
+            $trigger = true;
+        });
 
-		$button->simulateButtonPress();
+        $button->simulateButtonPress();
 
-		$this->assertTrue( $trigger );
-	}
+        $this->assertTrue($trigger);
+    }
 }

@@ -9,8 +9,8 @@ namespace Gcd\Tests;
  */
 class MvpHandlerTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 {
-	public function testSubHandlerUsed()
-	{
+    public function testSubHandlerUsed()
+    {
 
-	}
+    }
 }

@@ -31,7 +31,7 @@ class NumericTextBox extends TextBox
         parent::__construct($name, $size);
     }
 
-    public function setDecimalPlaces( $decimalPlaces )
+    public function setDecimalPlaces($decimalPlaces)
     {
         $this->decimalPlaces = $decimalPlaces;
     }

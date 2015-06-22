@@ -1,26 +1,18 @@
+var bridge = function (presenterPath) {
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+};
 
-var bridge = function( presenterPath )
-{
-	window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge.apply( this, arguments );
-}
-
-bridge.prototype = new window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
 bridge.prototype.constructor = bridge;
 
-bridge.spawn = function( spawnData, index )
-{
-	var textBox = document.createElement( "INPUT" );
-	textBox.setAttribute( "type", "text" );
+bridge.spawn = function (spawnData, index) {
+    var textBox = document.createElement("INPUT");
+    textBox.setAttribute("type", "text");
 
-	window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement( textBox, spawnData, index );
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(textBox, spawnData, index);
 
-	return textBox;
-}
+    return textBox;
+};
 
-bridge.prototype.attachEvents = function()
-{
-
-}
-
-window.gcd.core.mvp.viewBridgeClasses.TextBoxViewBridge = bridge;
+window.rhubarb.viewBridgeClasses.TextBoxViewBridge = bridge;
 

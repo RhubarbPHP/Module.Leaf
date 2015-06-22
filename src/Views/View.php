@@ -22,7 +22,6 @@ require_once __DIR__ . "/../PresenterViewBase.php";
 
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Deployment\Deployable;
-use Rhubarb\Crown\Events\EventEmitter;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Leaf\Presenters\PresenterDeploymentPackage;
 use Rhubarb\Leaf\PresenterViewBase;
@@ -41,7 +40,7 @@ abstract class View extends PresenterViewBase implements Deployable
      * @see View::AddPresenter()
      * @var Presenter[]
      */
-    protected $presenters = array();
+    protected $presenters = [];
 
     protected $presenterName;
 

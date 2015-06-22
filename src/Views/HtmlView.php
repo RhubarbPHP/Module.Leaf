@@ -120,7 +120,7 @@ class HtmlView extends View
      *
      * @see printFieldset()
      */
-    public function printControlGroup($inputs = array())
+    public function printControlGroup($inputs = [])
     {
         $args = func_get_args();
 
@@ -250,7 +250,7 @@ class HtmlView extends View
                 $wrappers[] = function () {
                     $deploymentPackage = $this->getDeploymentPackage();
                     $urls = $deploymentPackage->getDeployedUrls();
-                    $urls = array_merge($this->getAdditionalResourceUrls(),$urls);
+                    $urls = array_merge($this->getAdditionalResourceUrls(), $urls);
 
                     $jsAndCssUrls = [];
 
@@ -261,8 +261,7 @@ class HtmlView extends View
                     }
 
                     ResourceLoader::addScriptCode(
-                        "new window.gcd.core.mvp.viewBridgeClasses." . $this->getClientSideViewBridgeName(
-                        ) . "( '" . $this->getIndexedPresenterPath() . "' );",
+                        "new window.rhubarb.viewBridgeClasses." . $this->getClientSideViewBridgeName() . "( '" . $this->getIndexedPresenterPath() . "' );",
                         $jsAndCssUrls
                     );
                 };
@@ -276,7 +275,7 @@ class HtmlView extends View
     {
         $args = func_get_args();
         array_unshift($args, $this->presenterPath);
-        call_user_func_array(array('\Rhubarb\Leaf\Presenters\Presenter', "raiseEventOnViewBridge"), $args);
+        call_user_func_array(['\Rhubarb\Leaf\Presenters\Presenter', "raiseEventOnViewBridge"], $args);
     }
 
     public function getRestoredModel()

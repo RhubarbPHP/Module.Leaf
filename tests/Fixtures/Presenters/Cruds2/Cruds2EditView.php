@@ -6,10 +6,10 @@ use Rhubarb\Leaf\Views\View;
 
 class Cruds2EditView extends View
 {
-	protected function printViewContent()
-	{
-		$user = $this->RaiseEvent( "GetRestModel" );
+    protected function printViewContent()
+    {
+        $user = $this->RaiseEvent("GetRestModel");
 
-		print $user->Forename;
-	}
+        print $user->Forename;
+    }
 }

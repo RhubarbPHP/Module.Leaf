@@ -6,12 +6,12 @@ use Rhubarb\Crown\UnitTesting\CoreTestCase;
 
 class DialogPresenterTest extends CoreTestCase
 {
-	public function testNameGetsDefaultOfClassName()
-	{
-		$dialog = new UnitTestDialogPresenter();
+    public function testNameGetsDefaultOfClassName()
+    {
+        $dialog = new UnitTestDialogPresenter();
 
-		$this->assertEquals( "UnitTestDialog", $dialog->getName() );
-	}
+        $this->assertEquals("UnitTestDialog", $dialog->getName());
+    }
 }
 
 class UnitTestDialogPresenter extends DialogPresenter

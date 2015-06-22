@@ -10,8 +10,8 @@ namespace Rhubarb\Leaf\UnitTesting\Presenters;
  */
 class Complete extends \Rhubarb\Leaf\Presenters\Presenter
 {
-	protected function createView()
-	{
-		$this->registerView( new CompleteView() );
-	}
+    protected function createView()
+    {
+        $this->registerView(new CompleteView());
+    }
 }

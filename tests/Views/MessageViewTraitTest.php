@@ -2,83 +2,84 @@
 
 namespace Rhubarb\Leaf\Views;
 
-use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Leaf\Presenters\Presenter;
 use string;
 
 class MessageViewTraitTest extends CoreTestCase
 {
-	public function testMessageTraitShowsMessage()
-	{
-		$presenter = new UnitTestingMessagePresenter();
-		$view = new UnitTestingMessageView();
-		$presenter->attachMockView( $view );
+    public function testMessageTraitShowsMessage()
+    {
+        $presenter = new UnitTestingMessagePresenter();
+        $view = new UnitTestingMessageView();
+        $presenter->attachMockView($view);
 
-		$output = $presenter->test();
+        $output = $presenter->test();
 
-		$this->assertContains( "Normal content", $output );
+        $this->assertContains("Normal content", $output);
 
-		$view->simulateEvent( "ActivateMessage", "Sent" );
+        $view->simulateEvent("ActivateMessage", "Sent");
 
-		$output = $presenter->test();
+        $output = $presenter->test();
 
-		$this->assertContains( "Message was sent", $output );
+        $this->assertContains("Message was sent", $output);
 
-		$view->simulateEvent( "ActivateMessage", "Failed" );
+        $view->simulateEvent("ActivateMessage", "Failed");
 
-		$output = $presenter->test();
+        $output = $presenter->test();
 
-		$this->assertContains( "The message failed", $output );
-	}
+        $this->assertContains("The message failed", $output);
+    }
 }
 
 class UnitTestingMessagePresenter extends Presenter
 {
-	protected function createView()
-	{
-		return new UnitTestingMessageView();
-	}
+    protected function createView()
+    {
+        return new UnitTestingMessageView();
+    }
 
-	private $message = false;
+    private $message = false;
 
-	protected function configureView()
-	{
-		parent::configureView();
+    protected function configureView()
+    {
+        parent::configureView();
 
-		$this->view->attachEventHandler( "ActivateMessage", function( $message )
-		{
-			$this->message = $message;
-		});
-	}
+        $this->view->attachEventHandler("ActivateMessage", function ($message) {
+            $this->message = $message;
+        });
+    }
 
-	protected function applyModelToView()
-	{
-		parent::applyModelToView();
+    protected function applyModelToView()
+    {
+        parent::applyModelToView();
 
-		$this->view->message = $this->message;
-	}
+        $this->view->message = $this->message;
+    }
 }
 
 class UnitTestingMessageView extends UnitTestView
 {
-	use MessageViewTrait;
+    use MessageViewTrait;
 
-	/**
-	 * Should return an array of key value pairs storing message texts against an arbitrary tracking code.
-	 *
-	 * @return string[]
-	 */
-	protected function getMessages()
-	{
-		return
-		[
-			"Sent" => "Message was sent",
-			"Failed" => function(){ return "The message failed"; }
-		];
-	}
+    /**
+     * Should return an array of key value pairs storing message texts against an arbitrary tracking code.
+     *
+     * @return string[]
+     */
+    protected function getMessages()
+    {
+        return
+            [
+                "Sent" => "Message was sent",
+                "Failed" => function () {
+                    return "The message failed";
+                }
+            ];
+    }
 
-	protected function printViewContent()
-	{
-		print "Normal content";
-	}
+    protected function printViewContent()
+    {
+        print "Normal content";
+    }
 }

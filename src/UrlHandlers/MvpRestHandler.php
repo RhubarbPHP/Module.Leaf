@@ -46,7 +46,8 @@ class MvpRestHandler extends ModelCollectionHandler
         $itemPresenterClassName,
         $additionalPresenterClassNameMap = [],
         $children = []
-    ) {
+    )
+    {
         parent::__construct($modelName, $children);
 
         $this->collectionPresenterClassName = $collectionPresenterClassName;
@@ -129,7 +130,7 @@ class MvpRestHandler extends ModelCollectionHandler
         if ($this->isCollection()) {
             if (method_exists($mvp, "setRestCollection")) {
                 try {
-                    call_user_func(array($mvp, "setRestCollection"), $this->getModelCollection());
+                    call_user_func([$mvp, "setRestCollection"], $this->getModelCollection());
                 } catch (RestImplementationException $er) {
 
                 }
@@ -137,7 +138,7 @@ class MvpRestHandler extends ModelCollectionHandler
         } else {
             if (method_exists($mvp, "setRestModel")) {
                 try {
-                    call_user_func(array($mvp, "setRestModel"), $this->getModelObject());
+                    call_user_func([$mvp, "setRestModel"], $this->getModelObject());
                 } catch (RestImplementationException $er) {
                 }
             }

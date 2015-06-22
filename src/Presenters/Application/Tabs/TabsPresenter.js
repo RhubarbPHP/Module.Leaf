@@ -1,26 +1,22 @@
+var tabsPresenter = function (presenterPath) {
+    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+};
 
-var tabsPresenter = function( presenterPath )
-{
-	window.gcd.core.mvp.viewBridgeClasses.JqueryHtmlViewBridge.apply( this, arguments );
-}
-
-tabsPresenter.prototype = new window.gcd.core.mvp.viewBridgeClasses.JqueryHtmlViewBridge();
+tabsPresenter.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
 tabsPresenter.prototype.constructor = tabsPresenter;
 
-tabsPresenter.prototype.attachEvents = function()
-{
-	var self = this;
+tabsPresenter.prototype.attachEvents = function () {
+    var self = this;
 
-	this.element.find( 'li').click( function()
-	{
-		var lis = $( this ).parent()[0].childNodes;
-		var index = Array.prototype.indexOf.call( lis, this );
+    this.element.find('li').click(function () {
+        var lis = $(this).parent()[0].childNodes;
+        var index = Array.prototype.indexOf.call(lis, this);
 
-		self.raiseServerEvent( "TabSelected", index );
+        self.raiseServerEvent("TabSelected", index);
 
-        $( 'ul:first', self.element ).children().removeClass( '-is-selected' );
-        $( this).addClass( '-is-selected' );
-	});
-}
+        $('ul:first', self.element).children().removeClass('-is-selected');
+        $(this).addClass('-is-selected');
+    });
+};
 
-window.gcd.core.mvp.viewBridgeClasses.Tabs = tabsPresenter;
+window.rhubarb.viewBridgeClasses.Tabs = tabsPresenter;

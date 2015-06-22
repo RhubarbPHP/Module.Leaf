@@ -22,12 +22,12 @@ use Rhubarb\Crown\Events\EventEmitter;
 
 abstract class PresenterViewBase
 {
-	use EventEmitter;
+    use EventEmitter;
 
-	protected function receivedEventPassThrough()
-	{
-		$arguments = func_get_args();
+    protected function receivedEventPassThrough()
+    {
+        $arguments = func_get_args();
 
-		return call_user_func_array( [ $this, "raiseEvent" ], $arguments );
-	}
+        return call_user_func_array([$this, "raiseEvent"], $arguments);
+    }
 }

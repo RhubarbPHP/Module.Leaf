@@ -56,8 +56,7 @@ class ButtonView extends JQueryControlView
         <input type="<?= $this->inputType ?>" name="<?= htmlentities($this->getIndexedPresenterPath()); ?>"
                presenter-name="<?= htmlentities($this->presenterName); ?>"
                id="<?= htmlentities($this->getIndexedPresenterPath()); ?>"
-               value="<?= htmlentities($this->text); ?>"<?= $this->getClassTag() . $this->getHtmlAttributeTags(
-        ) . $xmlAttribute . $validationAttribute . $validatorAttribute . $confirmAttribute ?>/>
+               value="<?= htmlentities($this->text); ?>"<?= $this->getClassTag() . $this->getHtmlAttributeTags() . $xmlAttribute . $validationAttribute . $validatorAttribute . $confirmAttribute ?>/>
     <?php
     }
 

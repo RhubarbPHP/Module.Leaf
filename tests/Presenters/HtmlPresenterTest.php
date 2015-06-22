@@ -9,42 +9,41 @@ use Rhubarb\Stem\Models\Validation\Validator;
 
 class HtmlPresenterTest extends RhubarbTestCase
 {
-	public function testClientSideValidationCreatedFromModelValidation()
-	{
-		$presenter = new UnitTestHtmlPresenter();
-		$clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
+    public function testClientSideValidationCreatedFromModelValidation()
+    {
+        $presenter = new UnitTestHtmlPresenter();
+        $clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
 
-		$this->assertInstanceOf( ValidatorClientSide::class, $clientSideValidation );
-		$this->assertCount( 2, $clientSideValidation->validations );
+        $this->assertInstanceOf(ValidatorClientSide::class, $clientSideValidation);
+        $this->assertCount(2, $clientSideValidation->validations);
 
-		$presenter->testInvalidTypes = true;
+        $presenter->testInvalidTypes = true;
 
-		$clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
+        $clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
 
-		$this->assertNull( $clientSideValidation );
-	}
+        $this->assertNull($clientSideValidation);
+    }
 }
 
 class UnitTestHtmlPresenter extends HtmlPresenter
 {
-	public function PublicCreateDefaultClientSideValidator()
-	{
-		return $this->createDefaultClientSideValidator();
-	}
+    public function PublicCreateDefaultClientSideValidator()
+    {
+        return $this->createDefaultClientSideValidator();
+    }
 
-	public $testInvalidTypes = false;
+    public $testInvalidTypes = false;
 
-	protected function createDefaultValidator()
-	{
-		if ( $this->testInvalidTypes )
-		{
-			return new \stdClass();
-		}
+    protected function createDefaultValidator()
+    {
+        if ($this->testInvalidTypes) {
+            return new \stdClass();
+        }
 
-		$validator = new Validator();
-		$validator->validations[ ] = new HasValue( "Email" );
-		$validator->validations[ ] = new HasValue( "Name" );
+        $validator = new Validator();
+        $validator->validations[] = new HasValue("Email");
+        $validator->validations[] = new HasValue("Name");
 
-		return $validator;
-	}
+        return $validator;
+    }
 }

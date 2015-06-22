@@ -31,8 +31,7 @@ trait WithJqueryViewBridgeTrait
     {
         $package = parent::getDeploymentPackage();
         $package->resourcesToDeploy[] = __DIR__ . "/../../resources/jquery-presenter.js";
-        $package->resourcesToDeploy[] = $this->getDeploymentPackageDirectory(
-            ) . "/" . $this->getClientSideViewBridgeName() . ".js";
+        $package->resourcesToDeploy[] = $this->getDeploymentPackageDirectory() . "/" . $this->getClientSideViewBridgeName() . ".js";
 
         return $package;
     }

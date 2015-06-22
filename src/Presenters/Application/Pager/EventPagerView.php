@@ -24,22 +24,22 @@ use Rhubarb\Crown\Html\ResourceLoader;
 
 class EventPagerView extends PagerView
 {
-	protected function getClientSideViewBridgeName()
-	{
-		return "EventPager";
-	}
+    protected function getClientSideViewBridgeName()
+    {
+        return "EventPager";
+    }
 
-	protected function getAdditionalResourceUrls()
-	{
-		return [ ResourceLoader::getJqueryUrl( "1.9.1" ) ];
-	}
+    protected function getAdditionalResourceUrls()
+    {
+        return [ResourceLoader::getJqueryUrl("1.9.1")];
+    }
 
-	public function getDeploymentPackage()
-	{
-		$package = parent::getDeploymentPackage();
-		$package->resourcesToDeploy[] = __DIR__."/../../../../resources/jquery-presenter.js";
-		$package->resourcesToDeploy[] = __DIR__."/../../../../resources/application/event-pager.js";
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
+        $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/application/event-pager.js";
 
-		return $package;
-	}
+        return $package;
+    }
 }

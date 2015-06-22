@@ -28,25 +28,25 @@ use Rhubarb\Leaf\Presenters\Presenter;
  */
 class PresenterFooterColumn extends FooterColumn
 {
-	/**
-	 * @var Presenter
-	 */
-	protected $presenter;
+    /**
+     * @var Presenter
+     */
+    protected $presenter;
 
-	public function __construct( Presenter $presenter, $label = "" )
-	{
-		parent::__construct( $label );
+    public function __construct(Presenter $presenter, $label = "")
+    {
+        parent::__construct($label);
 
-		$this->presenter = $presenter;
-	}
+        $this->presenter = $presenter;
+    }
 
-	public function etPresenter()
-	{
-		return $this->presenter;
-	}
+    public function etPresenter()
+    {
+        return $this->presenter;
+    }
 
-	public function getCellValue( Table $table )
-	{
-		return (string) $this->presenter;
-	}
+    public function getCellValue(Table $table)
+    {
+        return (string)$this->presenter;
+    }
 }

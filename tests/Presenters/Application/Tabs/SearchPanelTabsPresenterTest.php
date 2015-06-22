@@ -2,103 +2,101 @@
 
 namespace Rhubarb\Leaf\Presenters\Application\Tabs;
 
-require_once( __DIR__."/../Search/SearchPanelTest.php" );
+require_once(__DIR__ . "/../Search/SearchPanelTest.php");
 
-use Rhubarb\Crown\Context;
-use Rhubarb\Leaf\Presenters\Application\Search\UnitTestSearchPanel;
-use Rhubarb\Leaf\Views\UnitTestView;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Leaf\Presenters\Application\Search\UnitTestSearchPanel;
+use Rhubarb\Leaf\Views\UnitTestView;
 
 class SearchPanelTabsPresenterTest extends CoreTestCase
 {
-	public function testInflationSupportsArray()
-	{
-		$tabs = new UnitTestSearchPanelTabsPresenter();
+    public function testInflationSupportsArray()
+    {
+        $tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->setTabDefinitions(
-			[
-				"Big" => [ "Phrase" => "This is a big phrase" ]
-			]
-		);
+        $tabs->setTabDefinitions(
+            [
+                "Big" => ["Phrase" => "This is a big phrase"]
+            ]
+        );
 
-		$searchResults = new SearchResultsTabDefinition( "Search Results", [] );
-		$searchResults->selected = true;
+        $searchResults = new SearchResultsTabDefinition("Search Results", []);
+        $searchResults->selected = true;
 
-		$this->assertEquals(
-			[ new SearchPanelTabDefinition( "Big", [ "Phrase" => "This is a big phrase" ] ),
-			  $searchResults
-			],
-			$tabs->PublicInflateTabDefinitions()
-		);
-	}
+        $this->assertEquals(
+            [new SearchPanelTabDefinition("Big", ["Phrase" => "This is a big phrase"]),
+                $searchResults
+            ],
+            $tabs->PublicInflateTabDefinitions()
+        );
+    }
 
-	public function testSelectingTabChangesSearchPanelControlValues()
-	{
-		$panel = new UnitTestSearchPanel();
-		$tabs = new UnitTestSearchPanelTabsPresenter();
+    public function testSelectingTabChangesSearchPanelControlValues()
+    {
+        $panel = new UnitTestSearchPanel();
+        $tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->setTabDefinitions(
-			[
-				"Big" => new SearchPanelTabDefinition( "Big", [ "Phrase" => "This is a big phrase" ] ),
-				"Small" => new SearchPanelTabDefinition( "Small", [ "Phrase" => "Small Phrase" ] )
-			]
-		);
+        $tabs->setTabDefinitions(
+            [
+                "Big" => new SearchPanelTabDefinition("Big", ["Phrase" => "This is a big phrase"]),
+                "Small" => new SearchPanelTabDefinition("Small", ["Phrase" => "Small Phrase"])
+            ]
+        );
 
-		$tabs->bindEventsWith( $panel );
+        $tabs->bindEventsWith($panel);
 
-		// Let's simulate going big.
-		$tabs->selectTabByIndex( 0 );
-		$tabs->test();
+        // Let's simulate going big.
+        $tabs->selectTabByIndex(0);
+        $tabs->test();
 
-		$this->assertEquals( "This is a big phrase", $panel->model->Phrase );
+        $this->assertEquals("This is a big phrase", $panel->model->Phrase);
 
-		// Let's simulate going small.
-		$tabs->selectTabByIndex( 1 );
-		$tabs->test();
+        // Let's simulate going small.
+        $tabs->selectTabByIndex(1);
+        $tabs->test();
 
-		$this->assertEquals( "Small Phrase", $panel->model->Phrase );
-	}
+        $this->assertEquals("Small Phrase", $panel->model->Phrase);
+    }
 
-	public function testSearchResultsTabShows()
-	{
-		$panel = new UnitTestSearchPanel();
-		$tabs = new UnitTestSearchPanelTabsPresenter();
+    public function testSearchResultsTabShows()
+    {
+        $panel = new UnitTestSearchPanel();
+        $tabs = new UnitTestSearchPanelTabsPresenter();
 
-		$tabs->setTabDefinitions(
-			[
-				"Big" => new SearchPanelTabDefinition( "Big", [ "Phrase" => "This is a big phrase" ] ),
-				"Small" => new SearchPanelTabDefinition( "Small", [ "Phrase" => "Small Phrase" ] )
-			]
-		);
+        $tabs->setTabDefinitions(
+            [
+                "Big" => new SearchPanelTabDefinition("Big", ["Phrase" => "This is a big phrase"]),
+                "Small" => new SearchPanelTabDefinition("Small", ["Phrase" => "Small Phrase"])
+            ]
+        );
 
-		$capturedTabDefinitions = [];
+        $capturedTabDefinitions = [];
 
-		$mockView = new UnitTestView();
-		$mockView->attachMethod( "SetTabDefinitions", function( $tabDefinitions ) use ( &$capturedTabDefinitions )
-		{
-			$capturedTabDefinitions = $tabDefinitions;
-		});
+        $mockView = new UnitTestView();
+        $mockView->attachMethod("SetTabDefinitions", function ($tabDefinitions) use (&$capturedTabDefinitions) {
+            $capturedTabDefinitions = $tabDefinitions;
+        });
 
-		$tabs->attachMockView( $mockView );
+        $tabs->attachMockView($mockView);
 
-		$tabs->bindEventsWith( $panel );
+        $tabs->bindEventsWith($panel);
 
-		$panel->model->Phrase = "A different Phrase";
+        $panel->model->Phrase = "A different Phrase";
 
-		$tabs->generateResponse( new WebRequest() );
+        $tabs->generateResponse(new WebRequest());
 
-		$this->assertEquals( "Search Results", $capturedTabDefinitions[ sizeof( $capturedTabDefinitions ) - 1 ]->label );
-	}
+        $this->assertEquals("Search Results", $capturedTabDefinitions[sizeof($capturedTabDefinitions) - 1]->label);
+    }
 }
 
 class UnitTestSearchPanelTabsPresenter extends SearchPanelTabsPresenter
 {
-	public function PublicInflateTabDefinitions()
-	{
-		$tabs = $this->inflateTabDefinitions();
-		$this->markSelectedTab( $tabs );
+    public function PublicInflateTabDefinitions()
+    {
+        $tabs = $this->inflateTabDefinitions();
+        $this->markSelectedTab($tabs);
 
-		return $tabs;
-	}
+        return $tabs;
+    }
 }

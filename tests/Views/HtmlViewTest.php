@@ -2,62 +2,61 @@
 
 namespace Rhubarb\Leaf\Views;
 
-use Rhubarb\Leaf\Presenters\Presenter;
-use Rhubarb\Leaf\Presenters\PresenterModel;
-use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Leaf\Presenters\Presenter;
+use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
 
 class HtmlViewTest extends CoreTestCase
 {
-	public function testWrappers()
-	{
-		$presenter = new TestPresenter( "Forename", true, true );
-		$output = $presenter->generateResponse();
+    public function testWrappers()
+    {
+        $presenter = new TestPresenter("Forename", true, true);
+        $output = $presenter->generateResponse();
 
-		// Careful now! The format of this string is important - dont' be tidying it up!
-		$this->assertEquals( '<div id="Forename" class="TestView" presenter-name="Forename">
+        // Careful now! The format of this string is important - dont' be tidying it up!
+        $this->assertEquals('<div id="Forename" class="TestView" presenter-name="Forename">
 Dummy Output
 <input type="hidden" name="ForenameState" id="ForenameState" value="{&quot;PresenterName&quot;:&quot;Forename&quot;,&quot;PresenterPath&quot;:&quot;Forename&quot;}" />
-</div>', $output );
-	}
+</div>', $output);
+    }
 
-	public function testRaisingEventOnViewBridge()
-	{
-		$presenter = new TestPresenter( "Forename", true, true );
-		$presenter->test();
+    public function testRaisingEventOnViewBridge()
+    {
+        $presenter = new TestPresenter("Forename", true, true);
+        $presenter->test();
 
-		$_SERVER[ 'HTTP_X_REQUESTED_WITH' ] = 'xmlhttprequest';
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
 
-		$view = $presenter->testView;
-		$view->TestRaiseEventOnViewBridge();
-		$response = $presenter->generateResponse( new WebRequest() );
+        $view = $presenter->testView;
+        $view->TestRaiseEventOnViewBridge();
+        $response = $presenter->generateResponse(new WebRequest());
 
-		$content = $response->GetContent();
+        $content = $response->GetContent();
 
-		$this->assertContains( '<event name="TestEvent" target="Forename"><param><![CDATA[123]]></param><param><![CDATA[234]]></param></event>', $content );
+        $this->assertContains('<event name="TestEvent" target="Forename"><param><![CDATA[123]]></param><param><![CDATA[234]]></param></event>', $content);
 
-		unset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] );
-	}
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
 }
 
 class TestPresenter extends Presenter
 {
-	private $requiresContainer = true;
-	private $requiresStateInputs = true;
-	public $testView;
+    private $requiresContainer = true;
+    private $requiresStateInputs = true;
+    public $testView;
 
-	public function __construct( $name = "", $requireContainer = true, $requireState = true )
-	{
-		parent::__construct( $name );
+    public function __construct($name = "", $requireContainer = true, $requireState = true)
+    {
+        parent::__construct($name);
 
-		$this->requiresContainer = $requireContainer;
-		$this->requiresStateInputs = $requireState;
-	}
+        $this->requiresContainer = $requireContainer;
+        $this->requiresStateInputs = $requireState;
+    }
 
-	protected function createView()
-	{
-		$this->testView = new TestView( $this->requiresContainer, $this->requiresStateInputs );
-		$this->registerView( $this->testView );
-	}
+    protected function createView()
+    {
+        $this->testView = new TestView($this->requiresContainer, $this->requiresStateInputs);
+        $this->registerView($this->testView);
+    }
 }

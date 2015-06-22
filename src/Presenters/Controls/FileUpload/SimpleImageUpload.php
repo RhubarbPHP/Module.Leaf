@@ -22,33 +22,33 @@ require_once __DIR__ . '/SimpleHtmlFileUpload.php';
 
 class SimpleImageUpload extends SimpleHtmlFileUpload
 {
-	public $previewImageWidth = 200;
+    public $previewImageWidth = 200;
 
-	public $previewImageHeight = 150;
+    public $previewImageHeight = 150;
 
-	public function __construct( $name = "", $previewImageWidth = 200, $previewImageHeight = 150 )
-	{
-		parent::__construct( $name );
+    public function __construct($name = "", $previewImageWidth = 200, $previewImageHeight = 150)
+    {
+        parent::__construct($name);
 
-		$this->filters[] = "image/*";
+        $this->filters[] = "image/*";
 
-		$this->previewImageWidth = $previewImageWidth;
-		$this->previewImageHeight = $previewImageHeight;
-	}
+        $this->previewImageWidth = $previewImageWidth;
+        $this->previewImageHeight = $previewImageHeight;
+    }
 
-	protected function createView()
-	{
-		return new SimpleImageUploadView();
-	}
+    protected function createView()
+    {
+        return new SimpleImageUploadView();
+    }
 
-	protected function applyModelToView()
-	{
-		parent::applyModelToView();
+    protected function applyModelToView()
+    {
+        parent::applyModelToView();
 
-		$currentPath = $this->raiseEvent( "GetCurrentPath" );
+        $currentPath = $this->raiseEvent("GetCurrentPath");
 
-		$this->view->currentImagePath = $currentPath;
-		$this->view->previewImageWidth = $this->previewImageWidth;
-		$this->view->previewImageHeight = $this->previewImageHeight;
-	}
+        $this->view->currentImagePath = $currentPath;
+        $this->view->previewImageWidth = $this->previewImageWidth;
+        $this->view->previewImageHeight = $this->previewImageHeight;
+    }
 }

@@ -7,8 +7,8 @@ use Rhubarb\Patterns\Mvp\Crud\ModelForm\ModelFormPresenter;
 
 class CrudsItemPresenter extends ModelFormPresenter
 {
-	protected function CreateView()
-	{
-		return new HtmlView();
-	}
+    protected function CreateView()
+    {
+        return new HtmlView();
+    }
 }

@@ -66,7 +66,7 @@ trait ClientSideValidation
         $clientSideClass = "Rhubarb\Leaf\Validation\\" . $type . "ClientSide";
 
         if (class_exists($clientSideClass)) {
-            return call_user_func(array($clientSideClass, "cloneFromModelValidation"), $validation);
+            return call_user_func([$clientSideClass, "cloneFromModelValidation"], $validation);
         }
 
         return null;

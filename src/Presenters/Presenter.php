@@ -102,7 +102,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      *
      * @var array
      */
-    private $delayedEvents = array();
+    private $delayedEvents = [];
 
     /**
      * A count of the number of presenters hosted on our view.
@@ -292,10 +292,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     public final function processDelayedEvents()
     {
         foreach ($this->delayedEvents as $event) {
-            call_user_func_array(array($this, "raiseEvent"), $event);
+            call_user_func_array([$this, "raiseEvent"], $event);
         }
 
-        $this->delayedEvents = array();
+        $this->delayedEvents = [];
 
         $this->view->processDelayedEvents();
     }
@@ -378,8 +378,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
         try {
             $presenter->initialise();
-        }
-        catch( RequiresViewReconfigurationException $er ){
+        } catch (RequiresViewReconfigurationException $er) {
             // Some presenters can throw the RequiresViewReconfigurationException during their intialisation
             // e.g. BackgroundTaskFullFocusPresenter
             // However as we're still in the middle of the initialisation we don't need to handle it here
@@ -784,7 +783,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         $args = array_slice($args, 1);
 
         if (method_exists($this, $functionName)) {
-            call_user_func_array(array($this, $functionName), $args);
+            call_user_func_array([$this, $functionName], $args);
         }
     }
 
@@ -884,7 +883,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             }
 
             if (isset($_REQUEST["_mvpEventArgumentsJson"])) {
-                array_push( $eventArguments, json_decode($_REQUEST["_mvpEventArgumentsJson"], true));
+                array_push($eventArguments, json_decode($_REQUEST["_mvpEventArgumentsJson"], true));
             }
 
             // Provide a callback for the event processing.
@@ -1212,7 +1211,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * @see Presenter::configureView()
      * @throws \Rhubarb\Leaf\Exceptions\NoViewException
      */
-    protected function initialiseView( $andRestoreModel = true )
+    protected function initialiseView($andRestoreModel = true)
     {
         if (!$this->view) {
             $response = $this->createView();
@@ -1228,7 +1227,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
         $this->hostedPresenterCount = 0;
 
-        if ( $andRestoreModel ) {
+        if ($andRestoreModel) {
             // Now we have the view we can restore our model (the view is required to do this as the view is
             // responsible for encoding the public state of our model). We must do this before configureView()
             // as sometimes the restored model has a bearing on how our view will configure itself.
