@@ -9,21 +9,21 @@ namespace Rhubarb\Leaf\UnitTesting\Presenters\Switched;
  */
 class DetailsView extends \Rhubarb\Leaf\Views\View
 {
-	public static $forename;
+    public static $forename;
 
-	public function createPresenters()
-	{
-		self::$forename = new UnitTestTextBox( "Forename" );
+    public function createPresenters()
+    {
+        self::$forename = new UnitTestTextBox("Forename");
 
-		$this->addPresenters(
-			self::$forename
-		);
+        $this->addPresenters(
+            self::$forename
+        );
 
-		parent::createPresenters();
-	}
+        parent::createPresenters();
+    }
 
-	public function printViewContent()
-	{
-		print $this->presenters[ "Forename" ];
-	}
+    public function printViewContent()
+    {
+        print $this->presenters["Forename"];
+    }
 }

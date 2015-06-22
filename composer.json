@@ -1,7 +1,14 @@
 {
   "name": "rhubarbphp/module-leaf",
   "description": "A nestable user interface building module for the Rhubarb PHP framework based upon the model-view-presenter pattern.",
-  "keywords": [ "mvp", "presenter", "leaf", "rhubarb", "php", "framework" ],
+  "keywords": [
+    "mvp",
+    "presenter",
+    "leaf",
+    "rhubarb",
+    "php",
+    "framework"
+  ],
   "homepage": "http://www.rhubarbphp.com/",
   "license": "Apache-2.0",
   "autoload": {

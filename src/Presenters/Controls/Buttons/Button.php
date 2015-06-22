@@ -20,10 +20,10 @@ namespace Rhubarb\Leaf\Presenters\Controls\Buttons;
 
 require_once __DIR__ . "/../JQueryControlView.php";
 
-use Rhubarb\Leaf\Validation\ValidatorClientSide;
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
+use Rhubarb\Leaf\Validation\ValidatorClientSide;
 
 class Button extends ControlPresenter
 {

@@ -22,7 +22,6 @@ require_once __DIR__ . '/../CompositeControlPresenter.php';
 
 use Rhubarb\Crown\DateTime\RhubarbTime;
 use Rhubarb\Leaf\Presenters\Controls\CompositeControlPresenter;
-use Rhubarb\Leaf\Presenters\ModelProvider;
 
 class Time extends CompositeControlPresenter
 {

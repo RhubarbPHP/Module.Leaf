@@ -26,7 +26,7 @@ class UnitTestView extends View
     {
         $args = func_get_args();
 
-        return call_user_func_array(array($this, "raiseEvent"), $args);
+        return call_user_func_array([$this, "raiseEvent"], $args);
     }
 
     private $setData = [];

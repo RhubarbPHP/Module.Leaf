@@ -34,7 +34,7 @@ class SwitchedPresenter extends Form
      * A collection of presenter names and class names to use.
      * @var array
      */
-    private $switchedPresenters = array();
+    private $switchedPresenters = [];
 
     /**
      * Override this to return a mapping of presenter names to classes.

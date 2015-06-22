@@ -1,6 +1,7 @@
 <?php
 
 namespace Rhubarb\Leaf\Presenters;
+
 use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
 
 /**
@@ -10,8 +11,8 @@ use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
  */
 class UnitTestStatefulPresenter extends Presenter
 {
-	protected function createView()
-	{
-		$this->registerView( new TestView() );
-	}
+    protected function createView()
+    {
+        $this->registerView(new TestView());
+    }
 }

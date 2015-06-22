@@ -21,7 +21,6 @@ namespace Rhubarb\Leaf\Presenters;
 require_once __DIR__ . '/Presenter.php';
 
 use Rhubarb\Crown\Html\ResourceLoader;
-use Rhubarb\Leaf\Views\SpawnableByViewBridgeViewTrait;
 
 /**
  * Exposes support for spawning a representation of the presenter directly with the view bridge.

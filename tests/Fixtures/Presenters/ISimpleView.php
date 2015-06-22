@@ -9,5 +9,5 @@ namespace Rhubarb\Leaf\Views;
  */
 interface ISimpleView
 {
-	function SetText( $text );
+    function SetText($text);
 }

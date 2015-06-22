@@ -18,12 +18,9 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\Selection\SearchControl;
 
-require_once __DIR__."/../SelectionControlPresenter.php";
+require_once __DIR__ . "/../SelectionControlPresenter.php";
 
-use Rhubarb\Crown\Html\ResourceLoader;
-use Rhubarb\Crown\Context;
 use Rhubarb\Leaf\Presenters\Controls\Selection\SelectionControlPresenter;
-use Rhubarb\Leaf\Presenters\ModelProvider;
 
 /**
  * A control presenter that forms the base for controls that require an event based search followed by selection.
@@ -33,96 +30,92 @@ use Rhubarb\Leaf\Presenters\ModelProvider;
  */
 abstract class SearchControl extends SelectionControlPresenter
 {
-	public function __construct( $name = "" )
-	{
-		parent::__construct( $name );
+    public function __construct($name = "")
+    {
+        parent::__construct($name);
 
-		$this->attachClientSidePresenterBridge = true;
-	}
+        $this->attachClientSidePresenterBridge = true;
+    }
 
-	protected function isValueSelectable( $value )
-	{
-		// Search controls are often bound to int columns where the default value will be zero.
-		// This should not be considered a selected item.
-		if ( $value === "0" || $value === 0 )
-		{
-			return false;
-		}
+    protected function isValueSelectable($value)
+    {
+        // Search controls are often bound to int columns where the default value will be zero.
+        // This should not be considered a selected item.
+        if ($value === "0" || $value === 0) {
+            return false;
+        }
 
-		return parent::isValueSelectable( $value );
-	}
+        return parent::isValueSelectable($value);
+    }
 
-	protected function initialiseModel()
-	{
-		parent::initialiseModel();
+    protected function initialiseModel()
+    {
+        parent::initialiseModel();
 
-		$this->model->ResultsWidth = "match";
-		$this->model->AutoSubmitSearch = true;
-		$this->ResultColumns = $this->getResultColumns();
-	}
+        $this->model->ResultsWidth = "match";
+        $this->model->AutoSubmitSearch = true;
+        $this->ResultColumns = $this->getResultColumns();
+    }
 
-	protected function createView()
-	{
-		return new SearchControlView();
-	}
+    protected function createView()
+    {
+        return new SearchControlView();
+    }
 
-	/**
-	 * Sets the width of the results panel.
-	 *
-	 * This is passed verbatim to the javascript width style so you can pass "150px" and "80%".
-	 *
-	 * There is one special case, "match" which the javascript will understand as making the results container
-	 * match the width of the search box.
-	 *
-	 * @param $width
-	 */
-	public function setResultsWidth( $width )
-	{
-		$this->model->ResultsWidth = $width;
-	}
+    /**
+     * Sets the width of the results panel.
+     *
+     * This is passed verbatim to the javascript width style so you can pass "150px" and "80%".
+     *
+     * There is one special case, "match" which the javascript will understand as making the results container
+     * match the width of the search box.
+     *
+     * @param $width
+     */
+    public function setResultsWidth($width)
+    {
+        $this->model->ResultsWidth = $width;
+    }
 
-	protected function configureView()
-	{
-		parent::configureView();
+    protected function configureView()
+    {
+        parent::configureView();
 
-		$this->view->attachEventHandler( "SearchPressed", function( $phrase )
-		{
-			$this->Phrase = $phrase;
+        $this->view->attachEventHandler("SearchPressed", function ($phrase) {
+            $this->Phrase = $phrase;
 
-			// Note the pattern here is not to engage with the phrase directly, but purely to record it in the
-			// model and let the standard method that returns items decide how to handle it.
-			return $this->getCurrentlyAvailableSelectionItems();
-		});
+            // Note the pattern here is not to engage with the phrase directly, but purely to record it in the
+            // model and let the standard method that returns items decide how to handle it.
+            return $this->getCurrentlyAvailableSelectionItems();
+        });
 
-		$this->view->attachEventHandler( "ItemSelected", function( $selectedId )
-		{
-			$this->SelectedItems = [ $selectedId ];
+        $this->view->attachEventHandler("ItemSelected", function ($selectedId) {
+            $this->SelectedItems = [$selectedId];
 
-			return $selectedId;
-		});
+            return $selectedId;
+        });
 
-		$this->view->AttachEventHandler( "GetItemForSingleValue", function( $value )
-		{
-			$value = $this->ConvertValueToModel( $value );
-			$optionValue = ( $value instanceof Model ) ? $value->UniqueIdentifier : $value;
+        $this->view->AttachEventHandler("GetItemForSingleValue", function ($value) {
+            $value = $this->ConvertValueToModel($value);
+            $optionValue = ($value instanceof Model) ? $value->UniqueIdentifier : $value;
 
-			$item = $this->MakeItem( $optionValue, $this->GetLabelForItem( $value ), $this->GetDataForItem( $value ) );
+            $item = $this->MakeItem($optionValue, $this->GetLabelForItem($value), $this->GetDataForItem($value));
 
-			return $item;
-		});
-	}
+            return $item;
+        });
+    }
 
-	protected abstract function getResultColumns();
+    protected abstract function getResultColumns();
 
-	protected function getPublicModelPropertyList()
-	{
-		$properties = parent::getPublicModelPropertyList();
-		$properties[] = "FocusOnLoad";
-		$properties[] = "AutoSubmitSearch";
-		$properties[] = "MinimumPhraseLength";
-		$properties[] = "ResultColumns";
-		$properties[] = "ResultsWidth";
+    protected function getPublicModelPropertyList()
+    {
+        $properties = parent::getPublicModelPropertyList();
+        $properties[] = "FocusOnLoad";
+        $properties[] = "AutoSubmitSearch";
+        $properties[] = "MinimumPhraseLength";
+        $properties[] = "ResultColumns";
+        $properties[] = "ResultsWidth";
 
-		return $properties;
-	}
+        return $properties;
+    }
 }

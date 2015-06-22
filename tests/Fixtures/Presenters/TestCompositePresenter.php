@@ -6,8 +6,8 @@ use Rhubarb\Leaf\Presenters\Controls\CompositeControlPresenter;
 
 class TestCompositePresenter extends CompositeControlPresenter
 {
-	protected function createView()
-	{
-		return new TestCompositeView();
-	}
+    protected function createView()
+    {
+        return new TestCompositeView();
+    }
 }

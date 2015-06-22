@@ -26,10 +26,10 @@ use Rhubarb\Leaf\Presenters\Controls\Text\Password\Password;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextArea\TextArea;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
-use Rhubarb\Stem\Schema\Columns\Decimal;
 use Rhubarb\Stem\Schema\Columns\Boolean;
 use Rhubarb\Stem\Schema\Columns\Date;
 use Rhubarb\Stem\Schema\Columns\DateTime;
+use Rhubarb\Stem\Schema\Columns\Decimal;
 use Rhubarb\Stem\Schema\Columns\Integer;
 use Rhubarb\Stem\Schema\Columns\LongString;
 use Rhubarb\Stem\Schema\Columns\Money;
@@ -159,4 +159,4 @@ trait CreatePresentersFromSchemaTrait
 
         return parent::createPresenterByName($presenterName);
     }
-} 
+}

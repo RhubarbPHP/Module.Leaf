@@ -103,7 +103,7 @@ class SelectionControlPresenter extends ControlPresenter
             function () {
                 $args = func_get_args();
 
-                call_user_func_array(array($this, "updateAvailableSelectionItems"), $args);
+                call_user_func_array([$this, "updateAvailableSelectionItems"], $args);
 
                 return $this->getCurrentlyAvailableSelectionItems();
             }

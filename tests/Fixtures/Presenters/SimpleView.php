@@ -11,28 +11,28 @@ use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
  */
 class SimpleView extends View implements ISimpleView
 {
-	private $text;
+    private $text;
 
-	public function PrintViewContent()
-	{
-		print $this->text;
-	}
+    public function PrintViewContent()
+    {
+        print $this->text;
+    }
 
-	public function SetText( $text )
-	{
-		$this->text = $text;
-	}
+    public function SetText($text)
+    {
+        $this->text = $text;
+    }
 
-	public function CreatePresenters()
-	{
-		parent::CreatePresenters();
+    public function CreatePresenters()
+    {
+        parent::CreatePresenters();
 
-		$this->AddPresenters(
-			[
-			"ForenameA" => new TextBox( "Forename" ),
-			"ForenameB" => new TextBox( "Forename" )
-			]
-		);
-	}
+        $this->AddPresenters(
+            [
+                "ForenameA" => new TextBox("Forename"),
+                "ForenameB" => new TextBox("Forename")
+            ]
+        );
+    }
 
 }

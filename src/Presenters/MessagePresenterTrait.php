@@ -20,17 +20,17 @@ namespace Rhubarb\Leaf\Presenters;
 
 trait MessagePresenterTrait
 {
-	protected $message = false;
+    protected $message = false;
 
-	protected function activateMessage( $message )
-	{
-		$this->message = $message;
-	}
+    protected function activateMessage($message)
+    {
+        $this->message = $message;
+    }
 
-	protected function onModelAppliedToView()
-	{
-		$this->view->message = $this->message;
+    protected function onModelAppliedToView()
+    {
+        $this->view->message = $this->message;
 
-		parent::onModelAppliedToView();
-	}
-} 
+        parent::onModelAppliedToView();
+    }
+}

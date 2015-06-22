@@ -11,74 +11,68 @@ use Rhubarb\Leaf\UnitTesting\Presenters\Switched\UnitTestSwitchedPresenter;
  */
 class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 {
-	/**
-	 * @var UnitTestSwitchedPresenter
-	 */
-	private $host;
+    /**
+     * @var UnitTestSwitchedPresenter
+     */
+    private $host;
 
-	protected function setUp()
-	{
-		parent::setUp();
+    protected function setUp()
+    {
+        parent::setUp();
 
-		$this->host = new UnitTestSwitchedPresenter();
-		$this->host->initialise();
-	}
+        $this->host = new UnitTestSwitchedPresenter();
+        $this->host->initialise();
+    }
 
-	public function testDefaultPresenterIsTheFirst()
-	{
-		$this->assertEquals( "Details", $this->host->TestGetDefaultPresenterName() );
-	}
+    public function testDefaultPresenterIsTheFirst()
+    {
+        $this->assertEquals("Details", $this->host->TestGetDefaultPresenterName());
+    }
 
-	public function testCurrentPresenterNameIsTheDefault()
-	{
-		$this->assertEquals( "Details", $this->host->TestGetCurrentPresenterName() );
+    public function testCurrentPresenterNameIsTheDefault()
+    {
+        $this->assertEquals("Details", $this->host->TestGetCurrentPresenterName());
 
-		$this->host->model->CurrentPresenterName = "Address";
-		$this->assertEquals( "Address", $this->host->TestGetCurrentPresenterName() );
-	}
+        $this->host->model->CurrentPresenterName = "Address";
+        $this->assertEquals("Address", $this->host->TestGetCurrentPresenterName());
+    }
 
-	public function testChangePresenterManually()
-	{
-		$this->assertEquals( "Details", $this->host->TestGetCurrentPresenterName() );
+    public function testChangePresenterManually()
+    {
+        $this->assertEquals("Details", $this->host->TestGetCurrentPresenterName());
 
-		$threwRequiresException = false;
+        $threwRequiresException = false;
 
-		try
-		{
-			$this->host->TestPresenterIsChanged( "Address" );
-		}
-		catch( \Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er )
-		{
-			$threwRequiresException = true;
-		}
+        try {
+            $this->host->TestPresenterIsChanged("Address");
+        } catch (\Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er) {
+            $threwRequiresException = true;
+        }
 
-		$this->assertTrue( $threwRequiresException, "ChangePresenter() must throw RequiresRegenerationException" );
+        $this->assertTrue($threwRequiresException, "ChangePresenter() must throw RequiresRegenerationException");
 
-		$this->assertEquals( "Address", $this->host->TestGetCurrentPresenterName() );
+        $this->assertEquals("Address", $this->host->TestGetCurrentPresenterName());
 
-		$this->setExpectedException( "\Rhubarb\Leaf\Exceptions\InvalidPresenterNameException" );
+        $this->setExpectedException("\Rhubarb\Leaf\Exceptions\InvalidPresenterNameException");
 
-		$this->host->TestPresenterIsChanged( "NonExistantPresenter" );
-	}
+        $this->host->TestPresenterIsChanged("NonExistantPresenter");
+    }
 
-	public function testChangePresenterThroughEvent()
-	{
-		$this->assertEquals( "Details", $this->host->TestGetCurrentPresenterName() );
+    public function testChangePresenterThroughEvent()
+    {
+        $this->assertEquals("Details", $this->host->TestGetCurrentPresenterName());
 
-		$presenter = $this->host->GetDetailsPresenter();
-		$threwRequiresException = false;
+        $presenter = $this->host->GetDetailsPresenter();
+        $threwRequiresException = false;
 
-		try
-		{
-			$presenter->TestChangingPresenterThroughEvent();
-		}
-		catch( \Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er )
-		{
-			$threwRequiresException = true;
-		}
+        try {
+            $presenter->TestChangingPresenterThroughEvent();
+        } catch (\Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er) {
+            $threwRequiresException = true;
+        }
 
-		$this->assertTrue( $threwRequiresException, "ChangePresenter() must throw RequiresRegenerationException" );
-		$this->assertEquals( "Address", $this->host->TestGetCurrentPresenterName() );
+        $this->assertTrue($threwRequiresException, "ChangePresenter() must throw RequiresRegenerationException");
+        $this->assertEquals("Address", $this->host->TestGetCurrentPresenterName());
 
-	}
+    }
 }

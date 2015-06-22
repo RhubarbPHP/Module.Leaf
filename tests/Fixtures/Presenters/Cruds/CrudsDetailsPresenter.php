@@ -6,9 +6,9 @@ use Rhubarb\Leaf\Presenters\Presenter;
 
 class CrudsDetailsPresenter extends Presenter
 {
-	protected function createView()
-	{
-		return new CrudsDetailsView();
-	}
+    protected function createView()
+    {
+        return new CrudsDetailsView();
+    }
 
 }

@@ -10,15 +10,15 @@ use Rhubarb\Leaf\Presenters\Application\Table\Table;
  */
 abstract class FooterProvider
 {
-	/**
-	 * @var Table
-	 */
-	protected $table;
+    /**
+     * @var Table
+     */
+    protected $table;
 
-	public abstract function printFooter();
+    public abstract function printFooter();
 
-	public function setTable( $table )
-	{
-		$this->table = $table;
-	}
+    public function setTable($table)
+    {
+        $this->table = $table;
+    }
 }

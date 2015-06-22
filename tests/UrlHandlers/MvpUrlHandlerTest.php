@@ -7,20 +7,20 @@ use Rhubarb\Crown\UnitTesting\CoreTestCase;
 
 class MvpUrlHandlerTest extends CoreTestCase
 {
-	public function testHandlerLooksForPresenter()
-	{
-		// Check that MvpUrlHandler differs from NamespaceMappedUrlHandler in that it looks for "Presenter" at the end
-		// of the class name.
+    public function testHandlerLooksForPresenter()
+    {
+        // Check that MvpUrlHandler differs from NamespaceMappedUrlHandler in that it looks for "Presenter" at the end
+        // of the class name.
 
-		// Some silly namespace to test.
-		$handler = new MvpUrlHandler( "Rhubarb\Leaf\UnitTesting\Presenters\Cruds" );
-		$handler->SetUrl( "/" );
+        // Some silly namespace to test.
+        $handler = new MvpUrlHandler("Rhubarb\Leaf\UnitTesting\Presenters\Cruds");
+        $handler->SetUrl("/");
 
-		$request = new WebRequest();
-		$request->UrlPath = "/normal/";
+        $request = new WebRequest();
+        $request->UrlPath = "/normal/";
 
-		$response = $handler->generateResponse( $request );
+        $response = $handler->generateResponse($request);
 
-		$this->assertEquals( 'My New View', $response );
-	}
+        $this->assertEquals('My New View', $response);
+    }
 }

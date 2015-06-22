@@ -1,15 +1,12 @@
+var jqueryHtmlViewBridge = function (presenterPath) {
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+};
 
-var jqueryHtmlViewBridge = function( presenterPath )
-{
-    window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge.apply( this, arguments );
-}
-
-jqueryHtmlViewBridge.prototype = new window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge();
+jqueryHtmlViewBridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
 jqueryHtmlViewBridge.prototype.constructor = jqueryHtmlViewBridge;
 
-jqueryHtmlViewBridge.prototype.onRegistered = function()
-{
-	this.element = $( this.viewNode );
-}
+jqueryHtmlViewBridge.prototype.onRegistered = function () {
+    this.element = $(this.viewNode);
+};
 
-window.gcd.core.mvp.viewBridgeClasses.JqueryHtmlViewBridge = jqueryHtmlViewBridge;
+window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge = jqueryHtmlViewBridge;

@@ -9,8 +9,8 @@ namespace Rhubarb\Leaf\UnitTesting\Presenters\Switched;
  */
 class Thanks extends \Rhubarb\Leaf\Presenters\Presenter
 {
-	protected function createView()
-	{
-		$this->registerView( new \Rhubarb\Leaf\UnitTesting\Presenters\TestView() );
-	}
+    protected function createView()
+    {
+        $this->registerView(new \Rhubarb\Leaf\UnitTesting\Presenters\TestView());
+    }
 }

@@ -34,7 +34,7 @@ class TableView extends JQueryView
      */
     public $list;
 
-    public $columns = array();
+    public $columns = [];
 
     public $noDataHtml = "";
 
@@ -48,7 +48,7 @@ class TableView extends JQueryView
 
     public $repeatPagerAtBottom = false;
 
-    public $tableCssClasses = array();
+    public $tableCssClasses = [];
 
     protected function getClientSideViewBridgeName()
     {

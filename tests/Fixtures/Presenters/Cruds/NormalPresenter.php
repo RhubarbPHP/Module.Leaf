@@ -14,8 +14,8 @@ use Rhubarb\Leaf\Presenters\HtmlPresenter;
 
 class NormalPresenter extends HtmlPresenter
 {
-	public function createView()
-	{
-		return new NormalView();
-	}
+    public function createView()
+    {
+        return new NormalView();
+    }
 }

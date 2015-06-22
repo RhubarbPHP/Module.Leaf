@@ -1,24 +1,17 @@
-var bridge = function( presenterPath )
-{
-    window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge.apply( this, arguments );
-}
+var bridge = function (presenterPath) {
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+};
 
-bridge.prototype = new window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
 bridge.prototype.constructor = bridge;
 
-bridge.prototype.attachEvents = function()
-{
+bridge.spawn = function (spawnSettings, viewIndex) {
+    var element = document.createElement("INPUT");
+    element.setAttribute("type", "file");
 
-}
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(element, spawnSettings, viewIndex);
 
-bridge.spawn = function( spawnSettings, viewIndex )
-{
-	var element = document.createElement( "INPUT" );
-	element.setAttribute( "type", "file" );
+    return element;
+};
 
-	window.gcd.core.mvp.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement( element, spawnSettings, viewIndex );
-
-	return element;
-}
-
-window.gcd.core.mvp.viewBridgeClasses.SimpleHtmlFileUploadViewBridge = bridge;
+window.rhubarb.viewBridgeClasses.SimpleHtmlFileUploadViewBridge = bridge;

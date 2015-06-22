@@ -18,28 +18,27 @@
 
 namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
 
-require_once __DIR__."/ModelColumn.php";
+require_once __DIR__ . "/ModelColumn.php";
 
 use Rhubarb\Crown\DateTime\RhubarbDateTime;
 
 class DateColumn extends ModelColumn
 {
-	private $dateFormat;
+    private $dateFormat;
 
-	public function __construct( $columnName, $label = "", $dateFormat = "jS F Y" )
-	{
-		parent::__construct($columnName, $label);
+    public function __construct($columnName, $label = "", $dateFormat = "jS F Y")
+    {
+        parent::__construct($columnName, $label);
 
-		$this->dateFormat = $dateFormat;
-	}
+        $this->dateFormat = $dateFormat;
+    }
 
-	protected function getFormattedValue($value)
-	{
-		if ( $value instanceof RhubarbDateTime )
-		{
-			return $value->format( $this->dateFormat );
-		}
+    protected function getFormattedValue($value)
+    {
+        if ($value instanceof RhubarbDateTime) {
+            return $value->format($this->dateFormat);
+        }
 
-		return $value;
-	}
+        return $value;
+    }
 }

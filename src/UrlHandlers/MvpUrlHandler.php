@@ -25,8 +25,8 @@ use Rhubarb\Crown\UrlHandlers\NamespaceMappedUrlHandler;
  */
 class MvpUrlHandler extends NamespaceMappedUrlHandler
 {
-	protected function convertUrlToClassName( $pageUrl )
-	{
-		return parent::convertUrlToClassName( $pageUrl )."Presenter";
-	}
+    protected function convertUrlToClassName($pageUrl)
+    {
+        return parent::convertUrlToClassName($pageUrl) . "Presenter";
+    }
 }

@@ -20,8 +20,8 @@ namespace Rhubarb\Leaf\Presenters\Application\Table;
 
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
-use Rhubarb\Crown\Exceptions\ForceResponseException;
 use Rhubarb\Crown\DataStreams\CsvStream;
+use Rhubarb\Crown\Exceptions\ForceResponseException;
 use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
@@ -53,7 +53,7 @@ class Table extends HtmlPresenter
     private $collection;
     private $pageSize;
     private $footerProviders = [];
-    private $tableCssClassNames = array();
+    private $tableCssClassNames = [];
 
     /**
      * @var Model
@@ -65,9 +65,9 @@ class Table extends HtmlPresenter
         parent::__construct($presenterName);
 
         $this->collection = $list;
-        $this->Columns = array();
+        $this->Columns = [];
         $this->pageSize = $pageSize;
-        $this->tableCssClassNames = array();
+        $this->tableCssClassNames = [];
 
         $this->attachClientSidePresenterBridge = true;
     }
@@ -312,7 +312,7 @@ class Table extends HtmlPresenter
             return [];
         }
 
-        $inflatedColumns = array();
+        $inflatedColumns = [];
 
         foreach ($columns as $key => $value) {
             $tableColumn = $value;
@@ -410,7 +410,7 @@ class Table extends HtmlPresenter
             $this->onRefresh();
         });
 
-        $presenter->attachEventHandler("Updated", array($this, "OnRefresh"));
+        $presenter->attachEventHandler("Updated", [$this, "OnRefresh"]);
     }
 
     protected function onRefresh()
