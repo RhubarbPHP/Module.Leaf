@@ -1,14 +1,9 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
-use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
+use Rhubarb\Leaf\Presenters\Presenter;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 class UnitTestStatefulPresenter extends Presenter
 {
     protected function createView()

@@ -1,20 +1,12 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: acuthbert
- * Date: 04/03/13
- * Time: 21:37
- * To change this template use File | Settings | File Templates.
- */
 
-namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Table\Columns;
 
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn;
+use Rhubarb\Stem\Tests\Fixtures\Company;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTime;
-use Rhubarb\Stem\UnitTesting\Company;
-
-class DateColumnTest extends CoreTestCase
+class DateColumnTest extends ModelUnitTestCase
 {
     public function testDateFormat()
     {

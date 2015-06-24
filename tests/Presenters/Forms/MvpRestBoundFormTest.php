@@ -1,15 +1,21 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Forms;
+namespace Rhubarb\Leaf\Tests\Presenters\Forms;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\CheckBoxes\CheckBox;
+use Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown;
+use Rhubarb\Leaf\Presenters\Controls\Text\Password\Password;
+use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
+use Rhubarb\Leaf\Presenters\Forms\MvpRestBoundForm;
 use Rhubarb\Leaf\UrlHandlers\MvpRestHandler;
 use Rhubarb\Leaf\Views\HtmlView;
-use Rhubarb\Stem\UnitTesting\Company;
-use Rhubarb\Stem\UnitTesting\User;
+use Rhubarb\Stem\Collections\Collection;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
+use Rhubarb\Stem\Tests\Fixtures\User;
 
-class MvpRestBoundFormTest extends CoreTestCase
+class MvpRestBoundFormTest extends RhubarbTestCase
 {
     public function testPresenterGetsRestModel()
     {
@@ -17,7 +23,7 @@ class MvpRestBoundFormTest extends CoreTestCase
         $user->Username = "windychicken";
         $user->Save();
 
-        $restHandler = new MvpRestHandler("Rhubarb\Stem\UnitTesting\User", "", "Rhubarb\Leaf\Presenters\Forms\ModelBoundTestForm");
+        $restHandler = new MvpRestHandler(User::class, "", ModelBoundTestForm::class);
         $restHandler->SetUrl("/users/");
 
         $request = new WebRequest();
@@ -54,33 +60,33 @@ class MvpRestBoundFormTest extends CoreTestCase
 
         $control = $mvp->PublicCreatePresenterByName("Username");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox", $control);
+        $this->assertInstanceOf(TextBox::class, $control);
 
         $control = $mvp->PublicCreatePresenterByName("Password");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Controls\Text\Password\Password", $control);
+        $this->assertInstanceOf(Password::class, $control);
 
         $control = $mvp->PublicCreatePresenterByName("Active");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Controls\CheckBoxes\CheckBox", $control);
+        $this->assertInstanceOf(CheckBox::class, $control);
 
         $control = $mvp->PublicCreatePresenterByName("UserType");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown", $control);
+        $this->assertInstanceOf(DropDown::class, $control);
 
         $items = $control->getSelectionItems();
 
         $this->assertEquals(["", "Please Select"], $items[0]);
-        $this->assertInstanceOf("Rhubarb\Stem\Repositories\MySql\Schema\Columns\Enum", $items[1]);
+        $this->assertInstanceOf(MySqlEnum::class, $items[1]);
 
         $control = $mvp->PublicCreatePresenterByName("CompanyID");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown", $control);
+        $this->assertInstanceOf(DropDown::class, $control);
 
         $items = $control->getSelectionItems();
 
         $this->assertEquals(["", "Please Select"], $items[0]);
-        $this->assertInstanceOf("Rhubarb\Stem\Collections\Collection", $items[1]);
+        $this->assertInstanceOf(Collection::class, $items[1]);
     }
 }
 

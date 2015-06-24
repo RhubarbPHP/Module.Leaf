@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
 use Rhubarb\Leaf\Presenters\Forms\Form;
 
@@ -10,5 +10,4 @@ class TestViewIndexPresenter extends Form
     {
         return new TestViewIndexView();
     }
-
 }

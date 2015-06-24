@@ -1,11 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\UrlHandlers;
+namespace Rhubarb\Leaf\Tests\UrlHandlers;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\UrlHandlers\MvpUrlHandler;
 
-class MvpUrlHandlerTest extends CoreTestCase
+class MvpUrlHandlerTest extends RhubarbTestCase
 {
     public function testHandlerLooksForPresenter()
     {
@@ -13,7 +14,7 @@ class MvpUrlHandlerTest extends CoreTestCase
         // of the class name.
 
         // Some silly namespace to test.
-        $handler = new MvpUrlHandler("Rhubarb\Leaf\UnitTesting\Presenters\Cruds");
+        $handler = new MvpUrlHandler('Rhubarb\Leaf\Tests\Fixtures\Presenters\Cruds');
         $handler->SetUrl("/");
 
         $request = new WebRequest();

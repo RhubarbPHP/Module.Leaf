@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters\Cruds2;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters\Cruds2;
 
 use Rhubarb\Leaf\Views\HtmlView;
 use Rhubarb\Patterns\Mvp\Crud\ModelForm\ModelFormPresenter;

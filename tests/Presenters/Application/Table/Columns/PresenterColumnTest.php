@@ -1,15 +1,16 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Table\Columns;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\PresenterColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Table;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Leaf\Views\View;
-use Rhubarb\Stem\UnitTesting\Example;
+use Rhubarb\Stem\Tests\Fixtures\Example;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
-class PresenterColumnTest extends CoreTestCase
+class PresenterColumnTest extends ModelUnitTestCase
 {
     public function testColumnPresents()
     {
@@ -62,6 +63,4 @@ class HostView extends View
     {
         print $this->table;
     }
-
-
 }

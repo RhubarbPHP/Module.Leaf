@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
 use Rhubarb\Leaf\Presenters\Controls\CompositeControlPresenter;
 

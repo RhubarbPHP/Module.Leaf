@@ -1,18 +1,19 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Search;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Search;
 
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Application\Search\SearchPanel;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBoxView;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 use Rhubarb\Stem\Filters\Contains;
 use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\Group;
 
-class SearchPanelTest extends CoreTestCase
+class SearchPanelTest extends RhubarbTestCase
 {
     /**
      * @var UnitTestSearchPanel
@@ -53,7 +54,7 @@ class SearchPanelTest extends CoreTestCase
         $search = new UnitTestSearchPanel();
 
         // This will simulate the textbox getting a value
-        $request = \Rhubarb\Crown\Context::CurrentRequest();
+        $request = Context::CurrentRequest();
         $request->Post("_Phrase", "abc123");
 
         $context = new Context();
@@ -98,23 +99,23 @@ class SearchPanelTest extends CoreTestCase
         $filter = null;
 
         $result = $this->panel->TestConfigureFilters($filter);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Group", $result);
+        $this->assertInstanceOf(Group::class, $result);
         $filters = $result->GetFilters();
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Contains", $filters[0]);
+        $this->assertInstanceOf(Contains::class, $filters[0]);
 
         $filter = new Equals("CompanyID", "1");
 
         $result = $this->panel->TestConfigureFilters($filter);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Group", $result);
+        $this->assertInstanceOf(Group::class, $result);
         $filters = $result->GetFilters();
         $this->assertCount(2, $filters);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Equals", $filters[0]);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Group", $filters[1]);
+        $this->assertInstanceOf(Equals::class, $filters[0]);
+        $this->assertInstanceOf(Group::class, $filters[1]);
 
         $filters = $filters[1]->GetFilters();
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf("Rhubarb\Stem\Filters\Contains", $filters[0]);
+        $this->assertInstanceOf(Contains::class, $filters[0]);
 
         $this->panel->Phrase = "";
 

@@ -1,14 +1,9 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
 use Rhubarb\Leaf\Views\HtmlView;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 class TestView extends HtmlView
 {
     public function __construct($requireContainer = true, $requireState = true)

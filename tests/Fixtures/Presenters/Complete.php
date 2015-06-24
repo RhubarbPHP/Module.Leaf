@@ -1,14 +1,13 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
+
+use Rhubarb\Leaf\Presenters\Presenter;
 
 /**
  * A second step of a multi step test.
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
  */
-class Complete extends \Rhubarb\Leaf\Presenters\Presenter
+class Complete extends Presenter
 {
     protected function createView()
     {

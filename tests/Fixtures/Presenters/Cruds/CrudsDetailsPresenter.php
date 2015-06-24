@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters\Cruds;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters\Cruds;
 
 use Rhubarb\Leaf\Presenters\Presenter;
 
@@ -10,5 +10,4 @@ class CrudsDetailsPresenter extends Presenter
     {
         return new CrudsDetailsView();
     }
-
 }

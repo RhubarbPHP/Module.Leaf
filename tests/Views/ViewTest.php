@@ -1,27 +1,24 @@
 <?php
 
-namespace Gcd\Tests;
+namespace Rhubarb\Leaf\Tests\Views;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\SimpleView;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class ViewTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
+class ViewTest extends RhubarbTestCase
 {
     public function testAddPresenterRaisesEvent()
     {
         $addedPresenter = null;
 
-        $view = new \Rhubarb\Leaf\Views\SimpleView();
+        $view = new SimpleView();
         $view->attachEventHandler("OnPresenterAdded", function ($presenter) use (&$addedPresenter) {
             $addedPresenter = $presenter;
         });
 
-        $view->AddPresenters(new \Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox("TestBox"));
+        $view->AddPresenters(new TextBox("TestBox"));
 
         $this->assertNotNull($addedPresenter);
-        $this->assertInstanceOf("\Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox", $addedPresenter);
-
+        $this->assertInstanceOf(TextBox::class, $addedPresenter);
     }
 }

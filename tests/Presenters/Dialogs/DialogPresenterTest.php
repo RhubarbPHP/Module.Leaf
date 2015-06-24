@@ -1,10 +1,11 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Dialogs;
+namespace Rhubarb\Leaf\Tests\Presenters\Dialogs;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Dialogs\DialogPresenter;
 
-class DialogPresenterTest extends CoreTestCase
+class DialogPresenterTest extends RhubarbTestCase
 {
     public function testNameGetsDefaultOfClassName()
     {
@@ -16,5 +17,4 @@ class DialogPresenterTest extends CoreTestCase
 
 class UnitTestDialogPresenter extends DialogPresenter
 {
-
 }

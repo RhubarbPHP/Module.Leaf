@@ -1,19 +1,20 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Table;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Table;
 
 use Rhubarb\Crown\Context;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\BooleanColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\OneToOneRelationshipColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\Template;
+use Rhubarb\Leaf\Presenters\Application\Table\Table;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 use Rhubarb\Stem\Collections\Collection;
-use Rhubarb\Stem\UnitTesting\Example;
+use Rhubarb\Stem\Tests\Fixtures\Example;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2013
- */
-class TableTest extends CoreTestCase
+class TableTest extends ModelUnitTestCase
 {
     public static function setUpBeforeClass()
     {
@@ -36,7 +37,7 @@ class TableTest extends CoreTestCase
     {
         $table = new Table();
 
-        $list = new Collection("Rhubarb\Stem\UnitTesting\Example");
+        $list = new Collection(Example::class);
         $table->setCollection($list);
 
         $this->assertEquals($list, $table->getCollection());
@@ -44,7 +45,7 @@ class TableTest extends CoreTestCase
 
     public function testTableInterpretsColumnsArray()
     {
-        $list = new Collection("Rhubarb\Stem\UnitTesting\Example");
+        $list = new Collection(Example::class);
         $table = new Table($list);
         $mockView = new MockTableView();
 
@@ -65,23 +66,23 @@ class TableTest extends CoreTestCase
         $table->generateResponse();
 
         $this->assertCount(9, $mockView->columns);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn", $mockView->columns[0]);
+        $this->assertInstanceOf(ModelColumn::class, $mockView->columns[0]);
+        $this->assertInstanceOf(Template::class, $mockView->columns[2]);
+        $this->assertInstanceOf(DateColumn::class, $mockView->columns[3]);
+        $this->assertInstanceOf(OneToOneRelationshipColumn::class, $mockView->columns[4]);
+        $this->assertInstanceOf(Template::class, $mockView->columns[5]);
+        $this->assertInstanceOf(DateColumn::class, $mockView->columns[6]);
+        $this->assertInstanceOf(BooleanColumn::class, $mockView->columns[7]);
+        $this->assertInstanceOf(ModelColumn::class, $mockView->columns[8]);
         $this->assertEquals("Forename", $mockView->columns[0]->label);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\Template", $mockView->columns[2]);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn", $mockView->columns[3]);
         $this->assertEquals("Date Of Birth", $mockView->columns[3]->label);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\OneToOneRelationshipColumn", $mockView->columns[4]);
         $this->assertEquals("Company", $mockView->columns[4]->label);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\Template", $mockView->columns[5]);
         $this->assertEquals("Company Name", $mockView->columns[5]->label);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn", $mockView->columns[6]);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\BooleanColumn", $mockView->columns[7]);
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn", $mockView->columns[8]);
     }
 
     public function testTableColumnSorts()
     {
-        $list = new Collection("Rhubarb\Stem\UnitTesting\Example");
+        $list = new Collection(Example::class);
         $table = new Table($list);
         $mockView = new MockTableView();
 

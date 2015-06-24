@@ -1,11 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Table\Columns;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Stem\UnitTesting\User;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\BooleanColumn;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
+use Rhubarb\Stem\Tests\Fixtures\User;
 
-class BooleanColumnTest extends CoreTestCase
+class BooleanColumnTest extends ModelUnitTestCase
 {
     public function testValueFormattedProperly()
     {

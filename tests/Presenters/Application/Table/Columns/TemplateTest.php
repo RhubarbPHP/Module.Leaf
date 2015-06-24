@@ -1,11 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Table\Columns;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Stem\UnitTesting\Example;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\Template;
+use Rhubarb\Stem\Tests\Fixtures\Example;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
-class TemplateTest extends CoreTestCase
+class TemplateTest extends ModelUnitTestCase
 {
     public function testReturnsCellValue()
     {

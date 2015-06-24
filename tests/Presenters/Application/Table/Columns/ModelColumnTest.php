@@ -1,19 +1,16 @@
 <?php
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2013
- */
 
-namespace Rhubarb\Leaf\Presenters\Application\Table\Columns;
+namespace Rhubarb\Leaf\Tests\Presenters\Application\Table\Columns;
 
-
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
+use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDate;
 use Rhubarb\Stem\Schema\Columns\String;
-use Rhubarb\Stem\UnitTesting\Example;
+use Rhubarb\Stem\Tests\Fixtures\Example;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
-class ModelColumnTest extends CoreTestCase
+class ModelColumnTest extends ModelUnitTestCase
 {
     public function testLabelIsSetAutomatically()
     {
@@ -42,10 +39,10 @@ class ModelColumnTest extends CoreTestCase
         $dateColumn = new MySqlDate("DateOfBirth");
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn", $tableColumn);
+        $this->assertInstanceOf(ModelColumn::class, $tableColumn);
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($dateColumn, "Test");
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn", $tableColumn);
+        $this->assertInstanceOf(DateColumn::class, $tableColumn);
     }
 
     public function testIsSortable()
@@ -54,7 +51,7 @@ class ModelColumnTest extends CoreTestCase
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
 
-        $this->assertInstanceOf("Rhubarb\Leaf\Presenters\Application\Table\Columns\ISortableColumn", $tableColumn);
+        $this->assertInstanceOf(SortableColumn::class, $tableColumn);
         $this->assertEquals("Forename", $tableColumn->getSortableColumnName());
     }
 }

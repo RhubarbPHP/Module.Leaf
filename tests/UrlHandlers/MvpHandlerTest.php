@@ -1,16 +1,12 @@
 <?php
 
-namespace Gcd\Tests;
+namespace Rhubarb\Leaf\Tests\UrlHandlers;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class MvpHandlerTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+
+class MvpHandlerTest extends RhubarbTestCase
 {
     public function testSubHandlerUsed()
     {
-
     }
 }

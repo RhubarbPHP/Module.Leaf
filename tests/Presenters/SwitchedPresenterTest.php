@@ -1,15 +1,12 @@
 <?php
 
-namespace Gcd\Tests;
+namespace Rhubarb\Leaf\Tests\Presenters;
+use Rhubarb\Leaf\Exceptions\InvalidPresenterNameException;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\UnitTestSwitchedPresenter;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 
-use Rhubarb\Leaf\UnitTesting\Presenters\Switched\UnitTestSwitchedPresenter;
-
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
+class SwitchedPresenterTest extends RhubarbTestCase
 {
     /**
      * @var UnitTestSwitchedPresenter
@@ -45,7 +42,7 @@ class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 
         try {
             $this->host->TestPresenterIsChanged("Address");
-        } catch (\Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er) {
+        } catch (RequiresViewReconfigurationException $er) {
             $threwRequiresException = true;
         }
 
@@ -53,7 +50,7 @@ class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 
         $this->assertEquals("Address", $this->host->TestGetCurrentPresenterName());
 
-        $this->setExpectedException("\Rhubarb\Leaf\Exceptions\InvalidPresenterNameException");
+        $this->setExpectedException(InvalidPresenterNameException::class);
 
         $this->host->TestPresenterIsChanged("NonExistantPresenter");
     }
@@ -67,12 +64,11 @@ class SwitchedPresenterTest extends \Rhubarb\Crown\UnitTesting\CoreTestCase
 
         try {
             $presenter->TestChangingPresenterThroughEvent();
-        } catch (\Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException $er) {
+        } catch (RequiresViewReconfigurationException $er) {
             $threwRequiresException = true;
         }
 
         $this->assertTrue($threwRequiresException, "ChangePresenter() must throw RequiresRegenerationException");
         $this->assertEquals("Address", $this->host->TestGetCurrentPresenterName());
-
     }
 }

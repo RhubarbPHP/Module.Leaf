@@ -1,10 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
+use Rhubarb\Leaf\Presenters\Controls\ControlView;
 
-class ControlViewTest extends CoreTestCase
+class ControlViewTest extends RhubarbTestCase
 {
     public function testCssClass()
     {
@@ -21,7 +23,6 @@ class ControlViewTest extends CoreTestCase
 
 class UnitTestControl extends ControlPresenter
 {
-
 }
 
 class ControlMockView extends ControlView

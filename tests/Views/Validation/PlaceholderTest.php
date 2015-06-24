@@ -1,12 +1,13 @@
 <?php
 
-namespace Rhubarb\Leaf\Views\Validation;
+namespace Rhubarb\Leaf\Tests\Views\Validation;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Leaf\Presenters\Simple;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Simple;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
+use Rhubarb\Leaf\Views\Validation\Placeholder;
 
-class PlaceholderTest extends CoreTestCase
+class PlaceholderTest extends RhubarbTestCase
 {
     public function testEmptyPlaceholder()
     {

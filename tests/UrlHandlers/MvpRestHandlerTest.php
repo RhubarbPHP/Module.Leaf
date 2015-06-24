@@ -1,12 +1,17 @@
 <?php
 
-namespace Rhubarb\Leaf\UrlHandlers;
+namespace Rhubarb\Leaf\Tests\UrlHandlers;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Stem\UnitTesting\User;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\Address;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\Details;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\Thanks;
+use Rhubarb\Leaf\UrlHandlers\MvpRestHandler;
+use Rhubarb\Stem\Collections\Collection;
+use Rhubarb\Stem\Tests\Fixtures\User;
 
-class MvpRestHandlerTest extends CoreTestCase
+class MvpRestHandlerTest extends RhubarbTestCase
 {
     /**
      * @var MvpRestHandler
@@ -18,10 +23,11 @@ class MvpRestHandlerTest extends CoreTestCase
         parent::setUp();
 
         // Note that we're using any old presenters here. The proof is that they actually get selected for the response.
-        $this->rest = new MvpRestHandler("Rhubarb\Stem\UnitTesting\User",
-            "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Address",
-            "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Details",
-            ["add" => "Rhubarb\Leaf\UnitTesting\Presenters\Switched\Thanks"]
+        $this->rest = new MvpRestHandler(
+            User::class,
+            Address::class,
+            Details::class,
+            ["add" => Thanks::class]
         );
 
         $this->rest->SetUrl("/users/");
@@ -35,11 +41,11 @@ class MvpRestHandlerTest extends CoreTestCase
         $request->Server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf("Rhubarb\Leaf\UnitTesting\Presenters\Switched\Address", $response->GetGenerator());
+        $this->assertInstanceOf(Address::class, $response->GetGenerator());
 
         $mvp = $response->GetGenerator();
 
-        $this->assertInstanceOf("Rhubarb\Stem\Collections\Collection", $mvp->restCollection);
+        $this->assertInstanceOf(Collection::class, $mvp->restCollection);
     }
 
     public function testRestHandlerInstantiatesModelView()
@@ -54,7 +60,7 @@ class MvpRestHandlerTest extends CoreTestCase
         $request->Server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf("Rhubarb\Leaf\UnitTesting\Presenters\Switched\Details", $response->GetGenerator());
+        $this->assertInstanceOf(Details::class, $response->GetGenerator());
 
         $mvp = $response->GetGenerator();
 
@@ -69,6 +75,6 @@ class MvpRestHandlerTest extends CoreTestCase
         $request->Server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf("Rhubarb\Leaf\UnitTesting\Presenters\Switched\Thanks", $response->GetGenerator());
+        $this->assertInstanceOf(Thanks::class, $response->GetGenerator());
     }
 }

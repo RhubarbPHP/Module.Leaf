@@ -1,13 +1,9 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class CompleteView extends \Rhubarb\Leaf\Views\View
+use Rhubarb\Leaf\Views\View;
+
+class CompleteView extends View
 {
-
 }

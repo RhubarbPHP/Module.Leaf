@@ -1,10 +1,11 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\DateTime;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\DateTime;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\DateTime\Date;
 
-class DateTest extends CoreTestCase
+class DateTest extends RhubarbTestCase
 {
     public function testDatesAreFormattedDuringBinding()
     {

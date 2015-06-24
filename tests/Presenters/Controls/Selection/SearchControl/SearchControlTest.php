@@ -1,11 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\Selection\SearchControl;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\Selection\SearchControl;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\Selection\SearchControl\SearchControl;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 
-class SearchControlTest extends CoreTestCase
+class SearchControlTest extends RhubarbTestCase
 {
     public function testSearchControlSearchPressedEventReturnsItems()
     {

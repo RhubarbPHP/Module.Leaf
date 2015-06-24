@@ -1,11 +1,14 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Tabs;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Tabs;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Application\Tabs\TabDefinition;
+use Rhubarb\Leaf\Presenters\Application\Tabs\TabsPresenter;
+use Rhubarb\Leaf\Presenters\Application\Tabs\TabsView;
 
-class TabsPresenterTest extends CoreTestCase
+class TabsPresenterTest extends RhubarbTestCase
 {
     public function testTabDefinitionsAreSet()
     {

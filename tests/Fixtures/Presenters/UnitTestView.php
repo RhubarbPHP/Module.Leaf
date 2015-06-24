@@ -16,9 +16,9 @@
  *  limitations under the License.
  */
 
-namespace Rhubarb\Leaf\Views;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
-require_once __DIR__ . '/View.php';
+use Rhubarb\Leaf\Views\View;
 
 class UnitTestView extends View
 {

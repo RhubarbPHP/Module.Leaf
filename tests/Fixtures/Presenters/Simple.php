@@ -1,12 +1,9 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
+use Rhubarb\Leaf\Presenters\Presenter;
+
 class Simple extends Presenter
 {
     public function __construct()
@@ -60,7 +57,7 @@ class Simple extends Presenter
 
     protected function createView()
     {
-        return new \Rhubarb\Leaf\Views\SimpleView();
+        return new SimpleView();
     }
 
     public function GetSubPresenters()

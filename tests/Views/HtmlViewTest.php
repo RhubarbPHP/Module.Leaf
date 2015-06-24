@@ -1,20 +1,20 @@
 <?php
 
-namespace Rhubarb\Leaf\Views;
+namespace Rhubarb\Leaf\Tests\Views;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Presenter;
-use Rhubarb\Leaf\UnitTesting\Presenters\TestView;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\TestView;
 
-class HtmlViewTest extends CoreTestCase
+class HtmlViewTest extends RhubarbTestCase
 {
     public function testWrappers()
     {
         $presenter = new TestPresenter("Forename", true, true);
         $output = $presenter->generateResponse();
 
-        // Careful now! The format of this string is important - dont' be tidying it up!
+        // Careful now! The format of this string is important - don't be tidying it up!
         $this->assertEquals('<div id="Forename" class="TestView" presenter-name="Forename">
 Dummy Output
 <input type="hidden" name="ForenameState" id="ForenameState" value="{&quot;PresenterName&quot;:&quot;Forename&quot;,&quot;PresenterPath&quot;:&quot;Forename&quot;}" />

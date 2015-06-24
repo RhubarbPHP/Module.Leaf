@@ -1,10 +1,12 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\FileUpload;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\FileUpload;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\FileUpload\SimpleHtmlFileUpload;
 
-class SimpleHtmlFileUploadTest extends CoreTestCase
+class SimpleHtmlFileUploadTest extends RhubarbTestCase
 {
     public function testUploadEventIsTriggered()
     {
@@ -17,7 +19,7 @@ class SimpleHtmlFileUploadTest extends CoreTestCase
             $eventPath = $path;
         });
 
-        $request = \Rhubarb\Crown\Context::CurrentRequest();
+        $request = Context::CurrentRequest();
         $request->Files("Image", [
             "name" => "goats-boats.jpg",
             "tmp_name" => "/temporary/path/abc123",

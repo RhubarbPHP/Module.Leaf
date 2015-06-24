@@ -1,12 +1,13 @@
 <?php
 
-namespace Rhubarb\Leaf\Views;
+namespace Rhubarb\Leaf\Tests\Views;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Presenter;
-use string;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
+use Rhubarb\Leaf\Views\MessageViewTrait;
 
-class MessageViewTraitTest extends CoreTestCase
+class MessageViewTraitTest extends RhubarbTestCase
 {
     public function testMessageTraitShowsMessage()
     {

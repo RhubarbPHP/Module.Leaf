@@ -1,29 +1,24 @@
 <?php
 
-namespace Gcd\Tests;
+namespace Rhubarb\Leaf\Tests\Presenters;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Layout\LayoutModule;
 use Rhubarb\Crown\Module;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
-use Rhubarb\Leaf\Presenters\Simple;
-use Rhubarb\Leaf\Presenters\UnitTestStatefulPresenter;
-use Rhubarb\Leaf\UnitTesting\Presenters\Switched\DetailsView;
-use Rhubarb\Leaf\UnitTesting\Presenters\Switched\UnitTestSwitchedPresenter;
-use Rhubarb\Leaf\UnitTesting\Presenters\Switched\UnitTestTextBox;
-use Rhubarb\Leaf\UnitTesting\Presenters\TestViewIndexPresenter;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Simple;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\DetailsView;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\UnitTestSwitchedPresenter;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\UnitTestTextBox;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\TestViewIndexPresenter;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestStatefulPresenter;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 
-class PresenterTest extends CoreTestCase
+class PresenterTest extends RhubarbTestCase
 {
     public function testPresenterFoundAndCorrectHtmlReturned()
     {
@@ -234,12 +229,7 @@ class PresenterTest extends CoreTestCase
     }
 }
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class SubPresenterTest extends CoreTestCase
+class SubPresenterTest extends RhubarbTestCase
 {
     /**
      * @var Hosted
@@ -359,13 +349,6 @@ Some output
 </eventresponse>", $response);
     }
 }
-
-include_once(__DIR__ . "/Presenter.class.php");
-include_once(__DIR__ . "/ModelProvider.class.php");
-include_once(__DIR__ . "/HtmlPresenter.class.php");
-include_once(__DIR__ . "/Controls/ControlPresenter.class.php");
-include_once(__DIR__ . "/../Views/View.class.php");
-include_once(__DIR__ . "/../Views/UnitTestView.class.php");
 
 class Host extends Presenter
 {

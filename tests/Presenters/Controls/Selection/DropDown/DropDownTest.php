@@ -1,10 +1,11 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\Selection\DropDown;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\Selection\DropDown;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown;
 
-class DropDownTest extends CoreTestCase
+class DropDownTest extends RhubarbTestCase
 {
     public function testDropDownReturnsHtmlCorrectly()
     {
@@ -18,10 +19,11 @@ class DropDownTest extends CoreTestCase
 
         $html = $dropDown->generateResponse();
 
-        $this->assertEquals('		<select name="Type" id="Type" presenter-name="Type">
-<option value="a" data-item="{&quot;value&quot;:&quot;a&quot;,&quot;label&quot;:&quot;a&quot;,&quot;data&quot;:[]}">a</option>
+        $this->assertEquals('    <select name="Type" id="Type"
+            presenter-name="Type">
+        <option value="a" data-item="{&quot;value&quot;:&quot;a&quot;,&quot;label&quot;:&quot;a&quot;,&quot;data&quot;:[]}">a</option>
 <option value="b" selected="selected" data-item="{&quot;value&quot;:&quot;b&quot;,&quot;label&quot;:&quot;bertie&quot;,&quot;data&quot;:[]}">bertie</option>
 <option value="c" data-item="{&quot;value&quot;:&quot;c&quot;,&quot;label&quot;:&quot;c&quot;,&quot;data&quot;:[]}">c</option>
-</select>', $html);
+        </select>', $html);
     }
 }

@@ -1,14 +1,9 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters\Switched;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched;
 
 use Rhubarb\Leaf\Presenters\Presenter;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 class Details extends Presenter
 {
     public static $forenameTextBound = "";

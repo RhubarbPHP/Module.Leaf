@@ -1,17 +1,15 @@
 <?php
 
-namespace Rhubarb\Leaf\UnitTesting\Presenters\Switched;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
-class Address extends \Rhubarb\Leaf\Presenters\Presenter
+use Rhubarb\Leaf\Presenters\Presenter;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\TestView;
+
+class Address extends Presenter
 {
     protected function createView()
     {
-        $this->registerView(new \Rhubarb\Leaf\UnitTesting\Presenters\TestView());
+        $this->registerView(new TestView());
     }
 
     public $restModel;

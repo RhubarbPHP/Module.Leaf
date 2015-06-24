@@ -1,14 +1,15 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\Selection;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\Selection;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\Selection\SelectionControlPresenter;
 use Rhubarb\Stem\Collections\Collection;
-use Rhubarb\Stem\Repositories\MySql\Filters\Equals;
+use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
-use Rhubarb\Stem\UnitTesting\User;
+use Rhubarb\Stem\Tests\Fixtures\User;
 
-class SelectionControlPresenterTest extends CoreTestCase
+class SelectionControlPresenterTest extends RhubarbTestCase
 {
     public function testItemCreation()
     {
@@ -85,7 +86,7 @@ class SelectionControlPresenterTest extends CoreTestCase
         $user->Save();
 
         // Test a collection
-        $collection = new Collection("Rhubarb\Stem\UnitTesting\User");
+        $collection = new Collection(User::class);
         $collection->Filter(new Equals("Active", 1));
 
         $presenter->setSelectionItems([$collection]);

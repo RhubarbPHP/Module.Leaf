@@ -1,15 +1,11 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Controls\Buttons;
+namespace Rhubarb\Leaf\Tests\Presenters\Controls\Buttons;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Controls\Buttons\Button;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2013
- */
-class ButtonTest extends CoreTestCase
+class ButtonTest extends RhubarbTestCase
 {
     public function testButtonPressedEventIsPassedThroughConstructor()
     {

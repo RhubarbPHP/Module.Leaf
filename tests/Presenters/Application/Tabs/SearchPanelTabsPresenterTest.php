@@ -1,15 +1,16 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Tabs;
-
-require_once(__DIR__ . "/../Search/SearchPanelTest.php");
+namespace Rhubarb\Leaf\Tests\Presenters\Application\Tabs;
 
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-use Rhubarb\Leaf\Presenters\Application\Search\UnitTestSearchPanel;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Leaf\Presenters\Application\Tabs\SearchPanelTabDefinition;
+use Rhubarb\Leaf\Presenters\Application\Tabs\SearchPanelTabsPresenter;
+use Rhubarb\Leaf\Presenters\Application\Tabs\SearchResultsTabDefinition;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
+use Rhubarb\Leaf\Tests\Presenters\ Application\Search\UnitTestSearchPanel;
 
-class SearchPanelTabsPresenterTest extends CoreTestCase
+class SearchPanelTabsPresenterTest extends RhubarbTestCase
 {
     public function testInflationSupportsArray()
     {
@@ -74,7 +75,7 @@ class SearchPanelTabsPresenterTest extends CoreTestCase
         $capturedTabDefinitions = [];
 
         $mockView = new UnitTestView();
-        $mockView->attachMethod("SetTabDefinitions", function ($tabDefinitions) use (&$capturedTabDefinitions) {
+        $mockView->attachMethod("setTabDefinitions", function ($tabDefinitions) use (&$capturedTabDefinitions) {
             $capturedTabDefinitions = $tabDefinitions;
         });
 

@@ -1,16 +1,17 @@
 <?php
 
-namespace Rhubarb\Leaf\Presenters\Application\Pager;
+namespace Rhubarb\Leaf\Tests\Presenters\ Application\Pager;
 
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
 use Rhubarb\Leaf\Exceptions\PagerOutOfBoundsException;
-use Rhubarb\Leaf\Views\UnitTestView;
+use Rhubarb\Leaf\Presenters\Application\Pager\Pager;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 use Rhubarb\Stem\Collections\Collection;
-use Rhubarb\Stem\UnitTesting\User;
+use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
+use Rhubarb\Stem\Tests\Fixtures\User;
 
-class PagerTest extends CoreTestCase
+class PagerTest extends ModelUnitTestCase
 {
     private $collection;
     /**
@@ -43,7 +44,7 @@ class PagerTest extends CoreTestCase
 
     private function CreateMocks()
     {
-        $this->collection = new Collection("\Rhubarb\Stem\UnitTesting\User");
+        $this->collection = new Collection(User::class);
 
         $this->mock = new TestPagerView();
 
@@ -110,8 +111,6 @@ class PagerTest extends CoreTestCase
         $this->assertEquals(3, $this->mock->pageNumber);
     }
 }
-
-include_once(__DIR__ . "/../../../Views/UnitTestView.class.php");
 
 class TestPagerView extends UnitTestView
 {

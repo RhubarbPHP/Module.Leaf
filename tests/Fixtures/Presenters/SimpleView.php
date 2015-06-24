@@ -1,14 +1,10 @@
 <?php
 
-namespace Rhubarb\Leaf\Views;
+namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
+use Rhubarb\Leaf\Views\View;
 
-/**
- *
- * @author acuthbert
- * @copyright GCD Technologies 2012
- */
 class SimpleView extends View implements ISimpleView
 {
     private $text;
