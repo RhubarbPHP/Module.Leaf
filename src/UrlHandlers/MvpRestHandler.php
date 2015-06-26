@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\UrlHandlers;
 
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Response\HtmlResponse;
-use Rhubarb\Crown\RestApi\Exceptions\RestImplementationException;
+use Rhubarb\RestApi\Exceptions\RestImplementationException;
 use Rhubarb\Stem\UrlHandlers\ModelCollectionHandler;
 
 /**
