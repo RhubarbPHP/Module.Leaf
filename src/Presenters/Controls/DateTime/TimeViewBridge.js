@@ -42,7 +42,10 @@ bridge.prototype.hasValue = function () {
 };
 
 bridge.prototype.getValue = function () {
-    return true;
+    var hours = this.findChildViewBridge("Hours").getValue();
+    var minutes = this.findChildViewBridge("Minutes").getValue();
+
+    return new Date(2000, 1, 1, hours, minutes, 0);
 };
 
 window.rhubarb.viewBridgeClasses.TimeViewBridge = bridge;

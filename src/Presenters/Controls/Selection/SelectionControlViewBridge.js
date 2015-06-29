@@ -17,6 +17,12 @@ selectionControl.prototype.setCurrentlyAvailableSelectionItems = function (items
 
 };
 
+selectionControl.prototype.setValue = function (value) {
+    this.viewNode.value = value;
+
+    this.model.SelectedItems = [{"value": value}];
+};
+
 selectionControl.prototype.getValue = function () {
     // If the control only supports a single selection then just return
     // the first of the selected items (or false if none selected)
