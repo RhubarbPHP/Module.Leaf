@@ -21,6 +21,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\Selection\SearchControl;
 require_once __DIR__ . "/../SelectionControlPresenter.php";
 
 use Rhubarb\Leaf\Presenters\Controls\Selection\SelectionControlPresenter;
+use Rhubarb\Stem\Models\Model;
 
 /**
  * A control presenter that forms the base for controls that require an event based search followed by selection.
@@ -35,6 +36,21 @@ abstract class SearchControl extends SelectionControlPresenter
         parent::__construct($name);
 
         $this->attachClientSidePresenterBridge = true;
+    }
+
+    /**
+     * Sets the width of the results panel.
+     *
+     * This is passed verbatim to the javascript width style so you can pass "150px" and "80%".
+     *
+     * There is one special case, "match" which the javascript will understand as making the results container
+     * match the width of the search box.
+     *
+     * @param $width
+     */
+    public function setResultsWidth($width)
+    {
+        $this->model->ResultsWidth = $width;
     }
 
     protected function isValueSelectable($value)
@@ -57,24 +73,11 @@ abstract class SearchControl extends SelectionControlPresenter
         $this->ResultColumns = $this->getResultColumns();
     }
 
+    protected abstract function getResultColumns();
+
     protected function createView()
     {
         return new SearchControlView();
-    }
-
-    /**
-     * Sets the width of the results panel.
-     *
-     * This is passed verbatim to the javascript width style so you can pass "150px" and "80%".
-     *
-     * There is one special case, "match" which the javascript will understand as making the results container
-     * match the width of the search box.
-     *
-     * @param $width
-     */
-    public function setResultsWidth($width)
-    {
-        $this->model->ResultsWidth = $width;
     }
 
     protected function configureView()
@@ -104,8 +107,6 @@ abstract class SearchControl extends SelectionControlPresenter
             return $item;
         });
     }
-
-    protected abstract function getResultColumns();
 
     protected function getPublicModelPropertyList()
     {
