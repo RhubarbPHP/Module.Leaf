@@ -37,28 +37,36 @@ dialog.prototype.getOriginalStates = function () {
 };
 
 dialog.prototype.clearAndShow = function () {
+    this.clear();
+    this.show();
+};
+
+dialog.prototype.clear = function () {
+    var
+        subPresenters = this.getSubPresenters(),
+        subPresenterIterator,
+        subPresenter;
+
     if (this.originalSubPresenterStates == null) {
         this.getOriginalStates();
     }
 
-    var subPresenters = this.getSubPresenters();
+    for (subPresenterIterator in subPresenters) {
+        if (subPresenters.hasOwnProperty(subPresenterIterator)) {
+            subPresenter = subPresenters[subPresenterIterator];
 
-    for (var i in subPresenters) {
-        var subPresenter = subPresenters[i];
+            if (!subPresenter.hasValue()) {
+                continue;
+            }
 
-        if (!subPresenter.hasValue()) {
-            continue;
-        }
-
-        if (this.originalSubPresenterStates[subPresenter.presenterName]) {
-            subPresenter.setValue(this.originalSubPresenterStates[subPresenter.presenterName]);
-        }
-        else {
-            subPresenter.setValue("");
+            if (this.originalSubPresenterStates[subPresenter.presenterName]) {
+                subPresenter.setValue(this.originalSubPresenterStates[subPresenter.presenterName]);
+            }
+            else {
+                subPresenter.setValue("");
+            }
         }
     }
-
-    this.show();
 };
 
 dialog.prototype.show = function () {
@@ -129,6 +137,5 @@ dialog.prototype.size = function () {
     dialog.css("marginLeft", "-" + (dialog.outerWidth() / 2) + "px");
     dialog.css("marginTop", "-" + (dialog.outerHeight() / 2) + "px");
 };
-
 
 window.rhubarb.viewBridgeClasses.DialogViewBridge = dialog;
