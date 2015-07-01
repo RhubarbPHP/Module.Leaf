@@ -30,10 +30,14 @@ button.prototype.attachEvents = function () {
 
     this.element.click(function () {
         if (self.validation) {
+            if (!self.eventHost) {
+                self.eventHost = self.findEventHost();
+            }
+
             var validationHost = self.eventHost;
 
-            if (self.validator && gcd.core.mvp.registeredPresenters[self.validator]) {
-                validationHost = gcd.core.mvp.registeredPresenters[self.validator];
+            if (self.validator && window.rhubarb.registeredPresenters[self.validator]) {
+                validationHost = window.rhubarb.registeredPresenters[self.validator];
             }
             else {
                 // See if there is a model-provider viewBridge in our parent chain and use the first of these
