@@ -384,7 +384,7 @@ HtmlViewBridge.prototype.loadState = function () {
         return;
     }
 
-    this.model = eval('(' + document.getElementById(path + 'State').value + ')');
+    this.model = JSON.parse(document.getElementById(path + 'State').value);
 
     if (document.getElementById(this.presenterPath)) {
         if (document.getElementById(this.presenterPath).className == "host") {
@@ -975,7 +975,7 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, 
             var response = ( eventResponse.textContent ) ? eventResponse.textContent : eventResponse.text;
 
             if (eventResponse.getAttribute("type") == "json") {
-                response = eval("(" + response + ")");
+                response = JSON.parse(response);
             }
             else {
                 response = response.trim();
