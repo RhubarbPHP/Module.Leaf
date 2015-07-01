@@ -15,14 +15,14 @@ class CheckSetTableView extends SelectionControlView
         $this->requiresStateInputs = false;
     }
 
-    protected function PrintViewContent()
+    protected function printViewContent()
     {
-        $name = $this->GetIndexedPresenterPath();
+        $name = $this->getIndexedPresenterPath();
         $name = \htmlentities($name) . '[]';
 
-        $presenterPath = \htmlentities($this->GetIndexedPresenterPath());
+        $presenterPath = \htmlentities($this->getIndexedPresenterPath());
         $presenterName = \htmlentities($this->presenterName);
-        $attributes = $this->GetHtmlAttributeTags();
+        $attributes = $this->getHtmlAttributeTags();
 
         $checkRow = $headerRow = '';
 
@@ -39,7 +39,7 @@ class CheckSetTableView extends SelectionControlView
                 foreach ($itemList as $subItem) {
                     $value = \htmlentities($subItem->value);
                     $text = \htmlentities($subItem->label);
-                    $checked = $this->IsValueSelected($subItem->value) ? ' checked="checked"' : '';
+                    $checked = $this->isValueSelected($subItem->value) ? ' checked="checked"' : '';
                     $data = \htmlentities(json_encode($subItem));
                     $headerRow .= '<th>'.$text.'</th>';
                     $checkRow .= <<<HTML
