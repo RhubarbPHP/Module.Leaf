@@ -23,11 +23,14 @@ require_once __DIR__ . "/../PresenterViewBase.php";
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
+use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Response\GeneratesResponse;
 use Rhubarb\Crown\Response\HtmlResponse;
+use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
 use Rhubarb\Leaf\Views\View;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionException;
 use Rhubarb\Stem\Exceptions\ModelConsistencyValidationException;
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Models\Validation\Validator;
@@ -53,7 +56,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * Note that the model is public to allow for unit tests to determine if the
      * presenter and view are working correctly.
      *
-     * @var \Rhubarb\Stem\ModelState
+     * @var ModelState
      */
     public $model = null;
 
@@ -249,7 +252,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     /**
      * Performs the validation supplied and if it errors, stores the resultant error in the $validationErrors array.
      *
-     * @param \Rhubarb\Stem\Models\Validation\Validator $validator
+     * @param Validator $validator
      * @return bool True if the validation succeeded. False if it didn't
      */
     public function validate(Validator $validator)
@@ -932,6 +935,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * the same page and returns the HTML for use in a host page.
      *
      * @param $index
+     *
+     * @return string
      */
     public final function getHtmlForIndex($index)
     {
@@ -1209,7 +1214,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      *
      * @see Presenter::createView()
      * @see Presenter::configureView()
-     * @throws \Rhubarb\Leaf\Exceptions\NoViewException
+     *
+     * @param bool $andRestoreModel If true, the model will be restored after the view is initialised
+     *
+     * @throws NoViewException
      */
     protected function initialiseView($andRestoreModel = true)
     {
@@ -1222,7 +1230,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         }
 
         if (!$this->view) {
-            throw new \Rhubarb\Leaf\Exceptions\NoViewException();
+            throw new NoViewException();
         }
 
         $this->hostedPresenterCount = 0;
@@ -1365,6 +1373,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * Provides access to the presenter's model
      *
      * @param $name
+     *
+     * @return mixed
      */
     public function __get($name)
     {
@@ -1403,5 +1413,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     {
         $this->bindEvents($presenter);
         $presenter->bindEvents($this);
+    }
+
+    public function getViewIndex()
+    {
+        return $this->viewIndex;
     }
 }
