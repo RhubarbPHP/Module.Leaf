@@ -1208,7 +1208,7 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
         presenterNames = [presenterNames];
     }
 
-    var matchedPresenters = [];
+    var matchedPresenters = new Array(presenterNames.length);
 
     var containingPresenterPath = containingPresenter.presenterPath;
 
@@ -1222,7 +1222,7 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
             // as the same trick can be used with waitForPresenters and it calls this method to do
             // most of the heavy lifting.
 
-            matchedPresenters.push(presenterName.viewBridge);
+            matchedPresenters[i] = presenterName.viewBridge;
             continue;
         }
 
@@ -1241,7 +1241,7 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
                     }
                 }
 
-                matchedPresenters[matchedPresenters.length] = registeredPresenter;
+                matchedPresenters[i] = registeredPresenter;
 
                 break;
             }
