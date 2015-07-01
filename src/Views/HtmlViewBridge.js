@@ -946,6 +946,8 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, 
         }
     }
 
+    this.reAttachHtmlViewBridges();
+
     for (i = 0; i < models.length; i++) {
         var model = models[i];
         target = model.getAttribute("id");
@@ -1004,8 +1006,6 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, 
             }
         }
     }
-
-    this.reAttachHtmlViewBridges();
 
     for (i = 0; i < eventsToRaise.length; i++) {
         var event = eventsToRaise[i];
