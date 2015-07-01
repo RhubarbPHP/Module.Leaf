@@ -103,6 +103,7 @@ class TextBoxView extends ControlView
     public function getSpawnSettings()
     {
         $settings = parent::getSpawnSettings();
+        $settings["type"] = $this->htmlType;
         $settings["size"] = $this->size;
         $settings["maxLength"] = $this->maxLength;
         $settings["allowBrowserAutoComplete"] = $this->allowBrowserAutoComplete;

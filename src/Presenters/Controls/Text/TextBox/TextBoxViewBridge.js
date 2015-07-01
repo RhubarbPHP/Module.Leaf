@@ -7,7 +7,11 @@ bridge.prototype.constructor = bridge;
 
 bridge.spawn = function (spawnData, index, parentPresenterPath) {
     var textBox = document.createElement("INPUT");
-    textBox.setAttribute("type", "text");
+    textBox.setAttribute("type", spawnData.type);
+    textBox.setAttribute("size", spawnData.size);
+    if (spawnData.maxLength) {
+        textBox.setAttribute("maxlength", spawnData.maxLength);
+    }
 
     window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(textBox, spawnData, index, parentPresenterPath);
 
@@ -15,4 +19,3 @@ bridge.spawn = function (spawnData, index, parentPresenterPath) {
 };
 
 window.rhubarb.viewBridgeClasses.TextBoxViewBridge = bridge;
-
