@@ -98,16 +98,18 @@ abstract class MvpRestBoundForm extends Form
 
     protected function setData($dataKey, $data, $viewIndex = false)
     {
+        $restModel = $this->getRestModel();
+
         if ($viewIndex) {
-            if ($this->restModel) {
-                if (!isset($this->restModel[$dataKey])) {
-                    $this->restModel[$dataKey] = [];
+            if ($restModel) {
+                if (!isset($restModel[$dataKey])) {
+                    $restModel[$dataKey] = [];
                 }
 
-                $existingData = $this->restModel[$dataKey];
+                $existingData = $restModel[$dataKey];
                 $existingData[$viewIndex] = $data;
 
-                $this->restModel[$dataKey] = $existingData;
+                $restModel[$dataKey] = $existingData;
             }
 
             if (!isset($this->model[$dataKey])) {
@@ -119,8 +121,8 @@ abstract class MvpRestBoundForm extends Form
 
             $this->model[$dataKey] = $existingData;
         } else {
-            if ($this->restModel) {
-                $this->restModel[$dataKey] = $data;
+            if ($restModel) {
+                $restModel[$dataKey] = $data;
             }
 
             $this->model[$dataKey] = $data;
@@ -145,8 +147,12 @@ abstract class MvpRestBoundForm extends Form
 
         if (isset($this->model[$dataKey])) {
             $data = $this->model[$dataKey];
-        } elseif (isset($this->restModel[$dataKey])) {
-            $data = $this->restModel[$dataKey];
+        } else {
+            $restModel = $this->getRestModel();
+
+            if (isset($restModel[$dataKey])) {
+                $data = $restModel[$dataKey];
+            }
         }
 
         if ($viewIndex && $data !== null && is_array($data)) {
