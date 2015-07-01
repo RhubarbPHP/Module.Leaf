@@ -6,15 +6,13 @@ bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
 bridge.prototype.constructor = bridge;
 
 bridge.prototype.setValue = function (value) {
-    var self = this;
-
     if (typeof value == "string" || value instanceof String) {
-        var dateTime = self.parseIsoDatetime(value);
+        var dateTime = this.parseIsoDatetime(value);
         var hours = dateTime.getHours();
         var minutes = dateTime.getMinutes();
 
-        self.findChildViewBridge("Hours").setValue(hours.pad());
-        self.findChildViewBridge("Minutes").setValue(minutes.pad());
+        this.findChildViewBridge("Hours").setValue(hours.pad());
+        this.findChildViewBridge("Minutes").setValue(minutes.pad());
     }
 };
 
@@ -46,6 +44,19 @@ bridge.prototype.getValue = function () {
     var minutes = this.findChildViewBridge("Minutes").getValue();
 
     return new Date(2000, 1, 1, hours, minutes, 0);
+};
+
+bridge.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
+    var container = document.createElement('div');
+
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(container, spawnSettings, viewIndex, parentPresenterPath);
+
+    for (var i in spawnSettings.SpawnSettings) {
+        var control = window.rhubarb.spawn(spawnSettings.SpawnSettings[i], null, container.id);
+        container.appendChild(control);
+    }
+
+    return container;
 };
 
 window.rhubarb.viewBridgeClasses.TimeViewBridge = bridge;

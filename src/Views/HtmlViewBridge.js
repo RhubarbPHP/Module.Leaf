@@ -5,11 +5,11 @@ if (!window.rhubarb) {
 window.rhubarb.registeredPresenters = {};
 window.rhubarb.viewBridgeClasses = {};
 
-window.rhubarb.spawn = function (spawnSettings, viewIndex) {
+window.rhubarb.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
     var viewBridgeClass = window.rhubarb.viewBridgeClasses[spawnSettings.ViewBridgeClass];
 
     if (viewBridgeClass.spawn) {
-        var element = viewBridgeClass.spawn(spawnSettings, viewIndex);
+        var element = viewBridgeClass.spawn(spawnSettings, viewIndex, parentPresenterPath);
 
         var bridge = new viewBridgeClass(element);
 
@@ -175,8 +175,9 @@ HtmlViewBridge.prototype.getViewIndex = function () {
  *
  * @param spawnData
  * @param [index]
+ * @param [parentPresenterPath]
  */
-HtmlViewBridge.spawn = function (spawnData, index) {
+HtmlViewBridge.spawn = function (spawnData, index, parentPresenterPath) {
 
 };
 
@@ -188,8 +189,8 @@ HtmlViewBridge.spawn = function (spawnData, index) {
  * @param node
  * @param [index]
  */
-HtmlViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index) {
-    var id = spawnData.PresenterPath;
+HtmlViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index, parentPresenterPath) {
+    var id = parentPresenterPath ? parentPresenterPath + '_' + spawnData.PresenterName : spawnData.PresenterPath;
 
     if (index !== null && index !== false && (typeof index !== "undefined")) {
         id += "(" + index + ")";

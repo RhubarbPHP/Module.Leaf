@@ -22,7 +22,7 @@ bridge.prototype.getValue = function () {
     }
 };
 
-bridge.spawn = function (spawnSettings, viewIndex) {
+bridge.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
     var checkbox = document.createElement('input');
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('value', '1');
@@ -32,7 +32,7 @@ bridge.spawn = function (spawnSettings, viewIndex) {
         checkbox.setAttribute(i, spawnSettings.Attributes[i]);
     }
 
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(checkbox, spawnSettings, viewIndex);
+    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(checkbox, spawnSettings, viewIndex, parentPresenterPath);
 
     return checkbox;
 };

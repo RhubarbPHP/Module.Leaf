@@ -22,14 +22,20 @@ require_once __DIR__ . '/../ControlView.php';
 
 use Rhubarb\Leaf\Presenters\Controls\ControlView;
 use Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown;
+use Rhubarb\Leaf\Views\SpawnableByViewBridgeViewTrait;
 
+/**
+ * @property DropDown[] $presenters
+ */
 class TimeView extends ControlView
 {
+    use SpawnableByViewBridgeViewTrait;
+
     private $minuteInterval = 1;
     private $hourStart;
     private $hourEnd;
 
-    function __construct($minuteInterval = 1, $hourStart = 0, $hourEnd = 23)
+    public function __construct($minuteInterval = 1, $hourStart = 0, $hourEnd = 23)
     {
         $this->minuteInterval = $minuteInterval;
         $this->hourStart = $hourStart;
@@ -75,5 +81,16 @@ class TimeView extends ControlView
         $package->resourcesToDeploy[] = __DIR__ . "/TimeViewBridge.js";
 
         return $package;
+    }
+
+    public function getSpawnSettings()
+    {
+        $settings = parent::GetSpawnSettings();
+        $settings["SpawnSettings"] = [
+            "Hours" => $this->presenters["Hours"]->getSpawnStructure(),
+            "Minutes" => $this->presenters["Minutes"]->getSpawnStructure()
+        ];
+
+        return $settings;
     }
 }

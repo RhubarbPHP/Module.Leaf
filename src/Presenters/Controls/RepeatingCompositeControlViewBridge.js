@@ -35,7 +35,7 @@ bridge.prototype.updateDom = function () {
         for (var i in this.controlSpawnSettings) {
             var spawnSettings = this.controlSpawnSettings[i];
 
-            var control = window.rhubarb.spawn(spawnSettings, index);
+            var control = window.rhubarb.spawn(spawnSettings, index, this.presenterPath);
             entry[control.viewBridge.presenterName] = control;
         }
 
