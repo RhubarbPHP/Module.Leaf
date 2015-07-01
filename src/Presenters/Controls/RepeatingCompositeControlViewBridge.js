@@ -28,31 +28,39 @@ bridge.prototype.updateDom = function () {
     }
 
     if (needsNewEntry) {
-        // Spawn the entries and then delegate the layout of them to a specialised function.
-        var index = this.entries.length;
-        var entry = {};
+        this.spawnNewEntry();
+    }
+};
 
-        for (var i in this.controlSpawnSettings) {
-            var spawnSettings = this.controlSpawnSettings[i];
+bridge.prototype.spawnNewEntry = function (data) {
+    // Spawn the entries and then delegate the layout of them to a specialised function.
+    var index = this.entries.length;
+    var entry = {};
 
-            var control = window.rhubarb.spawn(spawnSettings, index, this.presenterPath);
-            entry[control.viewBridge.presenterName] = control;
-        }
+    for (var i in this.controlSpawnSettings) {
+        var spawnSettings = this.controlSpawnSettings[i];
 
-        this.entries[this.entries.length] = entry;
+        var control = window.rhubarb.spawn(spawnSettings, index, this.presenterPath);
+        entry[control.viewBridge.presenterName] = control;
+    }
 
-        var entryDom = this.layoutControls(entry);
+    this.entries[this.entries.length] = entry;
 
-        this.element.append(entryDom);
+    var entryDom = this.layoutControls(entry);
 
-        for (i in entry) {
-            if (entry[i].viewBridge) {
-                entry[i].viewBridge.onRegistered();
+    this.element.append(entryDom);
+
+    for (i in entry) {
+        if (entry[i].viewBridge) {
+            entry[i].viewBridge.onRegistered();
+
+            if (data != undefined && data[i] != undefined) {
+                entry[i].viewBridge.setValue(data[i]);
             }
         }
-
-        entry.dom = entryDom;
     }
+
+    entry.dom = entryDom;
 };
 
 /**
