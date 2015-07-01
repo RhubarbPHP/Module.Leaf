@@ -14,6 +14,10 @@ bridge.prototype.setValue = function (value) {
         this.findChildViewBridge("Hours").setValue(hours.pad());
         this.findChildViewBridge("Minutes").setValue(minutes.pad());
     }
+    else if (typeof value == "object" && value instanceof Date) {
+        this.findChildViewBridge("Hours").setValue(value.getHours());
+        this.findChildViewBridge("Minutes").setValue(value.getMinutes().pad());
+    }
 };
 
 bridge.prototype.parseIsoDatetime = function (date) {
