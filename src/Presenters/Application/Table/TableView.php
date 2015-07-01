@@ -88,20 +88,22 @@ class TableView extends JQueryView
     {
         $suppressPagerContent = false;
 
-        try {
-            list($count) = $this->list->calculateAggregates(new Count($this->list->getModelSchema()->uniqueIdentifierColumnName));
-        } catch (\Exception $ex) {
-            $count = sizeof($this->list);
-        }
-        if ($count == 0 && $this->noDataHtml) {
-            print $this->noDataHtml;
-            $suppressPagerContent = true;
-        }
-
         if ($this->unsearchedHtml && !$this->getData("Searched")) {
             print $this->unsearchedHtml;
             $suppressPagerContent = true;
+        } else {
+            try {
+                list($count) = $this->list->calculateAggregates(new Count($this->list->getModelSchema()->uniqueIdentifierColumnName));
+            } catch (\Exception $ex) {
+                $count = sizeof($this->list);
+            }
+            if ($count == 0 && $this->noDataHtml) {
+                print $this->noDataHtml;
+                $suppressPagerContent = true;
+            }
+
         }
+
         //Always print the pager so we get javaScript loading
         $this->presenters["pager"]->setSuppressContent($suppressPagerContent);
         print $this->presenters["pager"];
