@@ -364,7 +364,7 @@ class Table extends HtmlPresenter
         return $value;
     }
 
-    private function configureFilters()
+    public function configureFilters()
     {
         $newFilter = $this->raiseEvent("ConfigureFilters", $this->collection->getFilter());
 
