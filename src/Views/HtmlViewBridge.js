@@ -611,7 +611,7 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
             presenter.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
-                self.parseEventResponse(eventName, xmlhttp.responseXML, onComplete);
+                self.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, onComplete, null);
             }
         }
     };
@@ -764,16 +764,22 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
  * @param targetHtmlViewBridge The name of the viewBridge the event is being triggered for
  */
 HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
+    var self = this;
     var argumentsArray = [];
-    var callback = false;
+    var successCallback = false;
+    var failureCallback = false;
 
     // Get the arguments into a proper array while stripping any closure found to become a callback.
 
     for (var i = 0; i < arguments.length; i++) {
-        argumentsArray[i] = arguments[i];
-
         if (arguments[i] instanceof Function) {
-            callback = arguments[i];
+            if (!successCallback) {
+                successCallback = arguments[i];
+            } else if (!failureCallback) {
+                failureCallback = arguments[i];
+            }
+        } else {
+            argumentsArray[i] = arguments[i];
         }
     }
 
@@ -803,11 +809,13 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
     // Attach the call back wrapper for the AJAX post.
 
     xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        if (xmlhttp.readyState == 4) {
             document.body.className = document.body.className.replace(" event-processing", "");
 
             if (xmlhttp.responseXML != null) {
-                targetHtmlViewBridge.parseEventResponse(eventName, xmlhttp.responseXML, callback);
+                targetHtmlViewBridge.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, successCallback, failureCallback);
+            } else if (self.isFailureCode(xmlhttp.status) && failureCallback) {
+                failureCallback(xmlhttp.responseText, xmlhttp.status);
             }
         }
     };
@@ -901,6 +909,14 @@ HtmlViewBridge.prototype.loadJson = function (url, callback) {
     xmlhttp.send();
 };
 
+HtmlViewBridge.prototype.isSuccessCode = function (httpResponseCode) {
+    return httpResponseCode >= 200 && httpResponseCode < 300;
+};
+
+HtmlViewBridge.prototype.isFailureCode = function (httpResponseCode) {
+    return httpResponseCode >= 400 && httpResponseCode < 600;
+};
+
 /**
  * Parses the raw xml response from the AJAX postback.
  *
@@ -908,15 +924,26 @@ HtmlViewBridge.prototype.loadJson = function (url, callback) {
  * <eventresponse> tags to call event handlers on the client.
  *
  * @param eventName
+ * @param responseCode
  * @param responseXml
+ * @param successCallback
+ * @param failureCallback
  */
-HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, callback) {
+HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseCode, responseXml, successCallback, failureCallback) {
     var updateElements = responseXml.getElementsByTagName("htmlupdate");
     var eventResponses = responseXml.getElementsByTagName("eventresponse");
     var scripts = responseXml.getElementsByTagName("script");
     var models = responseXml.getElementsByTagName("model");
     var eventsToRaise = responseXml.getElementsByTagName("event");
-    var content, target;
+    var content, target, callback;
+
+    if (this.isSuccessCode(responseCode)) {
+        callback = successCallback;
+    } else if (this.isFailureCode(responseCode)) {
+        callback = failureCallback;
+    } else {
+        console.log('Unhandled response code: ' + responseCode);
+    }
 
     for (var i = 0; i < updateElements.length; i++) {
         var element = updateElements[i];
@@ -985,14 +1012,14 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, 
             this.onServerEventResponseReceived(eventName, response);
 
             if (callback) {
-                callback(response);
+                callback(response, responseCode);
                 callBackCalled = true;
             }
         }
     }
 
     if (!callBackCalled && callback) {
-        callback();
+        callback(null, responseCode);
     }
 
     if (scripts.length > 0) {
@@ -1003,7 +1030,6 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseXml, 
                 eval(script.textContent);
             }
             catch (exception) {
-
             }
         }
     }
