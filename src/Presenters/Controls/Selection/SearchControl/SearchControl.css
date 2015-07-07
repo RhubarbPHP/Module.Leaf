@@ -1,4 +1,7 @@
 input.phrase-box-searching {
-    background: url(Resources/ajax-loader.gif) no-repeat center right !important;
+    background: white url(Resources/ajax-loader.gif) no-repeat center right !important;
 }
 
+.search-control .results {
+	overflow: auto;
+}
