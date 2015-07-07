@@ -772,14 +772,14 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
     // Get the arguments into a proper array while stripping any closure found to become a callback.
 
     for (var i = 0; i < arguments.length; i++) {
-        argumentsArray[i] = arguments[i];
-
         if (arguments[i] instanceof Function) {
             if (!successCallback) {
                 successCallback = arguments[i];
             } else if (!failureCallback) {
                 failureCallback = arguments[i];
             }
+        } else {
+            argumentsArray[i] = arguments[i];
         }
     }
 
