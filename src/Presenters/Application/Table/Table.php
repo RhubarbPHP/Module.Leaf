@@ -60,7 +60,7 @@ class Table extends HtmlPresenter
      */
     private $currentRow;
 
-    public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
+    public function __construct(Collection $list, $pageSize = 50, $presenterName = "Table")
     {
         parent::__construct($presenterName);
 
@@ -306,12 +306,6 @@ class Table extends HtmlPresenter
      */
     protected function inflateColumns($columns)
     {
-        // If the collection itself is null, we can't return a sensible columns collection.
-        // This might happen if the collection isn't determined until just before printing.
-        if ($this->collection == null) {
-            return [];
-        }
-
         $inflatedColumns = [];
 
         foreach ($columns as $key => $value) {
