@@ -55,6 +55,14 @@ class MvpRestHandler extends ModelCollectionHandler
         $this->additionalPresenterClassNameMap = $additionalPresenterClassNameMap;
     }
 
+    /**
+     * @return string
+     */
+    public function getUrlAction()
+    {
+        return $this->urlAction;
+    }
+
     protected function getSupportedMimeTypes()
     {
         $mime = parent::getSupportedMimeTypes();
