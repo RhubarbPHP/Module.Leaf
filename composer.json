@@ -17,12 +17,6 @@
       "Rhubarb\\Leaf\\Tests\\": "tests/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/acuthbert/rhubarb"
-    }
-  ],
   "require": {
     "rhubarbphp/rhubarb": "*"
   },
