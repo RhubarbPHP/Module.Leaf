@@ -811,6 +811,7 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
             document.body.className = document.body.className.replace(" event-processing", "");
+            self.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
                 targetHtmlViewBridge.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, successCallback, failureCallback);
