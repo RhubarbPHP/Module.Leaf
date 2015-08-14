@@ -18,7 +18,7 @@
 
 namespace Rhubarb\Leaf\Presenters\Application\Tabs;
 
-require_once __DIR__ . '\SearchPanelTabDefinition.php';
+require_once __DIR__ . '/SearchPanelTabDefinition.php';
 
 class SearchResultsTabDefinition extends SearchPanelTabDefinition
 {
