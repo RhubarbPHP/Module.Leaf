@@ -22,5 +22,4 @@ require_once __DIR__ . '\SearchPanelTabDefinition.php';
 
 class SearchResultsTabDefinition extends SearchPanelTabDefinition
 {
-
 }
