@@ -27,6 +27,18 @@ class Address extends ControlPresenter
     {
         parent::configureView();
         $this->view->defaultValues = $this->defaultValues;
-    }
 
+        $this->view->AttachEventHandler( "SearchPressed", function ( $houseNumber, $postCodeSearch ) {
+            $url = "http://paf.gcdtech.com/paf-data.php?simple=1&api=2&output=json&apikey=GCDTEST123";
+            if(!isset($postCodeSearch)) {
+                return json_decode([]);
+            }
+            $url .= "&postcode=" . urlencode($postCodeSearch);
+            if(isset($houseNumber)) {
+                $url .=  "&num=" . $houseNumber;
+            }
+            $response = file_get_contents($url);
+            return json_decode($response);
+        } );
+    }
 }

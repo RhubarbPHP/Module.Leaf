@@ -39,7 +39,7 @@ class AddressView extends ControlView
     {
         $this->AddPresenters(
             $country = new DropDown("Country"),
-            new TextBox("HouseNumber", 4),
+            new TextBox("HouseNumber", 20),
             new TextBox("PostCodeSearch", 10),
             $search = new Button("Search", "Search", function() {
             }),
@@ -58,9 +58,6 @@ class AddressView extends ControlView
 
     public function printViewContent()
     {
-        ?>
-
-        <?php
         $this->printFieldset( "", [ "Country" ] );
         ?>
         <div class="search-fields">
@@ -71,13 +68,15 @@ class AddressView extends ControlView
                     "Search"
                 ] );
             ?>
+            <span class="search-error">Insert a valid Post Code</span>
         </div>
+
         <br/>
         <p class="manual-address-par">Don't know the postcode? <a class="manual-address-link" href='#'>enter their address manually</a>.</p>
         <br/>
         <a class="search-address-link" href='#'>Search again</a>
         <div class="manual-fields">
-            <?php $this->printFieldset( "", [ "Line1", "Line2", "Town", "County", "PostCodeSearch" ] ); ?>
+            <?php $this->printFieldset( "", [ "Line1", "Line2", "Town", "County", "PostCode" ] ); ?>
         </div>
         <?php
     }
