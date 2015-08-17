@@ -8,6 +8,7 @@ bridge.prototype.constructor = bridge;
 bridge.prototype.attachEvents = function() {
 
     var self = this,
+        alertClass = "c-alert",
         manualAddressElements = $(".manual-fields"),
         searchAddressElement = $(".search-fields"),
         insertManualAddressLink = $(".manual-address-link"),
@@ -16,6 +17,7 @@ bridge.prototype.attachEvents = function() {
         houseNumber = $("#DonationPresenter_Address_HouseNumber"),
         postCodeSearch = $("#DonationPresenter_Address_PostCodeSearch"),
         searchError = $(".search-error"),
+        searchResults = $(".search-results"),
         searchButton = self.findChildViewBridge( 'Search' );
 
     // default configuration
@@ -25,6 +27,7 @@ bridge.prototype.attachEvents = function() {
 
     // address manual entry
     insertManualAddressLink.click(function() {
+        searchResults.removeClass(alertClass).empty();
         manualAddressPar.hide();
         manualAddressElements.show();
         searchAddressElement.hide();
@@ -41,7 +44,7 @@ bridge.prototype.attachEvents = function() {
     // search address
     searchButton.attachClientEventHandler("OnButtonPressed", function()
     {
-        searchError.hide();
+        searchResults.removeClass(alertClass).empty();
 
         // if post Code is empty show an error message
         if(! postCodeSearch.val()) {
@@ -49,7 +52,7 @@ bridge.prototype.attachEvents = function() {
         }
 
         self.raiseServerEvent( "SearchPressed", houseNumber.val(), postCodeSearch.val(), function (response){
-            console.log(response)
+            searchResults.addClass(alertClass).append("We found " + response.length + " results");
         });
         return false;
     });

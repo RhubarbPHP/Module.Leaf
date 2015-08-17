@@ -61,6 +61,7 @@ class AddressView extends ControlView
         $this->printFieldset( "", [ "Country" ] );
         ?>
         <div class="search-fields">
+            <span class="search-results"></span>
             <?php
                 $this->printFieldset( "", [
                     "HouseNumber",
