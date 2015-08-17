@@ -51,10 +51,8 @@ class AddressView extends ControlView
         );
 
         $country->SetSelectionItems( [ [ "", "Please select..." ], Country::getCountriesList() ] );
-        if(isset($this->defaultValues["Country"]))
-        {
-            $countryValue = $this->defaultValues["Country"];
-            $country->setSelectedItems($countryValue);
+        if (isset( $this->defaultValues[ "Country" ] )) {
+            $country->setSelectedItems( $this->defaultValues[ "Country" ] );
         }
     }
 
