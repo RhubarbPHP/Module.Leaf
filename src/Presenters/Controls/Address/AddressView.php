@@ -43,8 +43,8 @@ class AddressView extends ControlView
             new TextBox("PostCodeSearch", 10),
             $search = new Button("Search", "Search", function() {
             }),
-            new TextBox("Line1", 50),
-            new TextBox("Line2", 30),
+            new TextBox("AddressLine1", 50),
+            new TextBox("AddressLine2", 30),
             new TextBox("Town", 30),
             new TextBox("County", 20),
             new TextBox("PostCode", 10)
@@ -77,7 +77,14 @@ class AddressView extends ControlView
         <br/>
         <a class="search-address-link" href='#'>Search again</a>
         <div class="manual-fields">
-            <?php $this->printFieldset( "", [ "Line1", "Line2", "Town", "County", "PostCode" ] ); ?>
+            <?php $this->printFieldset( "", [
+                    "Line1" => "AddressLine1",
+                    "Line2" => "AddressLine2",
+                    "Town",
+                    "County",
+                    "PostCode"
+                ] );
+            ?>
         </div>
         <?php
     }
