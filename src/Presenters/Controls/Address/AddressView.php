@@ -12,6 +12,7 @@ use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 class AddressView extends ControlView
 {
     protected $htmlType = "address";
+    public $defaultValues;
 
     public function __construct($htmlType = "address")
     {
@@ -50,6 +51,11 @@ class AddressView extends ControlView
         );
 
         $country->SetSelectionItems( [ [ "", "Please select..." ], Country::getCountriesList() ] );
+        if(isset($this->defaultValues["Country"]))
+        {
+            $countryValue = $this->defaultValues["Country"];
+            $country->setSelectedItems($countryValue);
+        }
     }
 
     public function printViewContent()
