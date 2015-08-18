@@ -63,9 +63,7 @@ class AddressView extends ControlView
         <div class="search-fields">
             <div class="search-results">
                 <span class="search-results-msg"></span>
-                <ul class="search-results-items">
-
-                </ul>
+                <ul class="search-results-items"></ul>
             </div>
             <?php
                 $this->printFieldset( "", [
