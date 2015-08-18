@@ -32,7 +32,6 @@ bridge.prototype.attachEvents = function() {
     manualAddressElements.hide();
     searchLink.hide();
     searchError.hide();
-
     // address manual entry
     insertManualAddressLink.click(function() {
         showAddressFields()
