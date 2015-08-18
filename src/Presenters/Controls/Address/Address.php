@@ -29,15 +29,15 @@ class Address extends ControlPresenter
         $this->view->defaultValues = $this->defaultValues;
 
         $this->view->AttachEventHandler( "SearchPressed", function ( $houseNumber, $postCodeSearch ) {
-            $url = "http://paf.gcdtech.com/paf-data.php?simple=1&api=2&output=json&apikey=GCDTEST123";
             if(!isset($postCodeSearch)) {
                 return json_decode([]);
             }
-            $url .= "&postcode=" . urlencode($postCodeSearch);
+            $requestParams = [ "postcode" => $postCodeSearch ];
             if(isset($houseNumber)) {
-                $url .=  "&num=" . $houseNumber;
+                $requestParams["num"] = $houseNumber;
             }
-            $response = file_get_contents($url);
+            $requestUrl = PafSettings::getUrlRequest($requestParams);
+            $response = file_get_contents($requestUrl);
             return json_decode($response);
         } );
     }
