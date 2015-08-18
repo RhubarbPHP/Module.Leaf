@@ -17,7 +17,8 @@ bridge.prototype.attachEvents = function() {
         houseNumber = self.findChildViewBridge('HouseNumber'),
         postCodeSearch = self.findChildViewBridge('PostCodeSearch'),
         searchError = $(".search-error"),
-        searchResults = $(".search-results"),
+        searchResultsMsg = $(".search-results-msg"),
+        resultItemsList = $(".search-results-items"),
         searchButton = self.findChildViewBridge('Search'),
         // address fields
         line1 = self.findChildViewBridge('Line1'),
@@ -45,7 +46,7 @@ bridge.prototype.attachEvents = function() {
     });
     // search address
     searchButton.attachClientEventHandler("OnButtonPressed", function() {
-        searchResults.removeClass(alertClass).empty();
+        searchResultsMsg.removeClass(alertClass).empty();
         // if post Code is empty show an error message
         if(! postCodeSearch.viewNode.value) {
             searchError.show();
@@ -53,12 +54,27 @@ bridge.prototype.attachEvents = function() {
         }
 
         self.raiseServerEvent( "SearchPressed", houseNumber.viewNode.value, postCodeSearch.viewNode.value, function (response){
-            // single result fill address fields and fill them
+             // single result fill address fields and fill them
             if(response.length == 1) {
                 showAddressFields();
                 setAddressFields(response[0]);
             } else {
-                searchResults.addClass(alertClass).append("We found " + response.length + " results");
+                searchResultsMsg.addClass(alertClass).append("We found " + response.length + " results");
+                if(response.length > 0) {
+                    var resultString = "";
+                    for(var i in response) {
+                        var currItem = response[i];
+                        resultString +=
+                            "<li class='result-item'>"
+                            + "<span class='AddressLine1'>" + currItem['AddressLine1'] + "</span>"
+                            + "<span class='AddressLine2'>" + currItem['AddressLine2'] + "</span>"
+                            + "<span class='Town'>" + currItem['Town'] + "</span>"
+                            + "<span class='County'>" + currItem['County'] + "</span>"
+                            + "<span class='Postcode'>" + currItem['Postcode'] + "</span>"
+                            + "</li>";
+                    }
+                    resultItemsList.html(resultString);
+                }
             }
 
         });
@@ -81,6 +97,17 @@ bridge.prototype.attachEvents = function() {
         county.viewNode.value = addressObj['County'];
         postCode.viewNode.value = addressObj['Postcode'];
     }
+    // click event on resultItem of the search, map values in array and set address fields
+    resultItemsList.on("click", "li.result-item", function(){
+        var itemValues = $(this).find("span"),
+            addressObj = {};
+            itemValues.each(function() {
+            var currEl = $(this);
+            addressObj[ currEl.attr('class') ] = currEl.text();
+        });
+        setAddressFields(addressObj);
+        showAddressFields();
+    });
 };
 
 window.rhubarb.viewBridgeClasses.AddressViewBridge = bridge;
