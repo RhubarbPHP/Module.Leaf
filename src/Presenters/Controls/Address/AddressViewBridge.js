@@ -60,8 +60,8 @@ bridge.prototype.attachEvents = function() {
                 showAddressFields();
                 setAddressFields(response[0]);
             } else {
-                searchResultsMsg.addClass(alertClass).append("We found " + response.length + " results");
                 if(response.length > 0) {
+                    searchResultsMsg.addClass(alertClass).append("We found " + response.length + " results");
                     var resultString = "";
                     for(var i in response) {
                         var currItem = response[i];
@@ -75,9 +75,10 @@ bridge.prototype.attachEvents = function() {
                             + "</li>";
                     }
                     resultItemsList.html(resultString);
+                } else {
+                    searchResultsMsg.addClass(alertClass).append("The search didn't give any result, try with another post code or enter the address manually");
                 }
             }
-
         });
         return false;
     });
