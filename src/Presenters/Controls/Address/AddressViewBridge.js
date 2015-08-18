@@ -39,6 +39,7 @@ bridge.prototype.attachEvents = function() {
     });
     // search address
     searchLink.click(function() {
+        resultItemsList.empty();
         manualAddressPar.show();
         manualAddressElements.hide();
         searchAddressElement.show();
@@ -89,8 +90,7 @@ bridge.prototype.attachEvents = function() {
         searchLink.show();
     }
     // set address fields
-    function setAddressFields(addressObj)
-    {
+    function setAddressFields(addressObj) {
         line1.viewNode.value = addressObj['AddressLine1'];
         line2.viewNode.value = addressObj['AddressLine2'];
         town.viewNode.value = addressObj['Town'];
@@ -98,10 +98,11 @@ bridge.prototype.attachEvents = function() {
         postCode.viewNode.value = addressObj['Postcode'];
     }
     // click event on resultItem of the search, map values in array and set address fields
-    resultItemsList.on("click", "li.result-item", function(){
+    resultItemsList.on("click", "li.result-item", function() {
         var itemValues = $(this).find("span"),
             addressObj = {};
-            itemValues.each(function() {
+
+        itemValues.each(function() {
             var currEl = $(this);
             addressObj[ currEl.attr('class') ] = currEl.text();
         });
