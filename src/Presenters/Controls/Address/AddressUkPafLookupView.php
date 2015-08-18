@@ -9,10 +9,9 @@ use Rhubarb\Leaf\Presenters\Controls\ControlView;
 use Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 
-class AddressView extends ControlView
+class AddressUkPafLookupView extends ControlView
 {
     protected $htmlType = "address";
-    public $defaultValues;
 
     public function __construct($htmlType = "address")
     {
@@ -25,14 +24,14 @@ class AddressView extends ControlView
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = __DIR__ . "/AddressViewBridge.js";
+        $package->resourcesToDeploy[] = __DIR__ . "/AddressUkPafLookupViewBridge.js";
 
         return $package;
     }
 
     protected function getClientSideViewBridgeName()
     {
-        return "AddressViewBridge";
+        return "AddressUkPafLookupViewBridge";
     }
 
     public function createPresenters()
@@ -50,9 +49,7 @@ class AddressView extends ControlView
         );
 
         $country->SetSelectionItems( [ [ "", "Please select..." ], Country::getCountriesList() ] );
-        if (isset( $this->defaultValues[ "Country" ] )) {
-            $country->setSelectedItems( $this->defaultValues[ "Country" ] );
-        }
+        $country->setSelectedItems( "GB" );
     }
 
     public function printViewContent()

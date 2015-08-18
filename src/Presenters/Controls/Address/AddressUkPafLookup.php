@@ -6,20 +6,19 @@ namespace Rhubarb\Leaf\Presenters\Controls\Address;
 
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
-class Address extends ControlPresenter
+class AddressUkPafLookup extends ControlPresenter
 {
     private $defaultValues;
     protected $view;
 
-    public function __construct($name = "", $defaultValues = [])
+    public function __construct($name = "")
     {
         parent::__construct($name);
-        $this->defaultValues = $defaultValues;
     }
 
     protected function createView()
     {
-        $view = new AddressView();
+        $view = new AddressUkPafLookupView();
         return $view;
     }
 

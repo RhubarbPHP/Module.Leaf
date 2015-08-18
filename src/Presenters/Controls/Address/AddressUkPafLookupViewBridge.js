@@ -111,4 +111,4 @@ bridge.prototype.attachEvents = function() {
     });
 };
 
-window.rhubarb.viewBridgeClasses.AddressViewBridge = bridge;
+window.rhubarb.viewBridgeClasses.AddressUkPafLookupViewBridge = bridge;
