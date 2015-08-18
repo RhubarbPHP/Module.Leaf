@@ -41,8 +41,7 @@ class AddressView extends ControlView
             $country = new DropDown("Country"),
             new TextBox("HouseNumber", 20),
             new TextBox("PostCodeSearch", 10),
-            $search = new Button("Search", "Search", function() {
-            }),
+            $search = new Button("Search", "Search", function() {}),
             new TextBox("Line1", 50),
             new TextBox("Line2", 30),
             new TextBox("Town", 30),

@@ -5,7 +5,6 @@ namespace Rhubarb\Leaf\Presenters\Controls\Address;
 
 class Country
 {
-
     private static $countriesList = array(
         [ "AF", "Afghanistan" ],
         [ "AX", "Åland Islands" ],
