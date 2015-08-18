@@ -32,11 +32,11 @@ class Address extends ControlPresenter
             if(!isset($postCodeSearch)) {
                 return json_decode([]);
             }
-            $requestParams = [ "postcode" => $postCodeSearch ];
+            PafSettings::setPostCode($postCodeSearch);
             if(isset($houseNumber)) {
-                $requestParams["num"] = $houseNumber;
+                PafSettings::setHouseNumber($houseNumber);
             }
-            $requestUrl = PafSettings::getUrlRequest($requestParams);
+            $requestUrl = PafSettings::getUrlRequest();
             $response = file_get_contents($requestUrl);
             return json_decode($response);
         } );

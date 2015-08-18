@@ -14,6 +14,8 @@ class PafSettings {
     private static $apiKey = "GCDTEST123";
     private static $outputFormat = self::FORMAT_JSON;
     private static $apiVersion = "2";
+    private static $postCode = "";
+    private static $houseNumber = "";
 
     public static function getApiKey()
     {
@@ -45,16 +47,35 @@ class PafSettings {
         self::$outputFormat = $outputFormat;
     }
 
+    public static function getPostCode()
+    {
+        return self::$postCode;
+    }
+
+    public static function setPostCode($postCode)
+    {
+        self::$postCode = urlencode($postCode);
+    }
+
+    public static function getHouseNumber()
+    {
+        return self::$outputFormat;
+    }
+
+    public static function setHouseNumber($houseNumber)
+    {
+        self::$houseNumber = urlencode($houseNumber);
+    }
+
     public static function getUrlRequest( $searchParams = [ ] )
     {
         $requestParams = [
-            "api" =>self::$apiVersion,
-            "output" => self::$outputFormat,
-            "apikey" => self::$apiKey
+            "api"      => self::$apiVersion,
+            "output"   => self::$outputFormat,
+            "apikey"   => self::$apiKey,
+            "postcode" => self::$postCode,
+            "num"      => self::$houseNumber
         ];
-        foreach ($searchParams as $key => $value) {
-            $requestParams[$key] = urlencode($value);
-        }
         return implode( "?",
             [ self::serverUrl, http_build_query($requestParams, '&amp') ]
         );
