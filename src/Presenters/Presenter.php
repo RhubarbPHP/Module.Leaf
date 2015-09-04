@@ -171,8 +171,17 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      */
     public $suppressContent = false;
 
+    /**
+     * @param string $name Defaults to the class name
+     */
     public function __construct($name = "")
     {
+        if ($name == '') {
+            // Set a default presenter name of the class name
+            $classNameComponents = explode('\\', static::class);
+            $name = end($classNameComponents);
+        }
+
         $this->model = new PresenterModel();
         $this->model->PresenterName = $name;
         $this->model->PresenterPath = $name;
