@@ -26,6 +26,7 @@ use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Response\GeneratesResponse;
 use Rhubarb\Crown\Response\HtmlResponse;
+use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
@@ -178,8 +179,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     {
         if ($name == '') {
             // Set a default presenter name of the class name
-            $classNameComponents = explode('\\', static::class);
-            $name = end($classNameComponents);
+            $name = StringTools::getShortClassNameFromNamespace( static::class );
         }
 
         $this->model = new PresenterModel();
