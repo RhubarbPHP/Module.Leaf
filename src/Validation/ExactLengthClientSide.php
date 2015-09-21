@@ -18,21 +18,21 @@
 
 namespace Rhubarb\Leaf\Validation;
 
-use Rhubarb\Stem\Models\Validation\EqualTo;
+use Rhubarb\Stem\Models\Validation\ExactLength;
 
-class EqualToClientSide extends EqualTo
+class ExactLengthClientSide extends ExactLength
 {
     use ClientSideValidation;
 
     protected function getValidationSettings()
     {
         return [
-            "equalTo" => $this->equalTo
+            "exactLength" => $this->exactLength
         ];
     }
 
-    public static function cloneFromModelValidation(EqualTo $validation)
+    public static function cloneFromModelValidation(ExactLength $validation)
     {
-        return new EqualToClientSide($validation->name, $validation->equalTo);
+        return new ExactLengthClientSide($validation->name, $validation->exactLength);
     }
 }
