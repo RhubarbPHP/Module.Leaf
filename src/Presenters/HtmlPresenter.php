@@ -37,14 +37,14 @@ class HtmlPresenter extends Presenter
      */
     protected function createDefaultClientSideValidator()
     {
-        $validation = $this->createDefaultValidator();
+        $validation = $this->getDefaultValidator();
 
         if (!$validation instanceof Validation) {
             return null;
         }
 
         if (($validation instanceof Validation) && !(in_array(
-                "Rhubarb\Crown\ClientSide\Validation\ClientSideValidation",
+                ClientSideValidation::class,
                 ValidatorClientSide::NestedClassUses($validation)
             ))
         ) {

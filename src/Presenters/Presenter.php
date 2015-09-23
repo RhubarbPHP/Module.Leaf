@@ -24,8 +24,10 @@ use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Modelling\ModelState;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Response\GeneratesResponse;
 use Rhubarb\Crown\Response\HtmlResponse;
+use Rhubarb\Crown\Response\Response;
 use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
@@ -37,6 +39,8 @@ use Rhubarb\Stem\Models\Validation\Validator;
 
 /**
  * The base class for presenters
+ *
+ * @property string $PresenterName
  */
 abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 {
@@ -171,13 +175,18 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      */
     public $suppressContent = false;
 
+    /**
+     * Used to cache the default validator so it isn't created every time getDefaultValidator is called
+     * @var Validator
+     */
+    protected $defaultValidator;
+
     public function __construct($name = "")
     {
         $this->model = new PresenterModel();
         $this->model->PresenterName = $name;
         $this->model->PresenterPath = $name;
     }
-
 
     /**
      * Returns the unique path to identify this presenter amongst the hierarchy of sub presenters forming the complete view.
@@ -262,7 +271,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      */
     private function getPlaceholderDefaultContentByName($validationName)
     {
-        $defaultValidator = $this->createDefaultValidator();
+        $defaultValidator = $this->getDefaultValidator();
 
         foreach ($defaultValidator->validations as $validation) {
             if ($validation->name == $validationName) {
@@ -325,6 +334,15 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         $this->delayedEvents = [];
 
         $this->view->processDelayedEvents();
+    }
+
+    protected function getDefaultValidator()
+    {
+        if (!$this->defaultValidator)
+        {
+            $this->defaultValidator = $this->createDefaultValidator();
+        }
+        return $this->defaultValidator;
     }
 
     protected function createDefaultValidator()
@@ -894,13 +912,13 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             return;
         }
 
-        $targetWithoutIndexes = preg_replace("/\([^)]+\)/", "", $_REQUEST["_mvpEventTarget"]);
+        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_mvpEventTarget"]);
 
         if (stripos($targetWithoutIndexes, $this->model->PresenterPath) !== false) {
             $requestTargetParts = explode("_", $_REQUEST["_mvpEventTarget"]);
             $pathParts = explode("_", $this->model->PresenterPath);
 
-            if (preg_match("/\(([^)]+)\)/", $requestTargetParts[count($pathParts) - 1], $match)) {
+            if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
                 $this->viewIndex = $match[1];
             }
         }
@@ -930,12 +948,12 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
                 if (is_object($response) || is_array($response)) {
                     $response = json_encode($response);
-                    $type = " type=\"json\"";
+                    $type = ' type="json"';
                 }
 
-                print "<eventresponse event=\"" . $eventName . "\" sender=\"" . $eventTarget . "\"" . $type . ">
-<![CDATA[" . $response . "]]>
-</eventresponse>";
+                print '<eventresponse event="' . $eventName . '" sender="' . $eventTarget . '"' . $type . '>
+<![CDATA[' . $response . ']]>
+</eventresponse>';
             };
 
             // First raise the event on the presenter itself
@@ -981,7 +999,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         try {
             $response = $this->generateResponse();
 
-            if (!is_string($response)) {
+            if ($response instanceof Response) {
                 return $response->getContent();
             }
 
@@ -1024,9 +1042,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
             $html = ob_get_clean();
 
-            $html = "<htmlupdate id=\"" . $this->model->PresenterPath . "\">
-<![CDATA[" . $html . "]]>
-</htmlupdate>";
+            $html = '<htmlupdate id="' . $this->model->PresenterPath . '">
+<![CDATA[' . $html . ']]>
+</htmlupdate>';
 
             print $html;
         } else {
@@ -1076,7 +1094,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      *
      * Normally HTML.
      *
-     * @param null $request
+     * @param null|Request $request
      *
      * @throws PermissionException
      * @return string
@@ -1093,16 +1111,14 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         //
         // Should events be slower than necessary the first thing to consider is whether the presenter involved can
         // be flagged as atomic or redesigned so that it can be flagged as atomic.
-        if ($isAjax && $request && ($className = $request->Post("_mvpEventClass")) && ($className != get_class(
-                    $this
-                ))
-        ) {
+        if ($isAjax && $request && ($className = $request->post("_mvpEventClass")) && ($className != get_class($this))) {
             if (!$this->isPermitted()) {
                 throw new PermissionException();
             }
 
+            /** @var Presenter $correctPresenter */
             $correctPresenter = new $className();
-            $correctPresenter->setPresenterPath($request->Post("_mvpEventPresenterPath"));
+            $correctPresenter->setPresenterPath($request->post("_mvpEventPresenterPath"));
 
             return $correctPresenter->generateResponse($request);
         }
@@ -1350,7 +1366,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * @param string $dataKey
      * @param mixed $data
      * @param bool $viewIndex
-     * @internal param \Rhubarb\Leaf\Presenters\Presenter $presenter
      */
     protected function setDataFromPresenter($dataKey, $data, $viewIndex = false)
     {
