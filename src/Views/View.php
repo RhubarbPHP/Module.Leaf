@@ -362,6 +362,18 @@ abstract class View extends PresenterViewBase implements Deployable
     }
 
     /**
+     * Returns content to be displayed in the placeholder for the given validation name before there are any
+     * validation errors to display. The intent is for this to indicate required fields.
+     *
+     * @param $validationName
+     * @return mixed|null
+     */
+    public function getPlaceholderDefaultContent($validationName)
+    {
+        return $this->raiseEvent("GetPlaceholderDefaultContent", $validationName);
+    }
+
+    /**
      * Allows the view to return persisted model data back to the presenter.
      *
      * Some views persist state between connections. As it is the view that is responsible for the perisistance, it

@@ -250,6 +250,30 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     }
 
     /**
+     * This method will be called for any validation Placeholders printed for a View.
+     * It should return the content which should be in the placeholder before it
+     * displays any error.
+     *
+     * By default, if the default validator has any validations matching the validation
+     * name, this will return * to indicate that the field is required.
+     *
+     * @param $validationName
+     * @return string
+     */
+    private function getPlaceholderDefaultContentByName($validationName)
+    {
+        $defaultValidator = $this->createDefaultValidator();
+
+        foreach ($defaultValidator->validations as $validation) {
+            if ($validation->name == $validationName) {
+                return "*";
+            }
+        }
+
+        return "";
+    }
+
+    /**
      * Performs the validation supplied and if it errors, stores the resultant error in the $validationErrors array.
      *
      * @param Validator $validator
@@ -475,6 +499,13 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             "GetValidationErrors",
             function ($validationName) {
                 return $this->getValidationErrorsByName($validationName);
+            }
+        );
+
+        $view->attachEventHandler(
+            "GetPlaceholderDefaultContent",
+            function ($validationName) {
+                return $this->getPlaceholderDefaultContentByName($validationName);
             }
         );
 
