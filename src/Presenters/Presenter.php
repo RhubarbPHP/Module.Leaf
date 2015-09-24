@@ -269,7 +269,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * @param $validationName
      * @return string
      */
-    private function getPlaceholderDefaultContentByName($validationName)
+    public function getPlaceholderDefaultContentByName($validationName)
     {
         $defaultValidator = $this->getDefaultValidator();
 
