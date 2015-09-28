@@ -20,6 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\DateTime;
 
 require_once __DIR__ . "/../Text/TextBox/TextBoxView.php";
 
+use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBoxView;
 
 class DateView extends TextBoxView
@@ -29,11 +30,14 @@ class DateView extends TextBoxView
         return "DatePicker";
     }
 
+    protected function getAdditionalResourceUrls()
+    {
+        return [ResourceLoader::getJqueryUrl(), ResourceLoader::getJqueryUIUrl()];
+    }
+
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = "vendor/components/jquery/jquery.js";
-        $package->resourcesToDeploy[] = "vendor/components/jqueryui/jquery-ui.js";
         $package->resourcesToDeploy[] = "vendor/components/jqueryui/themes/base/jquery-ui.css";
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = __DIR__ . "/date-picker.js";
