@@ -54,7 +54,7 @@ class SearchPanelView extends HtmlView
         $this->addPresenters($searchButton);
     }
 
-    public function printViewContent()
+    protected function printViewContent()
     {
         print '<div class="search-panel">
 					<table class="grid">
