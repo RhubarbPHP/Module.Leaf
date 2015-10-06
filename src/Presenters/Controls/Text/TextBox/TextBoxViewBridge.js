@@ -18,7 +18,7 @@ bridge.spawn = function (spawnData, index, parentPresenterPath) {
     return textBox;
 };
 
-bridge.prototype.onKeyPress = function(event){
+bridge.prototype.keyPressed = function(event){
     if (this.onKeyPress){
         this.onKeyPress(event);
     }
@@ -30,11 +30,11 @@ bridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent) {
     var self = this;
 
     if (!this.viewNode.addEventListener) {
-        this.viewNode.attachEvent("onkeypress", self.onKeyPress.bind(self));
+        this.viewNode.attachEvent("onkeypress", self.keyPressed.bind(self));
     }
     else {
         // Be interested in a changed event if there is one.
-        this.viewNode.addEventListener('keypress', self.onKeyPress.bind(self), false);
+        this.viewNode.addEventListener('keypress', self.keyPressed.bind(self), false);
     }
 };
 
