@@ -247,6 +247,8 @@ class Table extends HtmlPresenter
         }
 
         $schemaColumns = $this->getSchemaColumns();
+        $sampleModel = new $modelClassName();
+        $decorator = $sampleModel->getDecorator();
 
         // Try and convert this to a ModelColumn
         if (isset($schemaColumns[$columnName])) {
@@ -264,6 +266,12 @@ class Table extends HtmlPresenter
         } else {
             // If the property exists as a computed column let's use that.
             if (method_exists($modelClassName, "Get" . $columnName)) {
+                // Let this computed column be treated as a normal String model column.
+                return new ModelColumn($columnName, $label);
+            }
+
+            // If the property exists in the data decorator
+            if (isset($decorator[$columnName])){
                 // Let this computed column be treated as a normal String model column.
                 return new ModelColumn($columnName, $label);
             }
