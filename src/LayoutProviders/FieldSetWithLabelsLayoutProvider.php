@@ -128,28 +128,28 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
 
         ?>
         <div class="_group">
-            <label class="_label" for="<?= $controlName; ?>"><?php $this->printLabel($label);?></label>
+            <label class="_label" for="<?= $controlName; ?>"><?php $this->printLabel($label); ?></label>
 
             <div class="_fields">
-
-                <?php
-
-                $this->printValue($value);
-
-                if (is_object($value)) {
-                    if ($value instanceof Presenter) {
-                        $placeholder = $this->generatePlaceholder($value->getName());
-
-                        if ($placeholder) {
-                            print $placeholder;
-                        }
-                    }
-                }
-
-                ?>
+                <?php $this->printValue($value); ?>
             </div>
         </div>
-    <?php
+        <?php
+    }
+
+    protected function generateValue($valueName)
+    {
+        $value = parent::generateValue($valueName);
+
+        if ($value instanceof Presenter) {
+            $placeholder = $this->generatePlaceholder($value->getName());
+
+            if ($placeholder) {
+                $value .= $placeholder;
+            }
+        }
+
+        return $value;
     }
 
     /**
