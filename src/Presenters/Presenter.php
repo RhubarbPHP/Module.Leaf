@@ -1111,7 +1111,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         //
         // Should events be slower than necessary the first thing to consider is whether the presenter involved can
         // be flagged as atomic or redesigned so that it can be flagged as atomic.
-        if ($isAjax && $request && ($className = $request->post("_mvpEventClass")) && ($className != get_class($this))) {
+        if ($isAjax && $request && ($className = $request->post("_mvpEventClass")) && $className != get_class($this)) {
             if (!$this->isPermitted()) {
                 throw new PermissionException();
             }
@@ -1207,6 +1207,24 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
             $response->setHeader("Content-Type", "text/xml");
 
             return $response;
+        } else {
+            // This allows raising viewbridge events as part of a full HTML response, so you can e.g.
+            // provide data for events on first load of a page instead of having the page make a call
+            // on load to retrieve data. Note that this should only be used when there's a specific
+            // benefit to performing initial page setup through an Event instead of just outputting
+            // your initial page HTML in the correct state.
+            foreach (self::$viewBridgeEvents as $eventParams) {
+                $target = json_encode(array_shift($eventParams));
+                $eventParams = json_encode($eventParams);
+
+                $javascript = <<<JS
+                    var registeredPresenter = window.rhubarb.registeredPresenters[$target];
+                    if (registeredPresenter) {
+                        registeredPresenter.raiseClientEvent.apply(registeredPresenter, $eventParams);
+                    }
+JS;
+                ResourceLoader::addScriptCodeOnReady($javascript);
+            }
         }
 
         return $html;
