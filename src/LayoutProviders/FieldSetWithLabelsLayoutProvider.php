@@ -137,21 +137,6 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
         <?php
     }
 
-    protected function generateValue($valueName)
-    {
-        $value = parent::generateValue($valueName);
-
-        if ($value instanceof Presenter) {
-            $placeholder = $this->generatePlaceholder($value->getName());
-
-            if ($placeholder) {
-                $value .= $placeholder;
-            }
-        }
-
-        return $value;
-    }
-
     /**
      * Prints the content of a label for an item
      *
@@ -170,5 +155,36 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
     public function printValue($value)
     {
         print $value;
+
+        if ($value instanceof Presenter) {
+            print $this->generatePlaceholder($value->getName());
+        }
+    }
+
+    /**
+     * Scan the string for {} placeholders that might contain input names.
+     *
+     * @param $data
+     * @return string
+     */
+    protected function parseStringAsTemplate($data)
+    {
+        $t = $html = $data;
+
+        while (preg_match("/[{]([^{}]+)[}]/", $t, $regs)) {
+            $t = str_replace($regs[0], "", $t);
+
+            $input = $this->generateValue($regs[1]);
+
+            if ($input instanceof Presenter) {
+                $input .= $this->generatePlaceholder($input->getName());
+            }
+
+            if ($input !== null && $input !== false && $input !== $regs[1]) {
+                $html = str_replace($regs[0], (string)$input, $html);
+            }
+        }
+
+        return $html;
     }
 }
