@@ -229,13 +229,10 @@ class HtmlView extends View
         }
 
         if ($this->raiseEvent("IsRootPresenter")) {
-            $wrappers[] = function ($content) {
-                $html = '<form method="post" enctype="multipart/form-data">
-' . $content . '
-</form>';
-
-                return $html;
-            };
+            $formWrapper = $this->getFormWrapper();
+            if ($formWrapper) {
+                $wrappers[] = $formWrapper;
+            }
         }
 
         $viewBridge = $this->getClientSideViewBridgeName();
@@ -269,6 +266,16 @@ class HtmlView extends View
         }
 
         return $wrappers;
+    }
+
+    protected function getFormWrapper() {
+        return function ($content) {
+            return <<<HTML
+<form method="post" enctype="multipart/form-data">
+$content
+</form>
+HTML;
+        };
     }
 
     protected final function raiseEventOnViewBridge($eventName)
