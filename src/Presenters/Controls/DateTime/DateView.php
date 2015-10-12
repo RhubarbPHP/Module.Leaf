@@ -38,7 +38,7 @@ class DateView extends TextBoxView
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = "vendor/components/jqueryui/themes/base/jquery-ui.css";
+        $package->resourcesToDeploy[] = __DIR__ . "/../../../../../../components/jqueryui/themes/base/jquery-ui.css";
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = __DIR__ . "/date-picker.js";
 
