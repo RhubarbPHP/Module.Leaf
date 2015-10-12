@@ -36,7 +36,7 @@ class Placeholder
         $errors = $this->hostingView->getValidationErrors($this->validationName);
         $errorMessages = [];
 
-        $errorHtml = "";
+        $errorHtml = $this->hostingView->getPlaceholderDefaultContent($this->validationName);
 
         foreach ($errors as $error) {
             $errorMessages[] = $error->message;

@@ -128,28 +128,13 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
 
         ?>
         <div class="_group">
-            <label class="_label" for="<?= $controlName; ?>"><?php $this->printLabel($label);?></label>
+            <label class="_label" for="<?= $controlName; ?>"><?php $this->printLabel($label); ?></label>
 
             <div class="_fields">
-
-                <?php
-
-                $this->printValue($value);
-
-                if (is_object($value)) {
-                    if ($value instanceof Presenter) {
-                        $placeholder = $this->generatePlaceholder($value->getName());
-
-                        if ($placeholder) {
-                            print $placeholder;
-                        }
-                    }
-                }
-
-                ?>
+                <?php $this->printValue($value); ?>
             </div>
         </div>
-    <?php
+        <?php
     }
 
     /**
@@ -170,5 +155,36 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
     public function printValue($value)
     {
         print $value;
+
+        if ($value instanceof Presenter) {
+            print $this->generatePlaceholder($value->getName());
+        }
+    }
+
+    /**
+     * Scan the string for {} placeholders that might contain input names.
+     *
+     * @param $data
+     * @return string
+     */
+    protected function parseStringAsTemplate($data)
+    {
+        $t = $html = $data;
+
+        while (preg_match("/[{]([^{}]+)[}]/", $t, $regs)) {
+            $t = str_replace($regs[0], "", $t);
+
+            $input = $this->generateValue($regs[1]);
+
+            if ($input instanceof Presenter) {
+                $input .= $this->generatePlaceholder($input->getName());
+            }
+
+            if ($input !== null && $input !== false && $input !== $regs[1]) {
+                $html = str_replace($regs[0], (string)$input, $html);
+            }
+        }
+
+        return $html;
     }
 }

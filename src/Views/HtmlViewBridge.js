@@ -505,6 +505,7 @@ HtmlViewBridge.prototype.validate = function (validator) {
         for (var i = 0; i < placeholders.length; i++) {
             if (placeholders[i].className.indexOf("validation-placeholder") > -1) {
                 placeholders[i].innerHTML = "";
+                placeholders[i].className = "validation-placeholder";
             }
         }
 

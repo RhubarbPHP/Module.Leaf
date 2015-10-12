@@ -23,12 +23,19 @@ require_once __DIR__ . "/Presenter.php";
 use Rhubarb\Leaf\Validation\ClientSideValidation;
 use Rhubarb\Leaf\Validation\ValidatorClientSide;
 use Rhubarb\Stem\Models\Validation\Validation;
+use Rhubarb\Stem\Models\Validation\Validator;
 
 class HtmlPresenter extends Presenter
 {
     /**
+     * Used to cache the default client side validator so it isn't created every time getDefaultClientSideValidator is called
+     * @var Validator
+     */
+    protected $defaultClientSideValidator;
+
+    /**
      * Returns by default the server side validator (which should be created using
-     * the appropriate ClientSide variants.
+     * the appropriate ClientSide variants.)
      *
      * Override to provide different validation on the client side. Ignore completely if you aren't using
      * the default validation behaviours.
@@ -37,23 +44,41 @@ class HtmlPresenter extends Presenter
      */
     protected function createDefaultClientSideValidator()
     {
-        $validation = $this->createDefaultValidator();
+        $validation = $this->getDefaultValidator();
 
         if (!$validation instanceof Validation) {
             return null;
         }
 
-        if (($validation instanceof Validation) && !(in_array(
-                "Rhubarb\Crown\ClientSide\Validation\ClientSideValidation",
-                ValidatorClientSide::NestedClassUses($validation)
-            ))
-        ) {
+        if ($validation instanceof Validation &&
+            !in_array(ClientSideValidation::class, ValidatorClientSide::nestedClassUses($validation))) {
             // Convert the validation to a client side validation if required. If the validation doesn't have a
             // matching client side version, null will returned essentially disabling the client side validation.
             $validation = ClientSideValidation::fromModelValidation($validation);
         }
 
         return $validation;
+    }
+
+    protected function getDefaultClientSideValidator()
+    {
+        if (!$this->defaultClientSideValidator) {
+            $this->defaultClientSideValidator = $this->createDefaultClientSideValidator();
+        }
+        return $this->defaultClientSideValidator;
+    }
+
+    public function getPlaceholderDefaultContentByName($validationName)
+    {
+        $defaultValidator = $this->getDefaultClientSideValidator();
+
+        foreach ($defaultValidator->validations as $validation) {
+            if ($validation->name == $validationName) {
+                return "*";
+            }
+        }
+
+        return "";
     }
 
     protected function onViewRegistered()
@@ -63,7 +88,7 @@ class HtmlPresenter extends Presenter
         $this->view->attachEventHandler(
             "GetDefaultClientSideValidator",
             function () {
-                return $this->createDefaultClientSideValidator();
+                return $this->getDefaultClientSideValidator();
             }
         );
     }

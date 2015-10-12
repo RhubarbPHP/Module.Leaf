@@ -26,6 +26,11 @@ use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Stem\Filters\Filter;
 use Rhubarb\Stem\Filters\Group;
 
+/**
+ * A search interface that raises search events on behalf of the contained search controls.
+ *
+ * @property bool $AutoSubmit True if searching should happen as you type.
+ */
 class SearchPanel extends HtmlPresenter
 {
     use ModelProvider;
