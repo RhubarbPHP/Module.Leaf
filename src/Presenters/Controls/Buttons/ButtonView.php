@@ -89,7 +89,7 @@ class ButtonView extends JQueryControlView
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = "vendor/rhubarbphp/rhubarb/resources/validation.js";
+        $package->resourcesToDeploy[] = __DIR__. "/../../../../../rhubarb/resources/validation.js";
         $package->resourcesToDeploy[] = __DIR__ . "/button.js";
 
         return $package;
