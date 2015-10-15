@@ -28,19 +28,25 @@ use Rhubarb\Leaf\Views\HtmlView;
  */
 class SwitchedPresenterView extends HtmlView
 {
-    private $presenter;
+    private $presenterToShow;
+    private $allPresenters;
+
+    public function __construct( $presenters, $presenterToShow )
+    {
+        $this->presenterToShow = $presenterToShow;
+        $this->allPresenters = $presenters;
+
+        $this->_requiresStateInputs = true;
+        $this->_requiresContainer = true;
+    }
 
     public function createPresenters()
     {
-        // We need to register our sub presenter early to make sure it's included
-        // in the events processing loop.
-        $this->presenter = $this->raiseEvent("GetCurrentPresenter");
-
-        $this->addPresenters($this->presenter);
+        $this->addPresenters( $this->allPresenters );
     }
 
     public function printViewContent()
     {
-        print $this->presenter;
+        print $this->presenterToShow;
     }
 }

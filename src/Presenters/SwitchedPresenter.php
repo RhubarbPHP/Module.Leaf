@@ -36,6 +36,13 @@ class SwitchedPresenter extends Form
      */
     private $switchedPresenters = [];
 
+    private $currentPresenter = null;
+
+
+    protected function createSwitchedPresenters()
+    {
+        return[];
+    }
     /**
      * Override this to return a mapping of presenter names to classes.
      *
@@ -43,22 +50,30 @@ class SwitchedPresenter extends Form
      */
     protected function getSwitchedPresenters()
     {
-        return [];
+        if ( !$this->switchedPresenters )
+        {
+            $this->switchedPresenters = $this->createSwitchedPresenters();
+        }
+
+        return $this->switchedPresenters;
     }
 
     protected function changePresenter($newPresenterName)
     {
-        if (!isset($this->switchedPresenters[$newPresenterName])) {
+        if (!isset($this->switchedPresenters[$newPresenterName]))
+        {
             throw new InvalidPresenterNameException($newPresenterName);
         }
 
-        $this->model->CurrentPresenterName = $newPresenterName;
+        $this->currentPresenter = $this->model->CurrentPresenterName = $newPresenterName;
 
         // We throw this exception to signal that the processing pipeline should reinitialise
         // the presenter. Of course this needs done as the hosted presenter should now be a
         // different one.
 
-        throw new RequiresViewReconfigurationException();
+        $this->createView();
+        $this->configureView();
+
     }
 
     protected function getPublicModelPropertyList()
@@ -74,7 +89,7 @@ class SwitchedPresenter extends Form
     {
         $this->switchedPresenters = $this->getSwitchedPresenters();
 
-        $this->registerView(new SwitchedPresenterView($this->switchedPresenters));
+        $this->registerView(new SwitchedPresenterView($this->switchedPresenters, $this->getCurrentPresenter()));
     }
 
     protected function configureView()
@@ -82,15 +97,7 @@ class SwitchedPresenter extends Form
         $this->view->attachEventHandler(
             "GetCurrentPresenter",
             function () {
-                $class = $this->switchedPresenters[$this->getCurrentPresenterName()];
-
-                if (is_string($class)) {
-                    $object = new $class();
-                } else {
-                    $object = $class;
-                }
-
-                return $object;
+                return $this->getCurrentPresenter();
             }
         );
 
@@ -100,13 +107,16 @@ class SwitchedPresenter extends Form
     /**
      * Gets the currently active presenter name.
      */
-    public function getCurrentPresenterName()
+    public function getCurrentPresenter()
     {
-        if (!isset($this->model->CurrentPresenterName)) {
-            return $this->getDefaultPresenterName();
+        if ( !isset( $this->model->CurrentPresenterName ) )
+        {
+            $this->model->CurrentPresenterName = $this->GetDefaultPresenterName();
         }
 
-        return $this->model->CurrentPresenterName;
+        $presenters = $this->GetSwitchedPresenters();
+
+        return $presenters[ $this->model->CurrentPresenterName ];
     }
 
     /**

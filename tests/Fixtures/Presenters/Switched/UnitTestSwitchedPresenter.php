@@ -47,7 +47,7 @@ class UnitTestSwitchedPresenter extends SwitchedPresenter
 
     public function TestGetCurrentPresenterName()
     {
-        return $this->getCurrentPresenterName();
+        return $this->getCurrentPresenter();
     }
 
     protected function initialiseModel()

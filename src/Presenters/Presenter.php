@@ -1296,6 +1296,9 @@ JS;
      */
     protected function initialiseView($andRestoreModel = true)
     {
+        $this->hostedPresenterCount = 0;
+        $this->subPresenterNamesUsed = [];
+
         if (!$this->view) {
             $response = $this->createView();
 
@@ -1308,7 +1311,7 @@ JS;
             throw new NoViewException();
         }
 
-        $this->hostedPresenterCount = 0;
+
 
         if ($andRestoreModel) {
             // Now we have the view we can restore our model (the view is required to do this as the view is
