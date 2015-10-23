@@ -51,9 +51,18 @@ trait ClientSideValidation
         return $structure;
     }
 
+    public static function cloneAndCopySettingsFromModelValidation(Validation $validation)
+    {
+        /** @var Validation $clientValidation */
+        $clientValidation = self::cloneFromModelValidation($validation);
+        $clientValidation->label = $validation->label;
+        $clientValidation->failedMessageOverride = $validation->failedMessageOverride;
+        return $clientValidation;
+    }
+
     public static function cloneFromModelValidation(Validation $validation)
     {
-        return null;
+        return new self($validation->name);
     }
 
     public final static function fromModelValidation(Validation $validation)
@@ -66,7 +75,7 @@ trait ClientSideValidation
         $clientSideClass = "Rhubarb\Leaf\Validation\\" . $type . "ClientSide";
 
         if (class_exists($clientSideClass)) {
-            return call_user_func([$clientSideClass, "cloneFromModelValidation"], $validation);
+            return call_user_func([$clientSideClass, "cloneAndCopySettingsFromModelValidation"], $validation);
         }
 
         return null;

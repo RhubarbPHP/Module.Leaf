@@ -23,9 +23,4 @@ use Rhubarb\Stem\Models\Validation\HasValue;
 class HasValueClientSide extends HasValue
 {
     use ClientSideValidation;
-
-    public static function cloneFromModelValidation(HasValue $validation)
-    {
-        return new HasValueClientSide($validation->name);
-    }
 }
