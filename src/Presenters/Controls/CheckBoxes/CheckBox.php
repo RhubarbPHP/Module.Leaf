@@ -24,6 +24,8 @@ use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
 class CheckBox extends ControlPresenter
 {
+    public $checked;
+
     protected function createView()
     {
         return new CheckBoxView();
@@ -59,6 +61,6 @@ class CheckBox extends ControlPresenter
     {
         parent::applyModelToView();
 
-        $this->view->setCheckedStatus((bool)$this->Value);
+        $this->view->setCheckedStatus((bool)$this->checked);
     }
 }
