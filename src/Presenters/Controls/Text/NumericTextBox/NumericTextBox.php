@@ -21,12 +21,16 @@ namespace Rhubarb\Leaf\Presenters\Controls\Text\NumericTextBox;
 require_once __DIR__ . '/../TextBox/TextBox.php';
 
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
+use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBoxView;
 
+/**
+ * @property TextBoxView $view
+ */
 class NumericTextBox extends TextBox
 {
     private $decimalPlaces = 2;
 
-    public function __construct($name = "", $size = 15)
+    public function __construct($name = "", $size = 15, $decimalPlaces = 2)
     {
         parent::__construct($name, $size);
     }
@@ -44,6 +48,11 @@ class NumericTextBox extends TextBox
     protected function applyModelToView()
     {
         parent::applyModelToView();
+
+        if (strlen($this->model->Text) == 0) {
+            $this->view->setText("");
+            return;
+        }
 
         $number = (float)$this->model->Text;
 
