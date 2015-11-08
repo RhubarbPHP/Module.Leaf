@@ -496,19 +496,18 @@ HtmlViewBridge.prototype.getSubPresenterValues = function () {
 HtmlViewBridge.prototype.validate = function (validator) {
     var model = this.getSubPresenterValues();
 
+    var placeholders = document.getElementsByTagName("em");
+
+    for (var i = 0; i < placeholders.length; i++) {
+        if (placeholders[i].className.indexOf("validation-placeholder") > -1) {
+            placeholders[i].innerHTML = "";
+            placeholders[i].className = "validation-placeholder";
+        }
+    }
+
     try {
         validator.validate(model);
-    }
-    catch (error) {
-        var placeholders = document.getElementsByTagName("em");
-
-        for (var i = 0; i < placeholders.length; i++) {
-            if (placeholders[i].className.indexOf("validation-placeholder") > -1) {
-                placeholders[i].innerHTML = "";
-                placeholders[i].className = "validation-placeholder";
-            }
-        }
-
+    } catch (error) {
         // For now we simply try and update any matching placeholders with the relevant error.
         error.applyToPlaceholders(this.viewNode);
 

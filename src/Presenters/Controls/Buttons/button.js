@@ -48,9 +48,9 @@ button.prototype.attachEvents = function () {
                 }
             }
 
+            window.rhubarb.validation.Scrolled = false;
             if (validationHost.validate(self.validation) !== true) {
                 self.raiseClientEvent("ValidationFailed");
-                window.rhubarb.validation.Scrolled = false;
                 return false;
             }
         }
