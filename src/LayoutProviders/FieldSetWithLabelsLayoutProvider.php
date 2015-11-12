@@ -33,34 +33,36 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
      */
     public function printItemsWithContainer($containerTitle, $items = null)
     {
-        $cssClass = "-horizontal";
+        $cssClass = "";
 
         if ($containerTitle != "") {
-            $cssClass .= " -has-legend";
+            $cssClass .= " has-legend";
         }
 
         ?>
-        <fieldset class="<?= $cssClass ?>">
-            <?php
+        <div class="c-form <?= $cssClass ?>">
+            <fieldset>
+                <?php
 
-            if ($containerTitle != "") {
-                $this->printContainerTitle($containerTitle);
-            }
+                if ($containerTitle != "") {
+                    $this->printContainerTitle($containerTitle);
+                }
 
-            $args = func_get_args();
-            $args = array_slice($args, 1);
+                $args = func_get_args();
+                $args = array_slice($args, 1);
 
-            call_user_func_array([$this, "printItems"], $args);
+                call_user_func_array([$this, "printItems"], $args);
 
-            ?>
-        </fieldset>
+                ?>
+            </fieldset>
+        </div>
     <?php
     }
 
 
     public function printContainerTitle($containerTitle)
     {
-        print '<legend class="form-legend">' . $containerTitle . '</legend>';
+        print '<legend class="c-form__legend">' . $containerTitle . '</legend>';
     }
 
     /**
@@ -127,10 +129,10 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
         $controlName = (is_object($value) && ($value instanceof Presenter)) ? $value->getDisplayIdentifier() : "";
 
         ?>
-        <div class="_group">
-            <label class="_label" for="<?= $controlName; ?>"><?php $this->printLabel($label); ?></label>
+        <div class="c-form__group">
+            <label class="c-form__label" for="<?= $controlName; ?>"><?php $this->printLabel($label); ?></label>
 
-            <div class="_fields">
+            <div class="c-form__inputs">
                 <?php $this->printValue($value); ?>
             </div>
         </div>
