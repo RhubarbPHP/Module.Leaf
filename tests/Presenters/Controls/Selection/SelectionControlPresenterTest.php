@@ -6,7 +6,7 @@ use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Controls\Selection\SelectionControlPresenter;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Filters\Equals;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnumColumn;
 use Rhubarb\Stem\Tests\Fixtures\User;
 
 class SelectionControlPresenterTest extends RhubarbTestCase
@@ -55,7 +55,7 @@ class SelectionControlPresenterTest extends RhubarbTestCase
         // Now enums
         $presenter->setSelectionItems(
             [
-                new MySqlEnum("TestField", "a", ["a", "b", "c"])
+                new MySqlEnumColumn("TestField", "a", ["a", "b", "c"])
             ]
         );
 

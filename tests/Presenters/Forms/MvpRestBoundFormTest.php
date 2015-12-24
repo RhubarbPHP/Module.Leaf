@@ -12,7 +12,7 @@ use Rhubarb\Leaf\Presenters\Forms\MvpRestBoundForm;
 use Rhubarb\Leaf\UrlHandlers\MvpRestHandler;
 use Rhubarb\Leaf\Views\HtmlView;
 use Rhubarb\Stem\Collections\Collection;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnumColumn;
 use Rhubarb\Stem\Tests\Fixtures\User;
 
 class MvpRestBoundFormTest extends RhubarbTestCase
@@ -77,7 +77,7 @@ class MvpRestBoundFormTest extends RhubarbTestCase
         $items = $control->getSelectionItems();
 
         $this->assertEquals(["", "Please Select"], $items[0]);
-        $this->assertInstanceOf(MySqlEnum::class, $items[1]);
+        $this->assertInstanceOf(MySqlEnumColumn::class, $items[1]);
 
         $control = $mvp->PublicCreatePresenterByName("CompanyID");
 

@@ -5,10 +5,10 @@ namespace Rhubarb\Leaf\Tests\Presenters\Application\Table\Columns;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDate;
-use Rhubarb\Stem\Schema\Columns\String;
-use Rhubarb\Stem\Tests\Fixtures\Example;
-use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateColumn;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
+use Rhubarb\Stem\Tests\unit\Fixtures\Example;
+use Rhubarb\Stem\Tests\unit\Fixtures\ModelUnitTestCase;
 
 class ModelColumnTest extends ModelUnitTestCase
 {
@@ -35,8 +35,8 @@ class ModelColumnTest extends ModelUnitTestCase
 
     public function testCanCreateAppropriateType()
     {
-        $stringColumn = new String("Forename", 50);
-        $dateColumn = new MySqlDate("DateOfBirth");
+        $stringColumn = new StringColumn("Forename", 50);
+        $dateColumn = new MySqlDateColumn("DateOfBirth");
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
         $this->assertInstanceOf(ModelColumn::class, $tableColumn);
@@ -47,7 +47,7 @@ class ModelColumnTest extends ModelUnitTestCase
 
     public function testIsSortable()
     {
-        $stringColumn = new String("Forename", 50);
+        $stringColumn = new StringColumn("Forename", 50);
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
 

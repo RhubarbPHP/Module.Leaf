@@ -36,7 +36,7 @@ use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Decorators\DataDecorator;
 use Rhubarb\Stem\Filters\Filter;
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlForeignKey;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlForeignKeyColumn;
 use Rhubarb\Stem\Schema\Relationships\OneToOne;
 use Rhubarb\Stem\Schema\SolutionSchema;
 
@@ -252,7 +252,7 @@ class Table extends HtmlPresenter
 
         // Try and convert this to a ModelColumn
         if (isset($schemaColumns[$columnName])) {
-            if ($schemaColumns[$columnName] instanceof MySqlForeignKey) {
+            if ($schemaColumns[$columnName] instanceof MySqlForeignKeyColumn) {
                 $relationships = SolutionSchema::getAllOneToOneRelationshipsForModelBySourceColumnName($this->collection->GetModelClassName());
 
                 if (isset($relationships[$columnName])) {

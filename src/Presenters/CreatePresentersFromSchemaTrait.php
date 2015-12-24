@@ -25,16 +25,16 @@ use Rhubarb\Leaf\Presenters\Controls\Text\NumericTextBox\NumericTextBox;
 use Rhubarb\Leaf\Presenters\Controls\Text\Password\Password;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextArea\TextArea;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnum;
-use Rhubarb\Stem\Schema\Columns\Boolean;
-use Rhubarb\Stem\Schema\Columns\Date;
-use Rhubarb\Stem\Schema\Columns\DateTime;
-use Rhubarb\Stem\Schema\Columns\Decimal;
-use Rhubarb\Stem\Schema\Columns\Integer;
-use Rhubarb\Stem\Schema\Columns\LongString;
-use Rhubarb\Stem\Schema\Columns\Money;
-use Rhubarb\Stem\Schema\Columns\String;
-use Rhubarb\Stem\Schema\Columns\Time;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnumColumn;
+use Rhubarb\Stem\Schema\Columns\BooleanColumn;
+use Rhubarb\Stem\Schema\Columns\DateColumn;
+use Rhubarb\Stem\Schema\Columns\DateTimeColumn;
+use Rhubarb\Stem\Schema\Columns\DecimalColumn;
+use Rhubarb\Stem\Schema\Columns\IntegerColumn;
+use Rhubarb\Stem\Schema\Columns\LongStringColumn;
+use Rhubarb\Stem\Schema\Columns\MoneyColumn;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
+use Rhubarb\Stem\Schema\Columns\TimeColumn;
 use Rhubarb\Stem\Schema\SolutionSchema;
 
 trait CreatePresentersFromSchemaTrait
@@ -95,23 +95,23 @@ trait CreatePresentersFromSchemaTrait
         $column = $columns[$presenterName];
 
         // Checkbox
-        if ($column instanceof Boolean) {
+        if ($column instanceof BooleanColumn) {
             return new CheckBox($presenterName);
         }
 
         // Date
-        if ($column instanceof Date || $column instanceof DateTime) {
+        if ($column instanceof DateColumn || $column instanceof DateTimeColumn) {
             return new \Rhubarb\Leaf\Presenters\Controls\DateTime\Date($presenterName);
         }
 
         // Time
-        if ($column instanceof Time) {
+        if ($column instanceof TimeColumn) {
             $textBox = new \Rhubarb\Leaf\Presenters\Controls\DateTime\Time($presenterName);
             return $textBox;
         }
 
         // Drop Downs
-        if ($column instanceof MySqlEnum) {
+        if ($column instanceof MySqlEnumColumn) {
             $dropDown = new DropDown($presenterName, $column->defaultValue);
             $dropDown->setSelectionItems(
                 [
@@ -124,14 +124,14 @@ trait CreatePresentersFromSchemaTrait
         }
 
         // TextArea
-        if ($column instanceof LongString) {
+        if ($column instanceof LongStringColumn) {
             $textArea = new TextArea($presenterName, 5, 40);
 
             return $textArea;
         }
 
         // TextBoxes
-        if ($column instanceof String) {
+        if ($column instanceof StringColumn) {
             if (stripos($presenterName, "password") !== false) {
                 return new Password($presenterName);
             }
@@ -143,14 +143,14 @@ trait CreatePresentersFromSchemaTrait
         }
 
         // Decimal
-        if ($column instanceof Decimal || $column instanceof Money) {
+        if ($column instanceof DecimalColumn || $column instanceof MoneyColumn) {
             $textBox = new NumericTextBox($presenterName, 5);
 
             return $textBox;
         }
 
         // Int
-        if ($column instanceof Integer) {
+        if ($column instanceof IntegerColumn) {
             $textBox = new TextBox($presenterName);
             $textBox->setSize(5);
 

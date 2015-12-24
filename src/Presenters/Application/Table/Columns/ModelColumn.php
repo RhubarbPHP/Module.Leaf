@@ -23,14 +23,14 @@ require_once __DIR__ . "/SortableColumn.php";
 
 use Rhubarb\Stem\Decorators\DataDecorator;
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTime;
-use Rhubarb\Stem\Schema\Columns\Boolean;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTimeColumn;
+use Rhubarb\Stem\Schema\Columns\BooleanColumn;
 use Rhubarb\Stem\Schema\Columns\Column;
-use Rhubarb\Stem\Schema\Columns\Date;
+use Rhubarb\Stem\Schema\Columns\DateColumn;
 use Rhubarb\Stem\Schema\Columns\Float;
-use Rhubarb\Stem\Schema\Columns\Integer;
-use Rhubarb\Stem\Schema\Columns\Money;
-use Rhubarb\Stem\Schema\Columns\Time;
+use Rhubarb\Stem\Schema\Columns\IntegerColumn;
+use Rhubarb\Stem\Schema\Columns\MoneyColumn;
+use Rhubarb\Stem\Schema\Columns\TimeColumn;
 
 /**
  * A table column bound to a property of a model object.
@@ -84,21 +84,21 @@ class ModelColumn extends TableColumn implements SortableColumn
      */
     public static function createTableColumnForSchemaColumn(Column $column, $label)
     {
-        if ($column instanceof Time) {
+        if ($column instanceof TimeColumn) {
             new TimeColumn($column->columnName, $label);
         }
 
-        if ($column instanceof Date || $column instanceof MySqlDateTime) {
+        if ($column instanceof DateColumn || $column instanceof MySqlDateTimeColumn) {
             return new DateColumn($column->columnName, $label);
         }
 
-        if ($column instanceof Boolean) {
+        if ($column instanceof BooleanColumn) {
             return new BooleanColumn($column->columnName, $label);
         }
 
         $tableColumn = new ModelColumn($column->columnName, $label);
 
-        if ($column instanceof Integer) {
+        if ($column instanceof IntegerColumn) {
             $tableColumn->addCssClass("number");
             $tableColumn->addCssClass("integer");
         }
@@ -108,7 +108,7 @@ class ModelColumn extends TableColumn implements SortableColumn
             $tableColumn->addCssClass("float");
         }
 
-        if ($column instanceof Money) {
+        if ($column instanceof MoneyColumn) {
             $tableColumn->addCssClass("money");
         }
 
