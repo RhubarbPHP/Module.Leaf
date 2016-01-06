@@ -64,17 +64,38 @@ class PagerView extends HtmlView
 
             $class = ($x == $pageStart) ? "first" : "";
 
-            if ($pageNumber == $this->pageNumber) {
-                $class .= " selected";
-            }
-
-            $class .= " pager-item";
-
-            $class = (trim($class) != "") ? " class=\"" . $class . "\"" : "";
-
-            $pages[] = "<a href=\"" . $request->URI . "?" . $stub . "-page=" . $pageNumber . "\"" . $class . " data-page=\"" . $pageNumber . "\">" . $pageNumber . "</a>";
+            $pages[] = $this->getPagerItem(
+                $request->URI . "?" . $stub . "-page=" . $pageNumber,
+                $class,
+                $pageNumber,
+                $pageNumber == $this->pageNumber
+            );
         }
 
-        print "<div class=\"pager\"><div class=\"pages\">" . implode("", $pages) . "</div></div>";
+        $this->printPagerItems($pages);
+    }
+
+    /**
+     * @param string $url
+     * @param string $displayClass
+     * @param string $pageNumber
+     * @param $currentPage
+     * @return string
+     */
+    protected function getPagerItem($url, $displayClass, $pageNumber, $currentPage)
+    {
+        $displayClass .= " pager-item";
+        if ($currentPage) {
+            $displayClass .= " selected";
+        }
+        return "<a href=\"{$url}\" class=\"" . trim($displayClass) . "\" data-page=\"" . $pageNumber . "\">" . $pageNumber . "</a>";
+    }
+
+    /**
+     * @param array $pagerItems Results of getPagerItems
+     */
+    protected function printPagerItems($pagerItems)
+    {
+        print "<div class=\"pager\"><div class=\"pages\">" . implode("", $pagerItems) . "</div></div>";
     }
 }
