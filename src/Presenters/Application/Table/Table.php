@@ -111,7 +111,9 @@ class Table extends HtmlPresenter
             $headings
         );
 
+        $hasItems = false;
         foreach ($this->collection as $item) {
+            $hasItems = true;
             $data = [];
 
             $decorator = DataDecorator::getDecoratorForModel($item);
@@ -125,6 +127,10 @@ class Table extends HtmlPresenter
             }
 
             $stream->appendItem($data);
+        }
+        // Ensure that there is at least one row added to the export, otherwise the export file will not be created
+        if (!$hasItems) {
+            $stream->appendItem([]);
         }
 
         // Push this file to the browser.
