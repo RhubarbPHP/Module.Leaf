@@ -1,62 +1,5 @@
 var searchControl = function (presenterPath) {
-    if (arguments.length) {
-        // Construct the search interface first so the when attachEvents is called, we have elements to attach to.
-        this.createDom();
-    }
-
     window.rhubarb.viewBridgeClasses.SelectionControlViewBridge.apply(this, arguments);
-
-    this.supportsMultipleSelection = false;
-
-    if (arguments.length) {
-        // Attach interface
-        this.element.after(this.interfaceContainer);
-
-        var count = 0;
-
-        if (this.model.SelectedItems) {
-            for (var value in this.model.SelectedItems) {
-                count++;
-            }
-        }
-
-        if (count) {
-            // Simulate selecting an item to ensure all other UI elements
-            // update consistently between first page load and subsequent
-            // selects.
-            this.setSelectedItems(this.model.SelectedItems);
-        }
-        else {
-            // Valid states will be:
-            // unselected
-            // searching
-            // searched
-            // selected
-            // not-searching is special and will change the state to unselected or selected based on whether a value
-            // has been selected.
-            this.changeState('not-searching');
-
-            /**
-             * Tracks the index of the item currently active due to keyboard input.
-             *
-             * -1 means no selection.
-             *
-             * @type {number}
-             */
-            this.keyboardSelection = -1;
-
-            this.searchResults = [];
-
-            if (this.model.FocusOnLoad) {
-                this.phraseBox.focus();
-            }
-        }
-    }
-
-    if (arguments.length) {
-        // Set the default width of the search control.
-        this.setWidth(200);
-    }
 };
 
 searchControl.prototype = new window.rhubarb.viewBridgeClasses.SelectionControlViewBridge();
@@ -109,6 +52,7 @@ searchControl.prototype.setValue = function (value) {
     if (value == "" || value == "0") {
         this.changeState('unselected');
         this.phraseBox.val('');
+        this.setInternalValue("");
     }
     else {
         this.selectedLabel.text("Retrieving...");
@@ -127,8 +71,68 @@ searchControl.prototype.hasKeyboardSelection = function () {
     return ( this.keyboardSelection > -1 );
 };
 
+searchControl.prototype.initialise = function() {
+    // Construct the search interface first so the when attachEvents is called, we have elements to attach to.
+    this.createDom();
+
+    this.supportsMultipleSelection = false;
+
+    // Attach interface
+    this.element.after(this.interfaceContainer);
+
+    var count = 0;
+
+    if (this.model.SelectedItems) {
+        for (var value in this.model.SelectedItems) {
+            count++;
+        }
+    }
+
+    // if the only value is empty, treat as no content
+    if(count === 1 && this.model.SelectedItems[0].value == "") {
+        count = 0;
+    }
+
+    if (count) {
+        // Simulate selecting an item to ensure all other UI elements
+        // update consistently between first page load and subsequent
+        // selects.
+        this.setSelectedItems(this.model.SelectedItems);
+    }
+    else {
+        // Valid states will be:
+        // unselected
+        // searching
+        // searched
+        // selected
+        // not-searching is special and will change the state to unselected or selected based on whether a value
+        // has been selected.
+        this.changeState('not-searching');
+
+        /**
+         * Tracks the index of the item currently active due to keyboard input.
+         *
+         * -1 means no selection.
+         *
+         * @type {number}
+         */
+        this.keyboardSelection = -1;
+
+        this.searchResults = [];
+
+        if (this.model.FocusOnLoad) {
+            this.phraseBox.focus();
+        }
+    }
+
+    // Set the default width of the search control.
+    this.setWidth(200);
+};
+
 searchControl.prototype.attachEvents = function () {
     var self = this;
+
+    this.initialise();
 
     this.phraseBox.keypress(function (e) {
         if (e.keyCode == 13) {
@@ -184,9 +188,7 @@ searchControl.prototype.attachEvents = function () {
 
 
     this.clearButton.click(function () {
-        //self.setSelectedValueAndLabel( "", "" );
-
-        self.changeState('unselected');
+        self.setValue("");
 
         self.phraseBox.focus().select();
 
@@ -285,6 +287,11 @@ searchControl.prototype.onCancelPressed = function () {
 };
 
 searchControl.prototype.submitSearch = function () {
+    // If there's no value, don't search
+    if(this.phraseBox.val() === "") {
+        this.changeState("unselected");
+        return;
+    }
     this.resultsList.html('');
     this.changeState('searching');
 
@@ -343,6 +350,7 @@ searchControl.prototype.setSelectedItems = function (items, raiseServerEvent) {
         this.selectedLabel.html(labelDom);
 
         this.setInternalValue(item.value);
+        this.changeState('selected');
 
         if (raiseServerEvent) {
             this.raiseServerEvent('ItemSelected', item, function (result) {
@@ -360,7 +368,6 @@ searchControl.prototype.itemSelected = function (result) {
 
 searchControl.prototype.setInternalValue = function (value) {
     this.element.find('input[name="' + this.presenterPath + '"]').val(value);
-    this.changeState('selected');
 };
 
 searchControl.prototype.createResultItemDom = function (item) {
