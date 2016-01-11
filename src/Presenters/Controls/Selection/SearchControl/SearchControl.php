@@ -108,6 +108,13 @@ abstract class SearchControl extends SelectionControlPresenter
         });
     }
 
+    protected function initialiseView($andRestoreModel = true)
+    {
+        parent::initialiseView($andRestoreModel);
+        $this->model->AllowMultipleSelection = $this->supportsMultipleSelection();
+    }
+
+
     protected function getPublicModelPropertyList()
     {
         $properties = parent::getPublicModelPropertyList();
@@ -116,6 +123,7 @@ abstract class SearchControl extends SelectionControlPresenter
         $properties[] = "MinimumPhraseLength";
         $properties[] = "ResultColumns";
         $properties[] = "ResultsWidth";
+        $properties[] = "AllowMultipleSelection";
 
         return $properties;
     }

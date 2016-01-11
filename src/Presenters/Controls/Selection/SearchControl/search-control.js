@@ -1,5 +1,7 @@
 var searchControl = function (presenterPath) {
     window.rhubarb.viewBridgeClasses.SelectionControlViewBridge.apply(this, arguments);
+
+    this.supportsMultipleSelection = true;
 };
 
 searchControl.prototype = new window.rhubarb.viewBridgeClasses.SelectionControlViewBridge();
@@ -75,8 +77,6 @@ searchControl.prototype.initialise = function() {
     // Construct the search interface first so the when attachEvents is called, we have elements to attach to.
     this.createDom();
 
-    this.supportsMultipleSelection = false;
-
     // Attach interface
     this.element.after(this.interfaceContainer);
 
@@ -91,6 +91,7 @@ searchControl.prototype.initialise = function() {
     // if the only value is empty, treat as no content
     if(count === 1 && this.model.SelectedItems[0].value == "") {
         count = 0;
+        this.model.SelectedItems = [];
     }
 
     if (count) {
@@ -272,6 +273,11 @@ searchControl.prototype.updateUiState = function () {
             this.selectedLabel.show();
             this.clearButton.show();
             break;
+        case "multiple-selected":
+            this.phraseBox.val("").show();
+            this.selectedLabel.show();
+            this.clearButton.show();
+            break;
     }
 
     // If the ui state is updating then a significant update to our model has happened and we should
@@ -329,36 +335,53 @@ searchControl.prototype.getItemLabel = function (itemData) {
     return itemData[1];
 };
 
-searchControl.prototype.createItemLabelDom = function (labelString) {
+searchControl.prototype.createItemLabelDom = function (labelString, item) {
     return labelString;
 };
 
 searchControl.prototype.itemDomSelected = function (itemDom) {
-    var item = itemDom.data('item');
-    this.setSelectedItems([item]);
+    var item = itemDom.data('item'), items;
+    if(this.model.AllowMultipleSelection) {;
+        items = this.model.SelectedItems;
+        items.push(item);
+        this.setSelectedItems(items);
+    } else {
+        this.setSelectedItems([item]);
+    }
     this.valueChanged();
 };
 
 searchControl.prototype.setSelectedItems = function (items, raiseServerEvent) {
+    var values = [];
     window.rhubarb.viewBridgeClasses.SelectionControlViewBridge.prototype.setSelectedItems.apply(this, arguments);
-
+    this.selectedLabel.html("");
     for (var value in items) {
         var item = items[value];
-        var labelDom = this.createItemLabelDom(item.label);
+        var labelDom = this.createItemLabelDom(item.label, item);
         var self = this;
 
-        this.selectedLabel.html(labelDom);
-
-        this.setInternalValue(item.value);
-        this.changeState('selected');
+        this.selectedLabel.append(labelDom);
+        if(this.model.AllowMultipleSelection) {
+            if(item.value !== "") {
+                values.push(item.value);
+            }
+        } else {
+            this.setInternalValue(item.value);
+        }
 
         if (raiseServerEvent) {
             this.raiseServerEvent('ItemSelected', item, function (result) {
                 self.itemSelected(result);
             });
         }
-
-        break;
+    }
+    if(this.model.AllowMultipleSelection) {
+        this.setInternalValue(values);
+        this.changeState('multiple-selected');
+    }
+    else
+    {
+        this.changeState('selected');
     }
 };
 
@@ -367,6 +390,9 @@ searchControl.prototype.itemSelected = function (result) {
 };
 
 searchControl.prototype.setInternalValue = function (value) {
+    if(Array.isArray(value)) {
+        value = value.join(',');
+    }
     this.element.find('input[name="' + this.presenterPath + '"]').val(value);
 };
 
