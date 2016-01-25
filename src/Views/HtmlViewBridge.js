@@ -1162,14 +1162,6 @@ HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
     return serialString;
 };
 
-HtmlViewBridge.prototype.addElementsToArray = function (elementCollection, inputArray) {
-    for (var i = 0; i < elementCollection.length; i++) {
-        inputArray.push(elementCollection[i]);
-    }
-
-    return inputArray;
-};
-
 /**
  * Triggers any attached event handlers for a given event name passing the response
  * from the server.
