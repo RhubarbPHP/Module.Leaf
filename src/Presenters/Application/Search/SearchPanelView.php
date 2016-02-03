@@ -27,7 +27,18 @@ use Rhubarb\Leaf\Views\WithViewBridgeTrait;
 
 class SearchPanelView extends HtmlView
 {
-    use WithViewBridgeTrait;
+    protected function getClientSideViewBridgeName()
+    {
+        return "SearchPanelViewBridge";
+    }
+
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__. "/" . $this->getClientSideViewBridgeName() . ".js";
+
+        return $package;
+    }
 
     /** @var ControlPresenter[] */
     protected $controls = [];
@@ -74,15 +85,5 @@ class SearchPanelView extends HtmlView
         print '<td>' . $this->presenters["Search"] . '</td>';
 
         print '</tr></table></div>';
-    }
-
-    /**
-     * Implement this and return __DIR__ when your ViewBridge.js is in the same folder as your class
-     *
-     * @returns string Path to your ViewBridge.js file
-     */
-    public function getDeploymentPackageDirectory()
-    {
-        return __DIR__;
     }
 }

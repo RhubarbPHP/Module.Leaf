@@ -28,6 +28,7 @@ use Rhubarb\Stem\Schema\Columns\BooleanColumn;
 use Rhubarb\Stem\Schema\Columns\Column;
 use Rhubarb\Stem\Schema\Columns\DateColumn;
 use Rhubarb\Stem\Schema\Columns\Float;
+use Rhubarb\Stem\Schema\Columns\FloatColumn;
 use Rhubarb\Stem\Schema\Columns\IntegerColumn;
 use Rhubarb\Stem\Schema\Columns\MoneyColumn;
 use Rhubarb\Stem\Schema\Columns\TimeColumn;
@@ -85,15 +86,15 @@ class ModelColumn extends TableColumn implements SortableColumn
     public static function createTableColumnForSchemaColumn(Column $column, $label)
     {
         if ($column instanceof TimeColumn) {
-            new TimeColumn($column->columnName, $label);
+            new \Rhubarb\Leaf\Presenters\Application\Table\Columns\TimeColumn($column->columnName, $label);
         }
 
         if ($column instanceof DateColumn || $column instanceof MySqlDateTimeColumn) {
-            return new DateColumn($column->columnName, $label);
+            return new \Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn($column->columnName, $label);
         }
 
         if ($column instanceof BooleanColumn) {
-            return new BooleanColumn($column->columnName, $label);
+            return new \Rhubarb\Leaf\Presenters\Application\Table\Columns\BooleanColumn($column->columnName, $label);
         }
 
         $tableColumn = new ModelColumn($column->columnName, $label);
@@ -103,7 +104,7 @@ class ModelColumn extends TableColumn implements SortableColumn
             $tableColumn->addCssClass("integer");
         }
 
-        if ($column instanceof Float) {
+        if ($column instanceof FloatColumn) {
             $tableColumn->addCssClass("number");
             $tableColumn->addCssClass("float");
         }
