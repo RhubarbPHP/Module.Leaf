@@ -22,8 +22,9 @@ require_once __DIR__ . "/TableColumn.php";
 
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Schema\Relationships\OneToOne;
+use Rhubarb\Stem\Schema\SolutionSchema;
 
-class OneToOneRelationshipColumn extends TableColumn
+class OneToOneRelationshipColumn extends TableColumn implements SortableColumn
 {
     /**
      * @var OneToOne
@@ -34,6 +35,7 @@ class OneToOneRelationshipColumn extends TableColumn
     {
         parent::__construct($label);
 
+        $this->sortable = true;
         $this->relationship = $relationship;
     }
 
@@ -46,5 +48,13 @@ class OneToOneRelationshipColumn extends TableColumn
         }
 
         return $object->getLabel();
+    }
+
+    public function getSortableColumnName()
+    {
+        $targetModel = $this->relationship->getTargetModelName();
+        $object = SolutionSchema::getModel($targetModel);
+
+        return $this->relationship->getTargetModelName().".".$object->getLabelColumnName();
     }
 }
