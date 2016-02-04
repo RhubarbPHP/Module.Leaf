@@ -9,8 +9,9 @@ var searchControl = function (presenterPath) {
     this.supportsMultipleSelection = false;
 
     if (arguments.length) {
+
         // Attach interface
-        this.element.after(this.interfaceContainer);
+        this.attachSearchInterfaceToDom();
 
         var count = 0;
 
@@ -61,6 +62,10 @@ var searchControl = function (presenterPath) {
 
 searchControl.prototype = new window.rhubarb.viewBridgeClasses.SelectionControlViewBridge();
 searchControl.prototype.constructor = searchControl;
+
+searchControl.prototype.attachSearchInterfaceToDom = function(){
+    this.element.after(this.interfaceContainer)
+};
 
 searchControl.prototype.createDom = function () {
     this.interfaceContainer = $("<div class='search-control'></div>");
