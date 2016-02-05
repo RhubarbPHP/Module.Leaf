@@ -60,7 +60,7 @@ class Table extends HtmlPresenter
      */
     private $currentRow;
 
-    public function __construct(Collection $list, $pageSize = 50, $presenterName = "Table")
+    public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
         parent::__construct($presenterName);
 
