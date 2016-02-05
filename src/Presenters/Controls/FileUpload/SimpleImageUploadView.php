@@ -18,10 +18,10 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\FileUpload;
 
-require_once __DIR__ . '/SimpleHtmlFileUploadView.php';
+use Rhubarb\ImageProcessing\Image;
+use Rhubarb\ImageProcessing\ImageProcessResize;
 
-use Rhubarb\Crown\Imaging\Image;
-use Rhubarb\Crown\Imaging\ImageProcessResize;
+require_once __DIR__ . '/SimpleHtmlFileUploadView.php';
 
 class SimpleImageUploadView extends SimpleHtmlFileUploadView
 {
