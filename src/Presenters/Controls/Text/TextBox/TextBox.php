@@ -23,6 +23,9 @@ require_once __DIR__ . "/../../ControlPresenter.php";
 use Rhubarb\Crown\Context;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
+/**
+ * @property TextBoxView $view
+ */
 class TextBox extends ControlPresenter
 {
     protected $size = 40;
@@ -30,12 +33,14 @@ class TextBox extends ControlPresenter
     protected $allowBrowserAutoComplete = true;
     protected $defaultValue = "";
     protected $placeholderText = "";
+    protected $inputHtmlType;
 
-    public function __construct($name = "", $size = 40)
+    public function __construct($name = "", $size = 40, $inputHtmlType = 'text')
     {
         parent::__construct($name);
 
         $this->size = $size;
+        $this->inputHtmlType = $inputHtmlType;
     }
 
     /**
@@ -76,7 +81,7 @@ class TextBox extends ControlPresenter
 
     protected function createView()
     {
-        return new TextBoxView();
+        return new TextBoxView($this->inputHtmlType);
     }
 
     public function setSize($size)
