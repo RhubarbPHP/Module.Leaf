@@ -91,7 +91,7 @@ class TableView extends JQueryView
         if ($this->unsearchedHtml && !$this->getData("Searched")) {
             print $this->unsearchedHtml;
             $suppressPagerContent = true;
-        } elseif (count($this->list) && $this->noDataHtml) {
+        } elseif (count($this->list) == 0 && $this->noDataHtml) {
             print $this->noDataHtml;
             $suppressPagerContent = true;
         }
