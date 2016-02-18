@@ -56,7 +56,7 @@ bridge.prototype.startSearch = function(){
 
 bridge.prototype.onSubPresenterValueChanged = function () {
     if (this.model.AutoSubmit) {
-        this.raiseServerEvent("Search");
+        this.startSearch();
     }
 };
 

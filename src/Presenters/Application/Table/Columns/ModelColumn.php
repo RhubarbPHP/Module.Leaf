@@ -110,6 +110,7 @@ class ModelColumn extends TableColumn implements SortableColumn
         }
 
         if ($column instanceof MoneyColumn) {
+            $tableColumn->addCssClass("number");
             $tableColumn->addCssClass("money");
         }
 
