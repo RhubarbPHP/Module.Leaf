@@ -420,7 +420,7 @@ HtmlViewBridge.prototype.getSubPresenters = function () {
             continue;
         }
 
-        if (subPath.indexOf(this.presenterPath) == 0) {
+        if (subPath.indexOf(this.presenterPath + "_") == 0) {
             subPresenters[subPresenters.length] = window.rhubarb.registeredPresenters[subPath];
         }
     }
