@@ -27,7 +27,7 @@ use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTime;
 use Rhubarb\Stem\Schema\Columns\Boolean;
 use Rhubarb\Stem\Schema\Columns\Column;
 use Rhubarb\Stem\Schema\Columns\Date;
-use Rhubarb\Stem\Schema\Columns\Float;
+use Rhubarb\Stem\Schema\Columns\FloatColumn;
 use Rhubarb\Stem\Schema\Columns\Integer;
 use Rhubarb\Stem\Schema\Columns\Money;
 use Rhubarb\Stem\Schema\Columns\Time;
@@ -103,7 +103,7 @@ class ModelColumn extends TableColumn implements SortableColumn
             $tableColumn->addCssClass("integer");
         }
 
-        if ($column instanceof Float) {
+        if ($column instanceof FloatColumn) {
             $tableColumn->addCssClass("number");
             $tableColumn->addCssClass("float");
         }

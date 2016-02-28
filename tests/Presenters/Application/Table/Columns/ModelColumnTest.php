@@ -6,7 +6,7 @@ use Rhubarb\Leaf\Presenters\Application\Table\Columns\DateColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDate;
-use Rhubarb\Stem\Schema\Columns\String;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
 use Rhubarb\Stem\Tests\Fixtures\Example;
 use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
 
@@ -35,7 +35,7 @@ class ModelColumnTest extends ModelUnitTestCase
 
     public function testCanCreateAppropriateType()
     {
-        $stringColumn = new String("Forename", 50);
+        $stringColumn = new StringColumn("Forename", 50);
         $dateColumn = new MySqlDate("DateOfBirth");
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
@@ -47,7 +47,7 @@ class ModelColumnTest extends ModelUnitTestCase
 
     public function testIsSortable()
     {
-        $stringColumn = new String("Forename", 50);
+        $stringColumn = new StringColumn("Forename", 50);
 
         $tableColumn = ModelColumn::createTableColumnForSchemaColumn($stringColumn, "Test");
 

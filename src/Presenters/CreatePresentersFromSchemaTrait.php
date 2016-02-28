@@ -33,7 +33,7 @@ use Rhubarb\Stem\Schema\Columns\Decimal;
 use Rhubarb\Stem\Schema\Columns\Integer;
 use Rhubarb\Stem\Schema\Columns\LongString;
 use Rhubarb\Stem\Schema\Columns\Money;
-use Rhubarb\Stem\Schema\Columns\String;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
 use Rhubarb\Stem\Schema\Columns\Time;
 use Rhubarb\Stem\Schema\SolutionSchema;
 
@@ -131,7 +131,7 @@ trait CreatePresentersFromSchemaTrait
         }
 
         // TextBoxes
-        if ($column instanceof String) {
+        if ($column instanceof StringColumn) {
             if (stripos($presenterName, "password") !== false) {
                 return new Password($presenterName);
             }
