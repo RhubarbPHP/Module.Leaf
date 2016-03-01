@@ -76,23 +76,19 @@ class PagerView extends HtmlView
         while ($iteration < $this->numberOfPages) {
             $pageNumber = $iteration + 1;
 
-            if ($pageNumber > $this->bufferPages && $iteration < $this->pageNumber - $this->bufferPages) {
-                // If we're past the first few pages but are still a few pages before our selected page...
-                if ($iteration + 1 != $this->pageNumber - $this->bufferPages) {
-                    // ... and there is more than 1 page number to hide, show an ellipsis instead and skip forward
-                    $pages[] = '<span class="pager-buffer">&hellip;</span>';
-                    $iteration = $this->pageNumber - $this->bufferPages;
-                    continue;
-                }
+            if ($pageNumber > $this->bufferPages && $pageNumber < $this->pageNumber - $this->bufferPages) {
+                // If we're past the first few pages but are still a few pages before our selected page
+                // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
+                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $iteration = $this->pageNumber - $this->bufferPages;
+                continue;
             }
-            if ($iteration < $this->numberOfPages - $this->bufferPages && $pageNumber > $this->pageNumber + $this->bufferPages - 1) {
-                // If we're earlier than the last few pages but are a few pages after our selected page...
-                if ($iteration + 1 != $this->numberOfPages - $this->bufferPages) {
-                    // ... and there is more than 1 page number to hide, show an ellipsis instead and skip forward
-                    $pages[] = '<span class="pager-buffer">&hellip;</span>';
-                    $iteration = $this->numberOfPages - $this->bufferPages;
-                    continue;
-                }
+            if ($pageNumber < $this->numberOfPages - $this->bufferPages && $pageNumber > $this->pageNumber + $this->bufferPages - 1) {
+                // If we're earlier than the last few pages but are a few pages after our selected page
+                // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
+                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $iteration = $this->numberOfPages - $this->bufferPages;
+                continue;
             }
 
             if ($pageNumber == $this->pageNumber) {
