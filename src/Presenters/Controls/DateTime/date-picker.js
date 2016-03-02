@@ -21,17 +21,30 @@ datePicker.prototype.attachEvents = function () {
 datePicker.prototype.getDate = function () {
     var date = this.element.datepicker('getDate');
 
-    var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    d.setTime(d.getTime() + (-date.getTimezoneOffset() * 60 * 1000));
+    if (!date instanceof Date) {
+        var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        d.setTime(d.getTime() + (-date.getTimezoneOffset() * 60 * 1000));
+        date = d;
+    }
 
-    return d;
+    return date;
 };
 
 datePicker.prototype.setDate = function (date) {
 
-    this.element.datepicker('setDate', date);
+    var jsDate = new Date(Date.parse(date));
+
+    this.element.datepicker('setDate', jsDate);
 
     this.valueChanged();
+};
+
+datePicker.prototype.setValue = function(date) {
+    this.setDate(date);
+};
+
+datePicker.prototype.getValue = function() {
+    return this.getDate();
 };
 
 window.rhubarb.viewBridgeClasses.DatePicker = datePicker;
