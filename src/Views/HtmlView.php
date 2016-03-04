@@ -58,7 +58,18 @@ class HtmlView extends View
         $package = new PresenterDeploymentPackage();
         $package->resourcesToDeploy = [__DIR__ . "/HtmlViewBridge.js"];
 
+        $viewBridgeFilePath = $this->getClientSideViewBridgeFilePath();
+
+        if ($viewBridgeFilePath){
+            $package->resourcesToDeploy[] = $viewBridgeFilePath;
+        }
+
         return $package;
+    }
+
+    protected function getClientSideViewBridgeFilePath()
+    {
+        return false;
     }
 
     /**
