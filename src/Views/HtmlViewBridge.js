@@ -157,7 +157,7 @@ HtmlViewBridge.prototype.attachDomChangeEventHandler = function (triggerChangeEv
 };
 
 HtmlViewBridge.prototype.getViewIndex = function () {
-    var pattern = /\[_([^\]]+)\]$/;
+    var pattern = /\((\d+)\)$/;
 
     var match = pattern.exec(this.viewNode.id);
 
@@ -620,7 +620,7 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
     var index = this.getViewIndex();
 
     if (index) {
-        target = target.replace("[_" + index + "]", "");
+        target = target.replace(/\(\d+\)$/, '');
     }
 
     if (hostPresenter) {
@@ -700,7 +700,7 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
     var index = targetHtmlViewBridge.getViewIndex();
 
     if (index) {
-        target = target.replace("[_" + index + "]", "");
+        target = target.replace(/\(\d+\)$/, '');
     }
 
     if (hostPresenter) {
@@ -825,7 +825,7 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
     var index = targetHtmlViewBridge.getViewIndex();
 
     if (index) {
-        target = target.replace("[_" + index + "]", "");
+        target = target.replace(/\(\d+\)$/, '');
     }
     if (hostPresenter) {
         var formData = hostPresenter.findInputsAndSerialize(hostPresenter.viewNode);
