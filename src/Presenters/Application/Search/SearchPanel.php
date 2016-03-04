@@ -207,7 +207,7 @@ class SearchPanel extends HtmlPresenter
 
         if (sizeof($filters) == 0) {
             // The search doesn't want to filter anything.
-            return false;
+            return null;
         }
 
         if ($filter === null) {
