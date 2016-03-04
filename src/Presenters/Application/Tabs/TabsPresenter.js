@@ -14,8 +14,8 @@ tabsPresenter.prototype.attachEvents = function () {
 
         self.raiseServerEvent("TabSelected", index);
 
-        $('ul:first', self.element).children().removeClass('-is-selected');
-        $(this).addClass('-is-selected');
+        $('ul:first', self.element).children().removeClass('selected');
+        $(this).addClass('selected');
     });
 };
 

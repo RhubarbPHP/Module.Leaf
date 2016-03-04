@@ -31,9 +31,31 @@ class TabsPresenter extends HtmlPresenter
         return new TabsView();
     }
 
+    /**
+     * Override to initialise the presenter with it's model, and any other relevant settings.
+     *
+     * The view should not be instantiated or configured here however - do this in ApplyModelToView
+     */
+    protected function initialiseModel()
+    {
+        parent::initialiseModel();
+
+        $this->SelectedTab = 0;
+    }
+
+
     public function setTabDefinitions($tabs = [])
     {
         $this->tabs = $tabs;
+    }
+
+    public function getSelectedTab()
+    {
+        if ($this->SelectedTab !== null) {
+            return $this->getTabByIndex($this->SelectedTab);
+        }
+
+        return null;
     }
 
     public function getTabDefinitions()

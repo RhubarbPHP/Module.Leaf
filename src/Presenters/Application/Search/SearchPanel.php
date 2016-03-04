@@ -183,7 +183,7 @@ class SearchPanel extends HtmlPresenter
 
     protected function bindEvents(Presenter $presenter)
     {
-        $presenter->attachEventHandler("ConfigureFilters", [$this, "OnConfigureFilters"]);
+        $presenter->attachEventHandler("GetFilter", [$this, "OnGetFilter"]);
         $presenter->attachEventHandler("GetSearchControlValues", [$this, "GetSearchControlValues"]);
     }
 
@@ -197,7 +197,7 @@ class SearchPanel extends HtmlPresenter
 
     }
 
-    protected function onConfigureFilters(Filter $filter = null)
+    protected function onGetFilter()
     {
         $group = new Group("AND");
 
@@ -210,18 +210,6 @@ class SearchPanel extends HtmlPresenter
             return null;
         }
 
-        if ($filter === null) {
-            return $group;
-        }
-
-        $outer = new Group("AND");
-
-        $outer->addFilters
-        (
-            $filter,
-            $group
-        );
-
-        return $outer;
+        return $filters;
     }
 }
