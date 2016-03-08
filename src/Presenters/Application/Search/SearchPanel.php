@@ -210,6 +210,6 @@ class SearchPanel extends HtmlPresenter
             return null;
         }
 
-        return $filters;
+        return $group;
     }
 }
