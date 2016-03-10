@@ -895,7 +895,7 @@ HtmlViewBridge.prototype.createXmlHttpRequest = function () {
 };
 
 HtmlViewBridge.prototype.loadJson = function (url, callback) {
-    var xmlhttp = new XMLHttpRequest();
+    var xmlhttp = this.createXmlHttpRequest();
 
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
