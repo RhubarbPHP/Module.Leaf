@@ -1216,10 +1216,11 @@ HtmlViewBridge.prototype.setFocus = function () {
  * Returns a list of presenters on the page by viewBridge name.
  *
  * Note that the containingPresenter parameter is optional. Omitting it will do a global search.
+ *
+ * @deprecated Presenters are now initialised synchronously, so this just uses getPresentersByName internally
  */
-
 window.rhubarb.waitForPresenters = function (presenterNames, callback, containingPresenter) {
-    var presenters = window.rhubarb.getPresentersByName(presenterNames, containingPresenter)
+    var presenters = window.rhubarb.getPresentersByName(presenterNames, containingPresenter);
 
     callback.apply(this, presenters);
 };
@@ -1279,8 +1280,23 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
     return matchedPresenters;
 };
 
+/**
+ * @deprecated Presenters are now initialised synchronously, so this just uses getPresentersByName internally
+ */
 HtmlViewBridge.prototype.waitForPresenters = function (presenters, callback) {
     return window.rhubarb.waitForPresenters(presenters, callback, this);
+};
+
+HtmlViewBridge.prototype.hide = function () {
+    this.viewNode.style.display = 'none';
+};
+
+HtmlViewBridge.prototype.show = function () {
+    this.viewNode.style.display = this.getCssDisplayType();
+};
+
+HtmlViewBridge.prototype.getCssDisplayType = function () {
+    this.viewNode.style.display = 'block';
 };
 
 if (!String.prototype.trim) {
