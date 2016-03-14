@@ -47,4 +47,8 @@ datePicker.prototype.getValue = function() {
     return this.getDate();
 };
 
+datePicker.prototype.getCssDisplayType = function () {
+    return 'inline-block';
+};
+
 window.rhubarb.viewBridgeClasses.DatePicker = datePicker;

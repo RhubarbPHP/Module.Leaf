@@ -1296,7 +1296,7 @@ HtmlViewBridge.prototype.show = function () {
 };
 
 HtmlViewBridge.prototype.getCssDisplayType = function () {
-    this.viewNode.style.display = 'block';
+    return 'block';
 };
 
 if (!String.prototype.trim) {

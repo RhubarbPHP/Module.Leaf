@@ -37,4 +37,8 @@ bridge.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
     return checkbox;
 };
 
+bridge.prototype.getCssDisplayType = function () {
+    return 'inline-block';
+};
+
 window.rhubarb.viewBridgeClasses.CheckBoxViewBridge = bridge;

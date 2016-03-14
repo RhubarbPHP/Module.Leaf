@@ -99,4 +99,8 @@ selectionControl.prototype.fetchAvailableSelectionItems = function () {
     this.raiseServerEvent.apply(this, params);
 };
 
+selectionControl.prototype.getCssDisplayType = function () {
+    return 'inline-block';
+};
+
 window.rhubarb.viewBridgeClasses.SelectionControlViewBridge = selectionControl;

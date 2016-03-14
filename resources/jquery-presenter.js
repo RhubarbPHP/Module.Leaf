@@ -9,4 +9,12 @@ jqueryHtmlViewBridge.prototype.onRegistered = function () {
     this.element = $(this.viewNode);
 };
 
+jqueryHtmlViewBridge.prototype.hide = function () {
+    this.element.hide();
+};
+
+jqueryHtmlViewBridge.prototype.show = function () {
+    this.element.show();
+};
+
 window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge = jqueryHtmlViewBridge;

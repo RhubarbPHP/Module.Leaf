@@ -38,4 +38,8 @@ bridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent) {
     }
 };
 
+bridge.prototype.getCssDisplayType = function () {
+    return 'inline-block';
+};
+
 window.rhubarb.viewBridgeClasses.TextBoxViewBridge = bridge;

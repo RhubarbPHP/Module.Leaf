@@ -86,4 +86,8 @@ button.prototype.attachEvents = function () {
     });
 };
 
+button.prototype.getCssDisplayType = function () {
+    return 'inline-block';
+};
+
 window.rhubarb.viewBridgeClasses.Button = button;
