@@ -20,8 +20,10 @@ namespace Rhubarb\Leaf\Views;
 
 require_once __DIR__ . "/View.php";
 
+use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Html\ResourceLoader;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Leaf\Presenters\PresenterDeploymentPackage;
@@ -186,8 +188,8 @@ class HtmlView extends View
             $wrappers[] = function ($content) {
                 $id = $this->getIndexedPresenterPath();
 
-                $request = Context::currentRequest();
-                $ajaxUrl = $request->UrlPath;
+                $request = Request::current();
+                $ajaxUrl = $request->urlPath;
 
                 $viewIndexSuffix = ($this->index) ? "[_" . $this->index . "]" : "";
 
@@ -300,8 +302,8 @@ HTML;
     {
         $id = $this->presenterPath;
 
-        $request = Context::currentRequest();
-        $state = $request->Post($id . "State");
+        $request = Request::current();
+        $state = $request->post($id . "State");
 
         if ($state != null) {
             if (is_string($state)) {

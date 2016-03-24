@@ -20,6 +20,7 @@ namespace Rhubarb\Leaf\Views;
 
 require_once __DIR__ . "/../PresenterViewBase.php";
 
+use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Leaf\Presenters\Presenter;
@@ -308,9 +309,9 @@ abstract class View extends PresenterViewBase implements Deployable
 
         if ($deploymentPackage != null) {
             // If we're in developer mode - make the deployment
-            $context = new Context();
+            $application = Application::current();
 
-            if ($context->DeveloperMode) {
+            if ($application->developerMode) {
                 $deploymentPackage->deploy();
             }
         }
