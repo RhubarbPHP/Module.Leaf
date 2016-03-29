@@ -69,9 +69,15 @@ button.prototype.attachEvents = function () {
         }
 
         if (self.useXmlRpc) {
-            self.raiseServerEvent("ButtonPressed", function (response) {
-                self.raiseClientEvent("ButtonPressCompleted", response);
-            });
+            self.raiseServerEvent(
+                "ButtonPressed",
+                function (response) {
+                    self.raiseClientEvent("ButtonPressCompleted", response);
+                },
+                function (response) {
+                    self.raiseClientEvent("ButtonPressFailed", response);
+                }
+            );
 
             this.preventDefault = true;
             return false;
