@@ -47,6 +47,11 @@ datePicker.prototype.getValue = function() {
     return this.getDate();
 };
 
+datePicker.prototype.getSerializableValue = function() {
+    var date = this.getDate();
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+};
+
 datePicker.prototype.getCssDisplayType = function () {
     return 'inline-block';
 };

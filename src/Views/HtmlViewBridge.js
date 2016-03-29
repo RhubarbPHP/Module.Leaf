@@ -469,6 +469,10 @@ HtmlViewBridge.prototype.getValue = function () {
     return "";
 };
 
+HtmlViewBridge.prototype.getSerializableValue = function () {
+    return this.getValue();
+};
+
 HtmlViewBridge.prototype.getDisplayView = function () {
     return this.getValue();
 };
@@ -1127,22 +1131,26 @@ HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
     var serialString = "";
 
     for (var i in subPresenters) {
+        if (!subPresenters.hasOwnProperty(i)) {
+            continue;
+        }
+        
         var subPresenter = subPresenters[i];
 
         if (!subPresenter.hasValue()) {
             continue;
         }
 
-        var value = subPresenter.getValue();
+        var value = subPresenter.getSerializableValue();
         if (typeof value == "object") {
-            for (var j in value) {
-                serialString += subPresenter.presenterPath + "[]=" + encodeURIComponent(value[j]) + "&";
+            for (var prop in value) {
+                if (value.hasOwnProperty(prop)) {
+                    serialString += subPresenter.presenterPath + "[]=" + encodeURIComponent(value[prop]) + "&";
+                }
             }
-        }
-        else if (typeof value == "boolean") {
+        } else if (typeof value == "boolean") {
             serialString += subPresenter.presenterPath + "=" + ( ( value ) ? "1" : "0" ) + "&";
-        }
-        else {
+        } else {
             serialString += subPresenter.presenterPath + "=" + encodeURIComponent(value) + "&";
         }
     }
