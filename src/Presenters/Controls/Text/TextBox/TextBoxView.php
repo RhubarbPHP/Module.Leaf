@@ -83,7 +83,7 @@ class TextBoxView extends ControlView
                id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" presenter-name="<?= \htmlentities(
             $this->presenterName
         ); ?>"<?= $autoCompleteAttribute . $this->getHtmlAttributeTags() . $placeholderText . $this->getClassTag() ?> />
-    <?php
+        <?php
     }
 
     private $size;

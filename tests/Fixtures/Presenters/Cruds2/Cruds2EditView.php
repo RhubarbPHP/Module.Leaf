@@ -8,7 +8,7 @@ class Cruds2EditView extends View
 {
     protected function printViewContent()
     {
-        $user = $this->RaiseEvent("GetRestModel");
+        $user = $this->raiseEvent("GetRestModel");
 
         print $user->Forename;
     }

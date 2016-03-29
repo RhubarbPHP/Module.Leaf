@@ -103,7 +103,7 @@ class Button extends ControlPresenter
     protected function parseRequestForCommand()
     {
         $request = $request = Context::currentRequest();
-        $pushed = $request->Post($this->getIndexedPresenterPath());
+        $pushed = $request->post($this->getIndexedPresenterPath());
 
         if ($pushed != null) {
             $this->raiseDelayedEvent("ButtonPressed", $this->viewIndex);

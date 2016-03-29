@@ -43,8 +43,7 @@ class MvpCollectionUrlHandler extends UrlHandler
         $itemPresenterClassName,
         $additionalPresenterClassNameMap = [],
         $children = []
-    )
-    {
+    ) {
         parent::__construct($children);
 
         $this->collectionPresenterClassName = $collectionPresenterClassName;

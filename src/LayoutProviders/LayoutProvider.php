@@ -29,8 +29,8 @@ namespace Rhubarb\Leaf\LayoutProviders;
  *
  * Method 1:
  *
- * $layout = LayoutProvider::GetDefaultLayoutProvider();
- * $layout->PrintItems(
+ * $layout = LayoutProvider::getDefaultLayoutProvider();
+ * $layout->printItems(
  *      [
  *          "Forename",
  *          "Surname"
@@ -38,7 +38,7 @@ namespace Rhubarb\Leaf\LayoutProviders;
  *
  * Method 2:
  *
- * $layout = LayoutProvider::GetDefaultLayoutProvider(
+ * $layout = LayoutProvider::getDefaultLayoutProvider(
  *      [
  *          "Forename",
  *          "Surname"

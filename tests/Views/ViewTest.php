@@ -1,9 +1,10 @@
 <?php
 
 namespace Rhubarb\Leaf\Tests\Views;
-use Rhubarb\Leaf\Tests\Fixtures\Presenters\SimpleView;
+
 use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
+use Rhubarb\Leaf\Tests\Fixtures\Presenters\SimpleView;
 
 class ViewTest extends RhubarbTestCase
 {
@@ -16,7 +17,7 @@ class ViewTest extends RhubarbTestCase
             $addedPresenter = $presenter;
         });
 
-        $view->AddPresenters(new TextBox("TestBox"));
+        $view->addPresenters(new TextBox("TestBox"));
 
         $this->assertNotNull($addedPresenter);
         $this->assertInstanceOf(TextBox::class, $addedPresenter);

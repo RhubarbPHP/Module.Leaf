@@ -56,7 +56,7 @@ class FieldSetWithLabelsLayoutProvider extends LayoutProvider
                 ?>
             </fieldset>
         </div>
-    <?php
+        <?php
     }
 
 

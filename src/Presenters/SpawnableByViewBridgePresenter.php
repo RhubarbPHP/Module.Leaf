@@ -34,7 +34,7 @@ class SpawnableByViewBridgePresenter extends Presenter
         if (method_exists($view, "getSpawnSettings")) {
             $this->applyModelToView();
 
-            $settings = $view->GetSpawnSettings();
+            $settings = $view->getSpawnSettings();
 
             $deploymentPackage = $view->getDeploymentPackage();
             $deploymentPackage->deploy();

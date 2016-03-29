@@ -28,6 +28,6 @@ class FormPagerView extends PagerView
 
         ?>
         <input type="hidden" name="<?= $this->presenterPath; ?>-page" class="page-input" value=""/>
-    <?php
+        <?php
     }
 }

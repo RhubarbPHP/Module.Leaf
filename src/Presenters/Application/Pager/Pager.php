@@ -98,8 +98,8 @@ class Pager extends HtmlPresenter
 
         $request = Context::currentRequest();
 
-        if ($request->Request($key)) {
-            $this->raiseEvent("PageChanged", $request->Request($key));
+        if ($request->request($key)) {
+            $this->raiseEvent("PageChanged", $request->request($key));
         }
 
         parent::parseRequestForCommand();

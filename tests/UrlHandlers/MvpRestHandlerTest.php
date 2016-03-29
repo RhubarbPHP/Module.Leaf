@@ -30,20 +30,20 @@ class MvpRestHandlerTest extends RhubarbTestCase
             ["add" => Thanks::class]
         );
 
-        $this->rest->SetUrl("/users/");
+        $this->rest->setUrl("/users/");
     }
 
     public function testRestHandlerInstantiatesCollectionView()
     {
         $request = new WebRequest();
         $request->UrlPath = "/users/";
-        $request->Server("HTTP_ACCEPT", "text/html");
-        $request->Server("REQUEST_METHOD", "get");
+        $request->server("HTTP_ACCEPT", "text/html");
+        $request->server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf(Address::class, $response->GetGenerator());
+        $this->assertInstanceOf(Address::class, $response->getGenerator());
 
-        $mvp = $response->GetGenerator();
+        $mvp = $response->getGenerator();
 
         $this->assertInstanceOf(Collection::class, $mvp->restCollection);
     }
@@ -52,17 +52,17 @@ class MvpRestHandlerTest extends RhubarbTestCase
     {
         $user = new User();
         $user->Username = "smith";
-        $user->Save();
+        $user->save();
 
         $request = new WebRequest();
         $request->UrlPath = "/users/1/";
-        $request->Server("HTTP_ACCEPT", "text/html");
-        $request->Server("REQUEST_METHOD", "get");
+        $request->server("HTTP_ACCEPT", "text/html");
+        $request->server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf(Details::class, $response->GetGenerator());
+        $this->assertInstanceOf(Details::class, $response->getGenerator());
 
-        $mvp = $response->GetGenerator();
+        $mvp = $response->getGenerator();
 
         $this->assertEquals("smith", $mvp->restModel->Username);
     }
@@ -71,10 +71,10 @@ class MvpRestHandlerTest extends RhubarbTestCase
     {
         $request = new WebRequest();
         $request->UrlPath = "/users/add/";
-        $request->Server("HTTP_ACCEPT", "text/html");
-        $request->Server("REQUEST_METHOD", "get");
+        $request->server("HTTP_ACCEPT", "text/html");
+        $request->server("REQUEST_METHOD", "get");
 
         $response = $this->rest->generateResponse($request);
-        $this->assertInstanceOf(Thanks::class, $response->GetGenerator());
+        $this->assertInstanceOf(Thanks::class, $response->getGenerator());
     }
 }

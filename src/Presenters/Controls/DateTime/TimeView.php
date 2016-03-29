@@ -85,7 +85,7 @@ class TimeView extends ControlView
 
     public function getSpawnSettings()
     {
-        $settings = parent::GetSpawnSettings();
+        $settings = parent::getSpawnSettings();
         $settings["SpawnSettings"] = [
             "Hours" => $this->presenters["Hours"]->getSpawnStructure(),
             "Minutes" => $this->presenters["Minutes"]->getSpawnStructure()

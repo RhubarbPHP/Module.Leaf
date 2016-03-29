@@ -23,7 +23,6 @@ require_once __DIR__ . "/../../HtmlPresenter.php";
 use Rhubarb\Leaf\Presenters\HtmlPresenter;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
-use Rhubarb\Stem\Filters\Filter;
 use Rhubarb\Stem\Filters\Group;
 
 /**
@@ -69,8 +68,8 @@ class SearchPanel extends HtmlPresenter
         $defaultValues = $this->getDefaultControlValues();
 
         foreach ($controls as $control) {
-            if (!isset($defaultValues[$control->GetName()])) {
-                $defaultValues[$control->GetName()] = "";
+            if (!isset($defaultValues[$control->getName()])) {
+                $defaultValues[$control->getName()] = "";
             }
         }
 

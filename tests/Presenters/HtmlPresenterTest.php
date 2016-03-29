@@ -13,14 +13,14 @@ class HtmlPresenterTest extends RhubarbTestCase
     public function testClientSideValidationCreatedFromModelValidation()
     {
         $presenter = new UnitTestHtmlPresenter();
-        $clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
+        $clientSideValidation = $presenter->publicCreateDefaultClientSideValidator();
 
         $this->assertInstanceOf(ValidatorClientSide::class, $clientSideValidation);
         $this->assertCount(2, $clientSideValidation->validations);
 
         $presenter->testInvalidTypes = true;
 
-        $clientSideValidation = $presenter->PublicCreateDefaultClientSideValidator();
+        $clientSideValidation = $presenter->publicCreateDefaultClientSideValidator();
 
         $this->assertNull($clientSideValidation);
     }
@@ -28,7 +28,7 @@ class HtmlPresenterTest extends RhubarbTestCase
 
 class UnitTestHtmlPresenter extends HtmlPresenter
 {
-    public function PublicCreateDefaultClientSideValidator()
+    public function publicCreateDefaultClientSideValidator()
     {
         return $this->createDefaultClientSideValidator();
     }

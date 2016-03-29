@@ -46,8 +46,7 @@ class MvpRestHandler extends ModelCollectionHandler
         $itemPresenterClassName,
         $additionalPresenterClassNameMap = [],
         $children = []
-    )
-    {
+    ) {
         parent::__construct($modelName, $children);
 
         $this->collectionPresenterClassName = $collectionPresenterClassName;

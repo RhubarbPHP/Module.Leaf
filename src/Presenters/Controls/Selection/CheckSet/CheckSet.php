@@ -39,8 +39,8 @@ class CheckSet extends DropDown
     {
         $request = Context::currentRequest();
 
-        if ($request->Server("REQUEST_METHOD") == "POST") {
-            $values = $request->Post($this->getIndexedPresenterPath());
+        if ($request->server("REQUEST_METHOD") == "POST") {
+            $values = $request->post($this->getIndexedPresenterPath());
 
             if ($values === null) {
                 $values = [];

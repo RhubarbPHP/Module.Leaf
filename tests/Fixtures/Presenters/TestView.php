@@ -12,7 +12,7 @@ class TestView extends HtmlView
         $this->requiresStateInputs = $requireState;
     }
 
-    public function TestRaiseEventOnViewBridge()
+    public function testRaiseEventOnViewBridge()
     {
         $this->raiseEventOnViewBridge("TestEvent", 123, 234);
     }

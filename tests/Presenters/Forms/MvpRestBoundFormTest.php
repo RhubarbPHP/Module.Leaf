@@ -21,21 +21,21 @@ class MvpRestBoundFormTest extends RhubarbTestCase
     {
         $user = new User();
         $user->Username = "windychicken";
-        $user->Save();
+        $user->save();
 
         $restHandler = new MvpRestHandler(User::class, "", ModelBoundTestForm::class);
-        $restHandler->SetUrl("/users/");
+        $restHandler->setUrl("/users/");
 
         $request = new WebRequest();
         $request->UrlPath = "/users/" . $user->UserID . "/";
-        $request->Server("HTTP_ACCEPT", "text/html");
-        $request->Server("REQUEST_METHOD", "get");
+        $request->server("HTTP_ACCEPT", "text/html");
+        $request->server("REQUEST_METHOD", "get");
 
         $response = $restHandler->generateResponse($request);
 
-        $mvp = $response->GetGenerator();
-        $restModel = $mvp->GetRestModel();
-        $restCollection = $mvp->GetRestCollection();
+        $mvp = $response->getGenerator();
+        $restModel = $mvp->getRestModel();
+        $restCollection = $mvp->getRestCollection();
 
         $this->assertEquals($user->Username, $restModel->Username);
 
@@ -43,7 +43,7 @@ class MvpRestBoundFormTest extends RhubarbTestCase
         $this->assertEquals(3, $mvp->model->NewValue);
         $this->assertNull($restModel->NewValue);
 
-        $mvp->PublicSetDataFromPresenter("Test", "TestValue");
+        $mvp->publicSetDataFromPresenter("Test", "TestValue");
 
         $this->assertEquals("TestValue", $mvp->model->Test);
         $this->assertEquals("TestValue", $restModel->Test);
@@ -54,23 +54,23 @@ class MvpRestBoundFormTest extends RhubarbTestCase
         $mvp = new ModelBoundTestForm();
         $mvp->setRestModel(new User());
 
-        $control = $mvp->PublicCreatePresenterByName("NonExistant");
+        $control = $mvp->publicCreatePresenterByName("NonExistant");
 
         $this->assertNull($control);
 
-        $control = $mvp->PublicCreatePresenterByName("Username");
+        $control = $mvp->publicCreatePresenterByName("Username");
 
         $this->assertInstanceOf(TextBox::class, $control);
 
-        $control = $mvp->PublicCreatePresenterByName("Password");
+        $control = $mvp->publicCreatePresenterByName("Password");
 
         $this->assertInstanceOf(Password::class, $control);
 
-        $control = $mvp->PublicCreatePresenterByName("Active");
+        $control = $mvp->publicCreatePresenterByName("Active");
 
         $this->assertInstanceOf(CheckBox::class, $control);
 
-        $control = $mvp->PublicCreatePresenterByName("UserType");
+        $control = $mvp->publicCreatePresenterByName("UserType");
 
         $this->assertInstanceOf(DropDown::class, $control);
 
@@ -79,7 +79,7 @@ class MvpRestBoundFormTest extends RhubarbTestCase
         $this->assertEquals(["", "Please Select"], $items[0]);
         $this->assertInstanceOf(MySqlEnumColumn::class, $items[1]);
 
-        $control = $mvp->PublicCreatePresenterByName("CompanyID");
+        $control = $mvp->publicCreatePresenterByName("CompanyID");
 
         $this->assertInstanceOf(DropDown::class, $control);
 
@@ -92,12 +92,12 @@ class MvpRestBoundFormTest extends RhubarbTestCase
 
 class ModelBoundTestForm extends MvpRestBoundForm
 {
-    public function PublicSetDataFromPresenter($dataKey, $value)
+    public function publicSetDataFromPresenter($dataKey, $value)
     {
         $this->setDataFromPresenter($dataKey, $value);
     }
 
-    public function PublicCreatePresenterByName($presenterName)
+    public function publicCreatePresenterByName($presenterName)
     {
         return $this->createPresenterByName($presenterName);
     }

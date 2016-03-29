@@ -9,21 +9,21 @@ class SimpleView extends View implements ISimpleView
 {
     private $text;
 
-    public function PrintViewContent()
+    public function printViewContent()
     {
         print $this->text;
     }
 
-    public function SetText($text)
+    public function setText($text)
     {
         $this->text = $text;
     }
 
-    public function CreatePresenters()
+    public function createPresenters()
     {
-        parent::CreatePresenters();
+        parent::createPresenters();
 
-        $this->AddPresenters(
+        $this->addPresenters(
             [
                 "ForenameA" => new TextBox("Forename"),
                 "ForenameB" => new TextBox("Forename")

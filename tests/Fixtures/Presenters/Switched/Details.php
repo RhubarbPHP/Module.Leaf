@@ -11,12 +11,12 @@ class Details extends Presenter
     public $restModel;
     public $restCollection;
 
-    public function SetRestModel($restObject)
+    public function setRestModel($restObject)
     {
         $this->restModel = $restObject;
     }
 
-    public function SetRestCollection($restCollection)
+    public function setRestCollection($restCollection)
     {
         $this->restCollection = $restCollection;
     }
@@ -26,8 +26,8 @@ class Details extends Presenter
         $this->registerView(new DetailsView());
     }
 
-    public function TestChangingPresenterThroughEvent()
+    public function testChangingPresenterThroughEvent()
     {
-        $this->RaiseEvent("ChangePresenter", "Address");
+        $this->raiseEvent("ChangePresenter", "Address");
     }
 }

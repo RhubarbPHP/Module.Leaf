@@ -19,9 +19,9 @@ class Simple extends Presenter
         });
     }
 
-    public function RemoveEventHandlers()
+    public function removeEventHandlers()
     {
-        $this->ClearEventHandlers();
+        $this->clearEventHandlers();
     }
 
     protected function getPublicModelPropertyList()
@@ -34,7 +34,7 @@ class Simple extends Presenter
 
     public $supportsLatePresenterRegistration = false;
 
-    protected function SupportsLateSubPresenterRegistration()
+    protected function supportsLateSubPresenterRegistration()
     {
         return $this->supportsLatePresenterRegistration;
     }
@@ -45,7 +45,7 @@ class Simple extends Presenter
 
         // Fire two events for our unit test.
         $this->raiseDelayedEvent("FirstEvent");
-        $this->RaiseEvent("SecondEvent");
+        $this->raiseEvent("SecondEvent");
     }
 
     /**
@@ -60,7 +60,7 @@ class Simple extends Presenter
         return new SimpleView();
     }
 
-    public function GetSubPresenters()
+    public function getSubPresenters()
     {
         return $this->subPresenters;
     }
@@ -70,19 +70,19 @@ class Simple extends Presenter
         parent::configureView();
 
         $this->view->attachEventHandler("Save", function () {
-            $this->Save();
+            $this->save();
         });
 
-        $this->view->SetText("Don't change this content - it should match the unit test.");
+        $this->view->setText("Don't change this content - it should match the unit test.");
     }
 
-    protected function Save()
+    protected function save()
     {
 
     }
 
-    protected function CommandUpdateText($text = "The text has changed!")
+    protected function commandUpdateText($text = "The text has changed!")
     {
-        $this->view->SetText($text);
+        $this->view->setText($text);
     }
 }

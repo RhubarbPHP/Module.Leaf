@@ -23,7 +23,6 @@ require_once __DIR__ . "/../../../Views/HtmlView.php";
 use Rhubarb\Leaf\Presenters\Controls\Buttons\Button;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Leaf\Views\HtmlView;
-use Rhubarb\Leaf\Views\WithViewBridgeTrait;
 
 class SearchPanelView extends HtmlView
 {
@@ -35,7 +34,7 @@ class SearchPanelView extends HtmlView
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = __DIR__. "/" . $this->getClientSideViewBridgeName() . ".js";
+        $package->resourcesToDeploy[] = __DIR__ . "/" . $this->getClientSideViewBridgeName() . ".js";
 
         return $package;
     }
@@ -53,7 +52,7 @@ class SearchPanelView extends HtmlView
     {
         parent::createPresenters();
 
-        $this->controls = $this->RaiseEvent("GetControls");
+        $this->controls = $this->raiseEvent("GetControls");
 
         $this->addPresenters($this->controls);
 

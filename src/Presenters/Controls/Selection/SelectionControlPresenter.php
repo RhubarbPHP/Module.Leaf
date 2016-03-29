@@ -118,7 +118,7 @@ class SelectionControlPresenter extends ControlPresenter
     protected function parseRequestForCommand()
     {
         $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if ($values !== null) {
             if (!is_array($values)) {
@@ -293,7 +293,7 @@ class SelectionControlPresenter extends ControlPresenter
 
             if ($item instanceof Collection) {
                 foreach ($item as $key => $model) {
-                    $items[] = $this->makeItem($key, $model->GetLabel(), $this->getDataForItem($model));
+                    $items[] = $this->makeItem($key, $model->getLabel(), $this->getDataForItem($model));
                 }
             } elseif ($item instanceof MySqlEnumColumn) {
                 $enumValues = $item->enumValues;
@@ -302,7 +302,7 @@ class SelectionControlPresenter extends ControlPresenter
                     $items[] = $this->makeItem($enumValue, $enumValue);
                 }
             } elseif (is_array($item)) {
-                if (count($item)>0) {
+                if (count($item) > 0) {
                     if (is_array($item[0])) {
                         foreach ($item as $subItem) {
                             $value = $subItem[0];

@@ -26,10 +26,11 @@ class SearchPanelTabsPresenterTest extends RhubarbTestCase
         $searchResults->selected = true;
 
         $this->assertEquals(
-            [new SearchPanelTabDefinition("Big", ["Phrase" => "This is a big phrase"]),
+            [
+                new SearchPanelTabDefinition("Big", ["Phrase" => "This is a big phrase"]),
                 $searchResults
             ],
-            $tabs->PublicInflateTabDefinitions()
+            $tabs->publicInflateTabDefinitions()
         );
     }
 
@@ -93,7 +94,7 @@ class SearchPanelTabsPresenterTest extends RhubarbTestCase
 
 class UnitTestSearchPanelTabsPresenter extends SearchPanelTabsPresenter
 {
-    public function PublicInflateTabDefinitions()
+    public function publicInflateTabDefinitions()
     {
         $tabs = $this->inflateTabDefinitions();
         $this->markSelectedTab($tabs);

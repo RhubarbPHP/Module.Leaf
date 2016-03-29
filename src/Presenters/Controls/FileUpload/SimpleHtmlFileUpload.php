@@ -45,7 +45,7 @@ class SimpleHtmlFileUpload extends ControlPresenter
     protected function parseRequestForCommand()
     {
         $request = Context::currentRequest();
-        $fileData = $request->Files($this->getIndexedPresenterPath());
+        $fileData = $request->files($this->getIndexedPresenterPath());
 
         $response = null;
 

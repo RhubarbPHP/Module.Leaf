@@ -23,9 +23,9 @@ use Rhubarb\Crown\Html\ResourceLoader;
 trait WithJqueryViewBridgeTrait
 {
     protected function getAdditionalResourceUrls()
-	{
-		return [ ResourceLoader::getJqueryUrl( "1.9.1" ) ];
-	}
+    {
+        return [ResourceLoader::getJqueryUrl("1.9.1")];
+    }
 
     protected function getClientSideViewBridgeName()
     {

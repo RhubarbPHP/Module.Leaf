@@ -30,7 +30,7 @@ abstract class ModelDialogPresenter extends DialogPresenter
 
     protected abstract function getModelName();
 
-    protected function GetRestModel()
+    protected function getRestModel()
     {
         $modelName = $this->getModelName();
 

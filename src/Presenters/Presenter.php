@@ -27,8 +27,8 @@ use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Response\GeneratesResponse;
 use Rhubarb\Crown\Response\HtmlResponse;
-use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Crown\Response\Response;
+use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
@@ -190,7 +190,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     {
         if ($name == '') {
             // Set a default presenter name of the class name
-            $name = StringTools::getShortClassNameFromNamespace( static::class );
+            $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
         $this->model = new PresenterModel();
@@ -348,8 +348,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
     protected function getDefaultValidator()
     {
-        if (!$this->defaultValidator)
-        {
+        if (!$this->defaultValidator) {
             $this->defaultValidator = $this->createDefaultValidator();
         }
         return $this->defaultValidator;
@@ -759,7 +758,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      * be hard to predict.
      *
      * @see Presenter::createView()
-     * @see Presenter::UpdateView()
+     * @see Presenter::updateView()
      */
     protected function configureView()
     {
@@ -1310,7 +1309,6 @@ JS;
         if (!$this->view) {
             throw new NoViewException();
         }
-
 
 
         if ($andRestoreModel) {

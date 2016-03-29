@@ -24,7 +24,6 @@ use Rhubarb\Leaf\Presenters\Application\Pager\EventPager;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\Template;
 use Rhubarb\Leaf\Views\JQueryView;
-use Rhubarb\Stem\Aggregates\Count;
 use Rhubarb\Stem\Decorators\DataDecorator;
 
 class TableView extends JQueryView

@@ -21,7 +21,6 @@ namespace Rhubarb\Leaf\Presenters;
 require_once __DIR__ . "/Presenter.php";
 
 use Rhubarb\Leaf\Exceptions\InvalidPresenterNameException;
-use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\Presenters\Forms\Form;
 
 
@@ -41,8 +40,9 @@ class SwitchedPresenter extends Form
 
     protected function createSwitchedPresenters()
     {
-        return[];
+        return [];
     }
+
     /**
      * Override this to return a mapping of presenter names to classes.
      *
@@ -50,8 +50,7 @@ class SwitchedPresenter extends Form
      */
     protected function getSwitchedPresenters()
     {
-        if ( !$this->switchedPresenters )
-        {
+        if (!$this->switchedPresenters) {
             $this->switchedPresenters = $this->createSwitchedPresenters();
         }
 
@@ -60,8 +59,7 @@ class SwitchedPresenter extends Form
 
     protected function changePresenter($newPresenterName)
     {
-        if (!isset($this->switchedPresenters[$newPresenterName]))
-        {
+        if (!isset($this->switchedPresenters[$newPresenterName])) {
             throw new InvalidPresenterNameException($newPresenterName);
         }
 
@@ -109,14 +107,13 @@ class SwitchedPresenter extends Form
      */
     public function getCurrentPresenter()
     {
-        if ( !isset( $this->model->CurrentPresenterName ) )
-        {
-            $this->model->CurrentPresenterName = $this->GetDefaultPresenterName();
+        if (!isset($this->model->CurrentPresenterName)) {
+            $this->model->CurrentPresenterName = $this->getDefaultPresenterName();
         }
 
-        $presenters = $this->GetSwitchedPresenters();
+        $presenters = $this->getSwitchedPresenters();
 
-        return $presenters[ $this->model->CurrentPresenterName ];
+        return $presenters[$this->model->CurrentPresenterName];
     }
 
     /**

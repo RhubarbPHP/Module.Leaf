@@ -15,7 +15,7 @@ class SearchControlTest extends RhubarbTestCase
         $testSearch = new UnitTestSearchControl();
         $testSearch->attachMockView($view);
 
-        $items = $testSearch->SimulateSearchPressed("test");
+        $items = $testSearch->simulateSearchPressed("test");
 
         $this->assertEquals("test", $testSearch->Phrase);
         $this->assertEquals("b", $items[1]->label);
@@ -30,7 +30,7 @@ class SearchControlTest extends RhubarbTestCase
         $testSearch = new UnitTestSearchControl();
         $testSearch->attachMockView($view);
 
-        $response = $testSearch->SimulateItemSelected(4);
+        $response = $testSearch->simulateItemSelected(4);
 
         $this->assertEquals(true, $response);
         $this->assertEquals(4, $testSearch->SelectedItems[0]);
@@ -39,12 +39,12 @@ class SearchControlTest extends RhubarbTestCase
 
 class UnitTestSearchControl extends SearchControl
 {
-    public function SimulateItemSelected($item)
+    public function simulateItemSelected($item)
     {
-        return $this->view->RaiseEvent("ItemSelected", $item);
+        return $this->view->raiseEvent("ItemSelected", $item);
     }
 
-    public function SimulateSearchPressed($phrase)
+    public function simulateSearchPressed($phrase)
     {
         $this->setSelectionItems(
             [
@@ -53,7 +53,7 @@ class UnitTestSearchControl extends SearchControl
                 [2, "c"]
             ]);
 
-        return $this->view->RaiseEvent("SearchPressed", $phrase);
+        return $this->view->raiseEvent("SearchPressed", $phrase);
     }
 
     protected function getResultColumns()

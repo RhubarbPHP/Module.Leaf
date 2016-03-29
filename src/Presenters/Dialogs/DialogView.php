@@ -35,7 +35,7 @@ abstract class DialogView extends JQueryView
         <div class="dialog__title">
             <?= $this->getTitle(); ?>
         </div>
-    <?php
+        <?php
     }
 
     protected abstract function printDialogContent();
@@ -57,7 +57,7 @@ abstract class DialogView extends JQueryView
                 ?>
             </div>
         </div>
-    <?php
+        <?php
     }
 
     protected function getClientSideViewBridgeName()

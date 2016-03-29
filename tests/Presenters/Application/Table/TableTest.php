@@ -23,7 +23,7 @@ class TableTest extends ModelUnitTestCase
         $example = new Example();
         $example->Forename = "Andrew";
         $example->Surname = "Cuthbert";
-        $example->Save();
+        $example->save();
     }
 
     public function testTableDefaultToEmptyCollection()
@@ -101,20 +101,20 @@ class TableTest extends ModelUnitTestCase
         $table->initialise();
 
         $mockView->simulateEvent("ColumnClicked", 0);
-        $table->generateResponse(Context::CurrentRequest());
-        $sorts = $list->GetSorts();
+        $table->generateResponse(Context::currentRequest());
+        $sorts = $list->getSorts();
         $this->assertEquals(["Forename" => true], $sorts);
 
 
         $mockView->simulateEvent("ColumnClicked", 0);
-        $table->generateResponse(Context::CurrentRequest());
-        $sorts = $list->GetSorts();
+        $table->generateResponse(Context::currentRequest());
+        $sorts = $list->getSorts();
         $this->assertEquals(["Forename" => false], $sorts);
 
 
         $mockView->simulateEvent("ColumnClicked", 1);
-        $table->generateResponse(Context::CurrentRequest());
-        $sorts = $list->GetSorts();
+        $table->generateResponse(Context::currentRequest());
+        $sorts = $list->getSorts();
         $this->assertEquals(["Surname" => true], $sorts);
     }
 }

@@ -60,7 +60,7 @@ class HtmlView extends View
 
         $viewBridgeFilePath = $this->getClientSideViewBridgeFilePath();
 
-        if ($viewBridgeFilePath){
+        if ($viewBridgeFilePath) {
             $package->resourcesToDeploy[] = $viewBridgeFilePath;
         }
 
@@ -279,7 +279,8 @@ class HtmlView extends View
         return $wrappers;
     }
 
-    protected function getFormWrapper() {
+    protected function getFormWrapper()
+    {
         return function ($content) {
             return <<<HTML
 <form method="post" enctype="multipart/form-data">
@@ -301,7 +302,7 @@ HTML;
         $id = $this->presenterPath;
 
         $request = Context::currentRequest();
-        $state = $request->Post($id . "State");
+        $state = $request->post($id . "State");
 
         if ($state != null) {
             if (is_string($state)) {

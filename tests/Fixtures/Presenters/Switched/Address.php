@@ -15,12 +15,12 @@ class Address extends Presenter
     public $restModel;
     public $restCollection;
 
-    public function SetRestModel($restObject)
+    public function setRestModel($restObject)
     {
         $this->restModel = $restObject;
     }
 
-    public function SetRestCollection($restCollection)
+    public function setRestCollection($restCollection)
     {
         $this->restCollection = $restCollection;
     }

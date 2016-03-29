@@ -29,10 +29,10 @@ Dummy Output
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
 
         $view = $presenter->testView;
-        $view->TestRaiseEventOnViewBridge();
+        $view->testRaiseEventOnViewBridge();
         $response = $presenter->generateResponse(new WebRequest());
 
-        $content = $response->GetContent();
+        $content = $response->getContent();
 
         $this->assertContains('<event name="TestEvent" target="Forename"><param><![CDATA[123]]></param><param><![CDATA[234]]></param></event>', $content);
 

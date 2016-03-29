@@ -19,8 +19,8 @@ class SimpleHtmlFileUploadTest extends RhubarbTestCase
             $eventPath = $path;
         });
 
-        $request = Context::CurrentRequest();
-        $request->Files("Image", [
+        $request = Context::currentRequest();
+        $request->files("Image", [
             "name" => "goats-boats.jpg",
             "tmp_name" => "/temporary/path/abc123",
             "error" => UPLOAD_ERR_OK

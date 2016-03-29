@@ -134,7 +134,7 @@ class TextBox extends ControlPresenter
     protected function parseRequestForCommand()
     {
         $request = Context::currentRequest();
-        $text = $request->Post($this->getIndexedPresenterPath());
+        $text = $request->post($this->getIndexedPresenterPath());
 
         if ($text !== null) {
             $this->model->Text = $text;

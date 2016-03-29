@@ -31,7 +31,7 @@ class SwitchedPresenterView extends HtmlView
     private $presenterToShow;
     private $allPresenters;
 
-    public function __construct( $presenters, $presenterToShow )
+    public function __construct($presenters, $presenterToShow)
     {
         $this->presenterToShow = $presenterToShow;
         $this->allPresenters = $presenters;
@@ -42,7 +42,7 @@ class SwitchedPresenterView extends HtmlView
 
     public function createPresenters()
     {
-        $this->addPresenters( $this->allPresenters );
+        $this->addPresenters($this->allPresenters);
     }
 
     public function printViewContent()

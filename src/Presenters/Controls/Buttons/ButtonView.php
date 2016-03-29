@@ -43,7 +43,7 @@ class ButtonView extends JQueryControlView
     {
         $xmlAttribute = ($this->useXmlRpc) ? " xmlrpc=\"yes\"" : "";
         $validationAttribute = ($this->validator != null) ? " validation=\"" . htmlentities(
-                json_encode($this->validator->GetJsonStructure())
+                json_encode($this->validator->getJsonStructure())
             ) . "\"" : "";
         $validatorAttribute = ($this->validatorHostPresenterPath) ? " validator=\"" . htmlentities(
                 $this->validatorHostPresenterPath
@@ -57,7 +57,7 @@ class ButtonView extends JQueryControlView
                presenter-name="<?= htmlentities($this->presenterName); ?>"
                id="<?= htmlentities($this->getIndexedPresenterPath()); ?>"
                value="<?= htmlentities($this->text); ?>"<?= $this->getClassTag() . $this->getHtmlAttributeTags() . $xmlAttribute . $validationAttribute . $validatorAttribute . $confirmAttribute ?>/>
-    <?php
+        <?php
     }
 
     public function setButtonText($text)
@@ -89,7 +89,7 @@ class ButtonView extends JQueryControlView
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
-        $package->resourcesToDeploy[] = __DIR__. "/../../../../../rhubarb/resources/validation.js";
+        $package->resourcesToDeploy[] = __DIR__ . "/../../../../../rhubarb/resources/validation.js";
         $package->resourcesToDeploy[] = __DIR__ . "/button.js";
 
         return $package;

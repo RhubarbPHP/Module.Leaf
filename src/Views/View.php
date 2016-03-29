@@ -37,7 +37,7 @@ abstract class View extends PresenterViewBase implements Deployable
     /**
      * A view can contain any number of presenters within it.
      *
-     * @see View::AddPresenter()
+     * @see View::addPresenter()
      * @var Presenter[]
      */
     protected $presenters = [];

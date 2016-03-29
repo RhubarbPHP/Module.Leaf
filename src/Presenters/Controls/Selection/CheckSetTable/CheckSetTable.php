@@ -1,6 +1,7 @@
 <?php
 
 namespace Rhubarb\Leaf\Presenters\Controls\Selection\CheckSetTable;
+
 use Rhubarb\Leaf\Presenters\Controls\Selection\CheckSet\CheckSet;
 
 /**

@@ -17,7 +17,7 @@ class ControlViewTest extends RhubarbTestCase
         $controlPresenter->attachMockView($mockView);
         $controlPresenter->generateResponse();
 
-        $this->assertEquals(" class=\"billy-goat chicken\"", $mockView->PublicGetClassTag());
+        $this->assertEquals(" class=\"billy-goat chicken\"", $mockView->publicGetClassTag());
     }
 }
 
@@ -27,7 +27,7 @@ class UnitTestControl extends ControlPresenter
 
 class ControlMockView extends ControlView
 {
-    public function PublicGetClassTag()
+    public function publicGetClassTag()
     {
         return $this->getClassTag();
     }

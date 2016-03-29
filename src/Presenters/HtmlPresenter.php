@@ -51,7 +51,8 @@ class HtmlPresenter extends Presenter
         }
 
         if ($validation instanceof Validation &&
-            !in_array(ClientSideValidation::class, ValidatorClientSide::nestedClassUses($validation))) {
+            !in_array(ClientSideValidation::class, ValidatorClientSide::nestedClassUses($validation))
+        ) {
             // Convert the validation to a client side validation if required. If the validation doesn't have a
             // matching client side version, null will returned essentially disabling the client side validation.
             $validation = ClientSideValidation::fromModelValidation($validation);

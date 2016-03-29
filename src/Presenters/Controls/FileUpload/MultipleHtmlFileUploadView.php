@@ -55,6 +55,6 @@ class MultipleHtmlFileUploadView extends SimpleHtmlFileUploadView
         <input type="file" name="<?= $this->getIndexedPresenterPath(); ?>[]"
                id="<?= $this->getIndexedPresenterPath(); ?>"
                presenter-name="<?= $this->presenterName ?>" <?= $accepts; ?> multiple="multiple"/>
-    <?php
+        <?php
     }
 } 

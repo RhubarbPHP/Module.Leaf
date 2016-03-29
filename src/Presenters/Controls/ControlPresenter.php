@@ -91,7 +91,7 @@ class ControlPresenter extends SpawnableByViewBridgePresenter
     protected function parseRequestForCommand()
     {
         $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if ($values !== null) {
             $this->model->Value = $values;

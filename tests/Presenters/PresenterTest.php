@@ -22,18 +22,18 @@ class PresenterTest extends RhubarbTestCase
 {
     public function testPresenterFoundAndCorrectHtmlReturned()
     {
-        LayoutModule::DisableLayout();
-        $request = Context::CurrentRequest();
+        LayoutModule::disableLayout();
+        $request = Context::currentRequest();
 
         // Simulate an incoming apache request
         $request->UrlPath = "/simple/";
         $request->IsWebRequest = true;
 
-        $response = Module::GenerateResponseForRequest($request);
+        $response = Module::generateResponseForRequest($request);
 
-        $this->assertEquals("Don't change this content - it should match the unit test.", $response->GetContent());
+        $this->assertEquals("Don't change this content - it should match the unit test.", $response->getContent());
 
-        LayoutModule::EnableLayout();
+        LayoutModule::enableLayout();
     }
 
     public function testPresenterHasName()
@@ -50,7 +50,7 @@ class PresenterTest extends RhubarbTestCase
         // Simple has two sub presenters both called forename - let's check they have unique ids
         $simple->generateResponse();
 
-        $subPresenters = $simple->GetSubPresenters();
+        $subPresenters = $simple->getSubPresenters();
 
         $this->assertCount(2, $subPresenters);
 
@@ -96,7 +96,7 @@ class PresenterTest extends RhubarbTestCase
         // Simple has two events. The first is delayed, the second isn't.
         // We should see that the last event to run was actually the first event.
 
-        $simple->generateResponse(Context::CurrentRequest());
+        $simple->generateResponse(Context::currentRequest());
 
         $this->assertEquals("FirstEvent", $simple->lastEventProcessed);
     }
@@ -112,8 +112,8 @@ class PresenterTest extends RhubarbTestCase
         // post data for next instance of it to pick up.
         $state = '{"TestValue":"abc123"}';
 
-        $request = Context::CurrentRequest();
-        $request->Post($simple->getPresenterPath() . "State", $state);
+        $request = Context::currentRequest();
+        $request->post($simple->getPresenterPath() . "State", $state);
 
         $simple = new UnitTestStatefulPresenter();
         $simple->initialise();
@@ -123,8 +123,8 @@ class PresenterTest extends RhubarbTestCase
 
     public function testDataBinding()
     {
-        $request = Context::CurrentRequest();
-        $request->Post("Forename", null);
+        $request = Context::currentRequest();
+        $request->post("Forename", null);
 
         // Test model binding 'get'
         $host = new UnitTestSwitchedPresenter();
@@ -136,8 +136,8 @@ class PresenterTest extends RhubarbTestCase
         $this->assertEquals("John", UnitTestTextBox::$textBoxValue);
 
         // Test model binding 'set'
-        $request = Context::CurrentRequest();
-        $request->Post("_1_Forename", "Jeremy");
+        $request = Context::currentRequest();
+        $request->post("_1_Forename", "Jeremy");
 
         $host = new UnitTestSwitchedPresenter();
 
@@ -158,12 +158,12 @@ class PresenterTest extends RhubarbTestCase
         $validator->validations[] = new HasValue( "Forename" );
         $validator->validations[] = new HasValue( "Surname" );
 
-        $result = $simple->Validate( $validator );
+        $result = $simple->validate( $validator );
 
         $this->assertFalse( $result );
 
         // Check that we can get the validation error.
-        $errors = $simple->GetValidationErrorsByName( "Forename" );
+        $errors = $simple->getValidationErrorsByName( "Forename" );
 
         $this->assertCount( 1, $errors );
         $this->assertInstanceOf( "Rhubarb\Stem\Models\Validation\ValidationError", $errors[0] );
@@ -173,7 +173,7 @@ class PresenterTest extends RhubarbTestCase
     public function testPresenterMarkedAsConfigured()
     {
         $presenter = new Simple();
-        $presenter->RemoveEventHandlers();
+        $presenter->removeEventHandlers();
 
         $this->assertFalse($presenter->isConfigured());
 
@@ -214,7 +214,7 @@ class PresenterTest extends RhubarbTestCase
         ob_start();
 
         $host->Forename = [4 => "def"];
-        $presenter->DisplayWithIndex("4");
+        $presenter->displayWithIndex("4");
 
         $content = ob_get_clean();
 
@@ -263,7 +263,7 @@ class SubPresenterTest extends RhubarbTestCase
         $host->initialise();
         $host->processUserInterfaceEvents();
 
-        self::$hosted->SimulateChangeOfGoats();
+        self::$hosted->simulateChangeOfGoats();
 
         $this->assertEquals(4, (int)self::$hosted->model->NumberOfGoats);
     }
@@ -401,7 +401,7 @@ class Hosted extends ControlPresenter
         return $this->model->NumberOfGoats;
     }
 
-    public function SimulateChangeOfGoats()
+    public function simulateChangeOfGoats()
     {
         $this->model->NumberOfGoats = 4;
         $this->setBoundData();
@@ -433,7 +433,7 @@ class AutoBindingViewTest extends UnitTestView
 
         // Attach an event handler to watch for the client side mvp event test.
         $presenter->attachEventHandler("MvpTestEventReceived", function () {
-            $this->RaiseEvent("MvpTestEventReceived");
+            $this->raiseEvent("MvpTestEventReceived");
         });
 
         $this->addPresenters($presenter);

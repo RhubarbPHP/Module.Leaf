@@ -33,14 +33,14 @@ class TabsPresenterTest extends RhubarbTestCase
             [
                 new TabDefinition("Tab 1", 1),
                 new TabDefinition("Tab 2", ["size" => "big", "colour" => "red"])
-            ], $view->GetInflatedTabs()
+            ], $view->getInflatedTabs()
         );
     }
 }
 
 class UnitTestingTabsView extends TabsView
 {
-    public function GetInflatedTabs()
+    public function getInflatedTabs()
     {
         return $this->tabs;
     }

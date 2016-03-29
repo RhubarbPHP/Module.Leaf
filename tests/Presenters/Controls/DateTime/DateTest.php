@@ -11,32 +11,32 @@ class DateTest extends RhubarbTestCase
     {
         $date = new UnitTestDate("TestDate");
 
-        $date->PublicApplyBoundData(new \DateTime("2001-12-10 13:12:11"));
+        $date->publicApplyBoundData(new \DateTime("2001-12-10 13:12:11"));
 
         $this->assertEquals("10/12/2001", $date->Text);
 
-        $date->PublicApplyBoundData("2001-13-101 13:12:11");
+        $date->publicApplyBoundData("2001-13-101 13:12:11");
 
         $this->assertEquals("", $date->Text);
 
         $date->Text = "23/04/2013";
 
-        $this->assertEquals("2013-04-23", $date->PublicExtractBoundData());
+        $this->assertEquals("2013-04-23", $date->publicExtractBoundData());
 
         $date->Text = "abc234";
 
-        $this->assertEquals("", $date->PublicExtractBoundData());
+        $this->assertEquals("", $date->publicExtractBoundData());
     }
 }
 
 class UnitTestDate extends Date
 {
-    public function PublicApplyBoundData($data)
+    public function publicApplyBoundData($data)
     {
         $this->applyBoundData($data);
     }
 
-    public function PublicExtractBoundData()
+    public function publicExtractBoundData()
     {
         return $this->extractBoundData();
     }

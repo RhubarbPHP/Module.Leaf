@@ -54,8 +54,8 @@ class SearchPanelTest extends RhubarbTestCase
         $search = new UnitTestSearchPanel();
 
         // This will simulate the textbox getting a value
-        $request = Context::CurrentRequest();
-        $request->Post("_Phrase", "abc123");
+        $request = Context::currentRequest();
+        $request->post("_Phrase", "abc123");
 
         $context = new Context();
         $context->Request = $request;
@@ -70,11 +70,11 @@ class SearchPanelTest extends RhubarbTestCase
 
         $search->setSearchControlValues(["Phrase" => "123456"]);
 
-        $search->phraseTextBox->AttachMockView($textBoxView = new UnitTestSearchPanelTextBoxView());
+        $search->phraseTextBox->attachMockView($textBoxView = new UnitTestSearchPanelTextBoxView());
 
         $search->generateResponse(new WebRequest());
 
-        $this->assertEquals("123456", $textBoxView->GetText());
+        $this->assertEquals("123456", $textBoxView->getText());
     }
 
     public function testDefaultControlValuesAreUsed()
@@ -98,22 +98,22 @@ class SearchPanelTest extends RhubarbTestCase
 
         $filter = null;
 
-        $result = $this->panel->TestConfigureFilters($filter);
+        $result = $this->panel->testConfigureFilters($filter);
         $this->assertInstanceOf(Group::class, $result);
-        $filters = $result->GetFilters();
+        $filters = $result->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf(Contains::class, $filters[0]);
 
         $filter = new Equals("CompanyID", "1");
 
-        $result = $this->panel->TestConfigureFilters($filter);
+        $result = $this->panel->testConfigureFilters($filter);
         $this->assertInstanceOf(Group::class, $result);
-        $filters = $result->GetFilters();
+        $filters = $result->getFilters();
         $this->assertCount(2, $filters);
         $this->assertInstanceOf(Equals::class, $filters[0]);
         $this->assertInstanceOf(Group::class, $filters[1]);
 
-        $filters = $filters[1]->GetFilters();
+        $filters = $filters[1]->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf(Contains::class, $filters[0]);
 
@@ -121,14 +121,14 @@ class SearchPanelTest extends RhubarbTestCase
 
         $filter = new Equals("CompanyID", "1");
 
-        $result = $this->panel->TestConfigureFilters($filter);
+        $result = $this->panel->testConfigureFilters($filter);
         $this->assertFalse($result, "The panel should not want to filter as phrase is blank. False should indicate this.");
     }
 }
 
 class UnitTestSearchPanelTextBoxView extends TextBoxView
 {
-    public function GetText()
+    public function getText()
     {
         return $this->text;
     }
@@ -151,13 +151,13 @@ class UnitTestSearchPanel extends SearchPanel
     public function populateFilterGroup(Group $filterGroup = null)
     {
         if ($this->Phrase) {
-            $filterGroup->AddFilters(
+            $filterGroup->addFilters(
                 new Contains("Surname", $this->Phrase)
             );
         }
     }
 
-    public function TestConfigureFilters($filterGroup)
+    public function testConfigureFilters($filterGroup)
     {
         return $this->onConfigureFilters($filterGroup);
     }

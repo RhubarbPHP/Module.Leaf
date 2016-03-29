@@ -237,7 +237,7 @@ class Table extends HtmlPresenter
 
     protected function createColumnFromString($columnName, $label)
     {
-        $modelClassName = SolutionSchema::getModelClass($this->collection->GetModelClassName());
+        $modelClassName = SolutionSchema::getModelClass($this->collection->getModelClassName());
 
         $autoLabelled = false;
 
@@ -253,7 +253,7 @@ class Table extends HtmlPresenter
         // Try and convert this to a ModelColumn
         if (isset($schemaColumns[$columnName])) {
             if ($schemaColumns[$columnName] instanceof MySqlForeignKeyColumn) {
-                $relationships = SolutionSchema::getAllOneToOneRelationshipsForModelBySourceColumnName($this->collection->GetModelClassName());
+                $relationships = SolutionSchema::getAllOneToOneRelationshipsForModelBySourceColumnName($this->collection->getModelClassName());
 
                 if (isset($relationships[$columnName])) {
                     if ($relationships[$columnName] instanceof OneToOne) {
@@ -271,7 +271,7 @@ class Table extends HtmlPresenter
             }
 
             // If the property exists in the data decorator
-            if (isset($decorator[$columnName])){
+            if (isset($decorator[$columnName])) {
                 // Let this computed column be treated as a normal String model column.
                 return new ModelColumn($columnName, $label);
             }
@@ -286,7 +286,7 @@ class Table extends HtmlPresenter
 
                     return new Template("{" . $columnName . "}", $label);
                 } else {
-                    $relationships = SolutionSchema::getAllRelationshipsForModel($this->collection->GetModelClassName());
+                    $relationships = SolutionSchema::getAllRelationshipsForModel($this->collection->getModelClassName());
 
                     if (isset($relationships[$columnName])) {
                         if ($relationships[$columnName] instanceof OneToOne) {
@@ -368,7 +368,7 @@ class Table extends HtmlPresenter
 
     public function configureFilters()
     {
-        $this->raiseEvent("GetFilter", function(Filter $filter){
+        $this->raiseEvent("GetFilter", function (Filter $filter) {
             $this->collection->filter($filter);
         });
 

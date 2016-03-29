@@ -14,15 +14,15 @@ class PresenterColumnTest extends ModelUnitTestCase
 {
     public function testColumnPresents()
     {
-        Example::ClearObjectCache();
+        Example::clearObjectCache();
 
         $example = new Example();
         $example->Forename = "Andrew";
-        $example->Save();
+        $example->save();
 
         $example = new Example();
         $example->Forename = "Bobby";
-        $example->Save();
+        $example->save();
 
         $host = new HostPresenter();
         $output = $host->generateResponse();
@@ -48,7 +48,7 @@ class HostView extends View
     public function createPresenters()
     {
         $this->addPresenters(
-            $this->table = new Table(Example::Find()),
+            $this->table = new Table(Example::find()),
             $this->presented = new TextBox("Forename")
         );
 

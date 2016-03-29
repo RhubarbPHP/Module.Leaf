@@ -30,7 +30,7 @@ class CheckSetTableView extends SelectionControlView
             if (isset($item->Children)) {
                 $itemList = $item->Children;
                 $text = \htmlentities($item->label);
-                $headerRow .= '<th rowspan="2">'.$text.'</th>';
+                $headerRow .= '<th rowspan="2">' . $text . '</th>';
             } else {
                 $itemList = [$item];
             }
@@ -41,7 +41,7 @@ class CheckSetTableView extends SelectionControlView
                     $text = \htmlentities($subItem->label);
                     $checked = $this->isValueSelected($subItem->value) ? ' checked="checked"' : '';
                     $data = \htmlentities(json_encode($subItem));
-                    $headerRow .= '<th>'.$text.'</th>';
+                    $headerRow .= '<th>' . $text . '</th>';
                     $checkRow .= <<<HTML
                     <td>
                         <input type="checkbox" name="$name" value="$value"$checked data-item="$data" />

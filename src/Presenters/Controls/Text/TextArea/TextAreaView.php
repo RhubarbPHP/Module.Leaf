@@ -36,6 +36,6 @@ class TextAreaView extends TextBoxView
                   name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
                   id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
                   presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() . $placeholderText ?>><?= $this->text; ?></textarea>
-    <?php
+        <?php
     }
 }

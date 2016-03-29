@@ -31,7 +31,7 @@ class PagerTest extends ModelUnitTestCase
         for ($x = 0; $x < 500; $x++) {
             $user = new User();
             $user->Username = $x;
-            $user->Save();
+            $user->save();
         }
     }
 
@@ -39,10 +39,10 @@ class PagerTest extends ModelUnitTestCase
     {
         parent::setUp();
 
-        $this->CreateMocks();
+        $this->createMocks();
     }
 
-    private function CreateMocks()
+    private function createMocks()
     {
         $this->collection = new Collection(User::class);
 
@@ -102,9 +102,9 @@ class PagerTest extends ModelUnitTestCase
         $context = new Context();
         $context->Request = $request;
 
-        $request->Request($this->pager->PresenterPath . "-page", 3);
+        $request->request($this->pager->PresenterPath . "-page", 3);
 
-        $this->CreateMocks();
+        $this->createMocks();
 
         $this->pager->test();
 
@@ -118,17 +118,17 @@ class TestPagerView extends UnitTestView
     public $pageNumber;
     public $numberPerPage;
 
-    public function SetNumberOfPages($numberOfPages)
+    public function setNumberOfPages($numberOfPages)
     {
         $this->numberOfPages = $numberOfPages;
     }
 
-    public function SetPageNumber($pageNumber)
+    public function setPageNumber($pageNumber)
     {
         $this->pageNumber = $pageNumber;
     }
 
-    public function SetNumberPerPage($numberPerPage)
+    public function setNumberPerPage($numberPerPage)
     {
         $this->numberPerPage = $numberPerPage;
     }

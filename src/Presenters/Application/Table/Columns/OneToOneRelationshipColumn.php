@@ -55,6 +55,6 @@ class OneToOneRelationshipColumn extends TableColumn implements SortableColumn
         $targetModel = $this->relationship->getTargetModelName();
         $object = SolutionSchema::getModel($targetModel);
 
-        return $this->relationship->getTargetModelName().".".$object->getLabelColumnName();
+        return $this->relationship->getTargetModelName() . "." . $object->getLabelColumnName();
     }
 }

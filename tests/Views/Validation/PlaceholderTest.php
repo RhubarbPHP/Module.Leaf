@@ -27,12 +27,12 @@ class PlaceholderTest extends RhubarbTestCase
         $mvp = new Simple();
         $view = new PlaceholderTestView();
 
-        $mvp->AttachMockView( $view );
+        $mvp->attachMockView( $view );
 
         $validator = new Validator();
         $validator->validations[] = new HasValue( "Forename" );
 
-        $mvp->Validate( $validator );
+        $mvp->validate( $validator );
 
         $placeholder = new Placeholder( "Forename", $view );
 
@@ -43,7 +43,7 @@ class PlaceholderTest extends RhubarbTestCase
 
 class PlaceholderTestView extends UnitTestView
 {
-    public function SetText($text)
+    public function setText($text)
     {
 
     }

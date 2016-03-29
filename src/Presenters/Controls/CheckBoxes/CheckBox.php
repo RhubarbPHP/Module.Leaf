@@ -41,7 +41,7 @@ class CheckBox extends ControlPresenter
         }
 
         $request = $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if (is_array($values)) {
             foreach ($values as $index => $value) {

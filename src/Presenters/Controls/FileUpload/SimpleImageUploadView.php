@@ -36,9 +36,9 @@ class SimpleImageUploadView extends SimpleHtmlFileUploadView
         if ($this->currentImagePath != "") {
             try {
                 $image = new Image($this->currentImagePath);
-                $image->AddProcess(new ImageProcessResize($this->previewImageWidth, $this->previewImageHeight, true, true));
+                $image->addProcess(new ImageProcessResize($this->previewImageWidth, $this->previewImageHeight, true, true));
 
-                $url = $image->DeployImage();
+                $url = $image->deployImage();
 
                 print "<div><img src='$url' /></div>";
             } catch (\Exception $er) {

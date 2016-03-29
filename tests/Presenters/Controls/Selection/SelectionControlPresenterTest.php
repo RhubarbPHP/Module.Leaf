@@ -22,7 +22,7 @@ class SelectionControlPresenterTest extends RhubarbTestCase
             ]
         );
 
-        $items = $presenter->PublicGetCurrentlyAvailableSelectionItems();
+        $items = $presenter->publicGetCurrentlyAvailableSelectionItems();
 
         $this->assertCount(2, $items);
 
@@ -41,7 +41,7 @@ class SelectionControlPresenterTest extends RhubarbTestCase
             ]
         );
 
-        $items = $presenter->PublicGetCurrentlyAvailableSelectionItems();
+        $items = $presenter->publicGetCurrentlyAvailableSelectionItems();
 
         $this->assertCount(5, $items);
         $this->assertEquals("Value 1", $items[0]->value);
@@ -59,7 +59,7 @@ class SelectionControlPresenterTest extends RhubarbTestCase
             ]
         );
 
-        $items = $presenter->PublicGetCurrentlyAvailableSelectionItems();
+        $items = $presenter->publicGetCurrentlyAvailableSelectionItems();
 
         $this->assertCount(3, $items);
         $this->assertEquals("a", $items[0]->value);
@@ -71,27 +71,27 @@ class SelectionControlPresenterTest extends RhubarbTestCase
         $user->Forename = "Albert";
         $user->Surname = "Smith";
         $user->Active = 0;
-        $user->Save();
+        $user->save();
 
         $user = new User();
         $user->Forename = "Bertie";
         $user->Surname = "O'Hern";
         $user->Active = 1;
-        $user->Save();
+        $user->save();
 
         $user = new User();
         $user->Forename = "Catherine";
         $user->Surname = "Clarke";
         $user->Active = 1;
-        $user->Save();
+        $user->save();
 
         // Test a collection
         $collection = new Collection(User::class);
-        $collection->Filter(new Equals("Active", 1));
+        $collection->filter(new Equals("Active", 1));
 
         $presenter->setSelectionItems([$collection]);
 
-        $items = $presenter->PublicGetCurrentlyAvailableSelectionItems();
+        $items = $presenter->publicGetCurrentlyAvailableSelectionItems();
 
         $this->assertCount(2, $items);
         $this->assertEquals(2, $items[0]->value);
@@ -105,7 +105,7 @@ class SelectionControlPresenterTest extends RhubarbTestCase
 
 class TestSelectionControlPresenter extends SelectionControlPresenter
 {
-    public function PublicGetCurrentlyAvailableSelectionItems()
+    public function publicGetCurrentlyAvailableSelectionItems()
     {
         return $this->getCurrentlyAvailableSelectionItems();
     }

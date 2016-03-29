@@ -15,7 +15,7 @@ class MvpUrlHandlerTest extends RhubarbTestCase
 
         // Some silly namespace to test.
         $handler = new MvpUrlHandler('Rhubarb\Leaf\Tests\Fixtures\Presenters\Cruds');
-        $handler->SetUrl("/");
+        $handler->setUrl("/");
 
         $request = new WebRequest();
         $request->UrlPath = "/normal/";

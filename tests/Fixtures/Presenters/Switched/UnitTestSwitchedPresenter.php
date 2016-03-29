@@ -30,22 +30,22 @@ class UnitTestSwitchedPresenter extends SwitchedPresenter
         }
     }
 
-    public function GetDetailsPresenter()
+    public function getDetailsPresenter()
     {
         return $this->details;
     }
 
-    public function TestPresenterIsChanged($presenterName)
+    public function testPresenterIsChanged($presenterName)
     {
         $this->changePresenter($presenterName);
     }
 
-    public function TestGetDefaultPresenterName()
+    public function testGetDefaultPresenterName()
     {
         return $this->getDefaultPresenterName();
     }
 
-    public function TestGetCurrentPresenterName()
+    public function testGetCurrentPresenterName()
     {
         return $this->getCurrentPresenter();
     }

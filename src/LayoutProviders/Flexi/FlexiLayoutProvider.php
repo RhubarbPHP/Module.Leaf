@@ -67,7 +67,7 @@ class FlexiLayoutProvider extends LayoutProvider
 
             ?>
         </fieldset>
-    <?php
+        <?php
     }
 
     public function printContainerTitle($containerTitle)
@@ -150,7 +150,7 @@ class FlexiLayoutProvider extends LayoutProvider
 
         ?>
         <div class="form__item">
-            <label class="label" for="<?= $controlName; ?>"><?php $this->printLabel($label);?></label>
+            <label class="label" for="<?= $controlName; ?>"><?php $this->printLabel($label); ?></label>
 
             <?php
 
@@ -169,7 +169,7 @@ class FlexiLayoutProvider extends LayoutProvider
             ?>
 
         </div>
-    <?php
+        <?php
     }
 
     /**
