@@ -49,6 +49,11 @@ datePicker.prototype.getValue = function() {
 
 datePicker.prototype.getSerializableValue = function() {
     var date = this.getDate();
+
+    if (date == null) {
+        return null;
+    }
+
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
 };
 
