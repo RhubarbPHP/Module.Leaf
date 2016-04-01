@@ -1134,7 +1134,7 @@ HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
         if (!subPresenters.hasOwnProperty(i)) {
             continue;
         }
-        
+
         var subPresenter = subPresenters[i];
 
         if (!subPresenter.hasValue()) {
@@ -1163,7 +1163,7 @@ HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
         var type = input.type;
 
         if (type.toLowerCase() == "hidden") {
-            serialString += input.name + "=" + encodeURIComponent(input.value) + "&";
+            serialString += encodeURIComponent(input.name) + "=" + encodeURIComponent(input.value) + "&";
         }
     }
 
