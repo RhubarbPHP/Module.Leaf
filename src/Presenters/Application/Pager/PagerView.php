@@ -30,6 +30,11 @@ class PagerView extends HtmlView
     public $numberPerPage;
     public $suppressContent = false;
 
+    /**
+     * @var int  The number of pages around the boundaries to show before hiding page links in favour of an ellipsis
+     */
+    public $bufferPages = 3;
+
     public function setNumberOfPages($numberOfPages)
     {
         $this->numberOfPages = $numberOfPages;
@@ -45,6 +50,16 @@ class PagerView extends HtmlView
         $this->numberPerPage = $numberPerPage;
     }
 
+    /**
+     * Sets the number of pages around the boundaries to show before hiding page links in favour of an ellipsis
+     *
+     * @param int $bufferPages
+     */
+    public function setBufferPages($bufferPages)
+    {
+        $this->bufferPages = $bufferPages;
+    }
+
     public function printViewContent()
     {
         // Don't show any pages if there only is one page.
@@ -52,27 +67,43 @@ class PagerView extends HtmlView
             return;
         }
 
-        $pageStart = max(0, $this->pageNumber - 5);
-        $pageEnd = min($this->numberOfPages, $pageStart + 9);
-
         $pages = [];
         $stub = $this->presenterPath;
         $request = Context::currentRequest();
 
-        for ($x = $pageStart; $x < $pageEnd; $x++) {
-            $pageNumber = $x + 1;
+        $iteration = 0;
+        $class = 'first';
+        while ($iteration < $this->numberOfPages) {
+            $pageNumber = $iteration + 1;
 
-            $class = ($x == $pageStart) ? "first" : "";
-
-            if ($pageNumber == $this->pageNumber) {
-                $class .= " selected";
+            if ($pageNumber > $this->bufferPages && $pageNumber < $this->pageNumber - $this->bufferPages) {
+                // If we're past the first few pages but are still a few pages before our selected page
+                // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
+                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $iteration = $this->pageNumber - $this->bufferPages;
+                continue;
+            }
+            if ($pageNumber < $this->numberOfPages - $this->bufferPages && $pageNumber > $this->pageNumber + $this->bufferPages - 1) {
+                // If we're earlier than the last few pages but are a few pages after our selected page
+                // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
+                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $iteration = $this->numberOfPages - $this->bufferPages;
+                continue;
             }
 
-            $class .= " pager-item";
+            if ($pageNumber == $this->pageNumber) {
+                $class .= ' selected';
+            }
 
-            $class = (trim($class) != "") ? " class=\"" . $class . "\"" : "";
+            $class .= ' pager-item';
 
-            $pages[] = "<a href=\"" . $request->URI . "?" . $stub . "-page=" . $pageNumber . "\"" . $class . " data-page=\"" . $pageNumber . "\">" . $pageNumber . "</a>";
+            $class = ' class="' . trim($class) . '"';
+
+            $pages[] = '<a href="' . $request->URI . '?' . $stub . '-page=' . $pageNumber . '"' . $class . ' data-page="' . $pageNumber . '">' . $pageNumber . '</a>';
+
+            $class = '';
+
+            $iteration++;
         }
 
         print "<div class=\"pager\"><div class=\"pages\">" . implode("", $pages) . "</div></div>";
