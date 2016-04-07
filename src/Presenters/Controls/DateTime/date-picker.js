@@ -21,7 +21,7 @@ datePicker.prototype.attachEvents = function () {
 datePicker.prototype.getDate = function () {
     var date = this.element.datepicker('getDate');
 
-    if (!date instanceof Date) {
+    if (date instanceof Date) {
         var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         d.setTime(d.getTime() + (-date.getTimezoneOffset() * 60 * 1000));
         date = d;
