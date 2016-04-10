@@ -24,6 +24,19 @@ use Rhubarb\Leaf\Presenters\Controls\Selection\Sets\SetSelectionControlView;
 
 class RadioButtonsView extends SetSelectionControlView
 {
+    protected function getClientSideViewBridgeName()
+    {
+        return "RadioButtonsViewBridge";
+    }
+
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . "/RadioButtonsViewBridge.js";
+
+        return $package;
+    }
+
     public function getInputHtml($name, $value, $item)
     {
         $checked = '';
