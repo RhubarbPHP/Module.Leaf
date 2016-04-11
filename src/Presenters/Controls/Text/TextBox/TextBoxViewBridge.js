@@ -12,6 +12,9 @@ bridge.spawn = function (spawnData, index, parentPresenterPath) {
     if (spawnData.maxLength) {
         textBox.setAttribute("maxlength", spawnData.maxLength);
     }
+    if (spawnData.placeholderText) {
+        textBox.setAttribute("placeholder", spawnData.placeholderText);
+    }
 
     window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(textBox, spawnData, index, parentPresenterPath);
 

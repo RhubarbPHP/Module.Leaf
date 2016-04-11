@@ -107,6 +107,7 @@ class TextBoxView extends ControlView
         $settings["size"] = $this->size;
         $settings["maxLength"] = $this->maxLength;
         $settings["allowBrowserAutoComplete"] = $this->allowBrowserAutoComplete;
+        $settings["placeholderText"] = $this->placeholderText;
 
         return $settings;
     }
