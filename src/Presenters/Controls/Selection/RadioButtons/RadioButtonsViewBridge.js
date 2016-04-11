@@ -11,6 +11,8 @@ radioButtonsViewBridge.prototype.setValue = function (value) {
     this.element.find('input[type=radio][value=' + value + ']').prop('checked', true);
 
     this.model.SelectedItems = [{"value": value}];
+
+    this.valueChanged();
 };
 
 radioButtonsViewBridge.prototype.valueChanged = function () {
