@@ -23,6 +23,7 @@ require_once __DIR__ . "/../PresenterViewBase.php";
 use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
+use Rhubarb\Crown\Logging\Log;
 use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Response\GeneratesResponse;
@@ -1014,6 +1015,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
             return $response;
         } catch (\Exception $er) {
+            Log::error("Unhandled " . basename(get_class($er)) . " `" . $er->getMessage() . "` in line " . $er->getLine() . " in " . $er->getFile(), 'ERROR');
             return $er->getMessage();
         }
     }
