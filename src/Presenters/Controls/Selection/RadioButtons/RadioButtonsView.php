@@ -41,4 +41,16 @@ class RadioButtonsView extends SetSelectionControlView
     {
         return parent::getItemOptionHtml($value, $label, $item, $classSuffix);
     }
+
+    protected function getClientSideViewBridgeName()
+    {
+        return 'RadioButtonsViewBridge';
+    }
+
+    public function getDeploymentPackage()
+    {
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/RadioButtonsViewBridge.js';
+        return $package;
+    }
 }
