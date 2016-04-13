@@ -27,7 +27,6 @@ use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlDateTimeColumn;
 use Rhubarb\Stem\Schema\Columns\BooleanColumn;
 use Rhubarb\Stem\Schema\Columns\Column;
 use Rhubarb\Stem\Schema\Columns\DateColumn;
-use Rhubarb\Stem\Schema\Columns\Float;
 use Rhubarb\Stem\Schema\Columns\FloatColumn;
 use Rhubarb\Stem\Schema\Columns\IntegerColumn;
 use Rhubarb\Stem\Schema\Columns\MoneyColumn;
