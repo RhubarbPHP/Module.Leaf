@@ -21,13 +21,11 @@ namespace Rhubarb\Leaf\Presenters;
 require_once __DIR__ . "/../PresenterViewBase.php";
 
 use Rhubarb\Crown\Application;
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\Response\GeneratesResponse;
 use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
 use Rhubarb\Crown\String\StringTools;

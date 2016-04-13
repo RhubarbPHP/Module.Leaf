@@ -2,9 +2,7 @@
 
 namespace Rhubarb\Leaf\Tests\Presenters\ Application\Search;
 
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\Tests\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Application\Search\SearchPanel;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBoxView;

@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\FileUpload;
 
 require_once __DIR__ . "/../ControlPresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
 class SimpleHtmlFileUpload extends ControlPresenter
@@ -44,8 +44,8 @@ class SimpleHtmlFileUpload extends ControlPresenter
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
-        $fileData = $request->Files($this->getIndexedPresenterPath());
+        $request = Request::current();
+        $fileData = $request->files($this->getIndexedPresenterPath());
 
         $response = null;
 

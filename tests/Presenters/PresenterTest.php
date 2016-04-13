@@ -2,11 +2,11 @@
 
 namespace Rhubarb\Leaf\Tests\Presenters;
 
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Layout\LayoutModule;
 use Rhubarb\Crown\Module;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Crown\Tests\Fixtures\TestCases\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
@@ -23,7 +23,7 @@ class PresenterTest extends RhubarbTestCase
     public function testPresenterFoundAndCorrectHtmlReturned()
     {
         LayoutModule::DisableLayout();
-        $request = Context::CurrentRequest();
+        $request = Request::current();
 
         // Simulate an incoming apache request
         $request->UrlPath = "/simple/";

@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
 require_once __DIR__ . "/../../../Views/HtmlView.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Views\HtmlView;
 
 class PagerView extends HtmlView
@@ -57,7 +57,7 @@ class PagerView extends HtmlView
 
         $pages = [];
         $stub = $this->presenterPath;
-        $request = Context::currentRequest();
+        $request = Request::current();
 
         for ($x = $pageStart; $x < $pageEnd; $x++) {
             $pageNumber = $x + 1;
@@ -72,7 +72,7 @@ class PagerView extends HtmlView
 
             $class = (trim($class) != "") ? " class=\"" . $class . "\"" : "";
 
-            $pages[] = "<a href=\"" . $request->URI . "?" . $stub . "-page=" . $pageNumber . "\"" . $class . " data-page=\"" . $pageNumber . "\">" . $pageNumber . "</a>";
+            $pages[] = "<a href=\"" . $request->uri . "?" . $stub . "-page=" . $pageNumber . "\"" . $class . " data-page=\"" . $pageNumber . "\">" . $pageNumber . "</a>";
         }
 
         print "<div class=\"pager\"><div class=\"pages\">" . implode("", $pages) . "</div></div>";

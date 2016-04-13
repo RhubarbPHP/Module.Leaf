@@ -2,7 +2,6 @@
 
 namespace Rhubarb\Leaf\Tests\Presenters\ Application\Pager;
 
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Exceptions\PagerOutOfBoundsException;
 use Rhubarb\Leaf\Presenters\Application\Pager\Pager;

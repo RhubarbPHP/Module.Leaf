@@ -20,8 +20,6 @@ namespace Rhubarb\Leaf\Views;
 
 require_once __DIR__ . "/View.php";
 
-use Rhubarb\Crown\Application;
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;

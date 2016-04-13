@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\CheckBoxes;
 
 require_once __DIR__ . "/../ControlPresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
 /**
@@ -35,13 +35,12 @@ class CheckBox extends ControlPresenter
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
+        $request = Request::current();
         if ($request->server("REQUEST_METHOD") != "POST") {
             return;
         }
 
-        $request = $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if (is_array($values)) {
             foreach ($values as $index => $value) {

@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Exceptions\PagerOutOfBoundsException;
 use Rhubarb\Leaf\Presenters\HtmlPresenter;
 use Rhubarb\Stem\Collections\Collection;
@@ -96,10 +96,10 @@ class Pager extends HtmlPresenter
     {
         $key = $this->PresenterPath . "-page";
 
-        $request = Context::currentRequest();
+        $request = Request::current();
 
-        if ($request->Request($key)) {
-            $this->raiseEvent("PageChanged", $request->Request($key));
+        if ($request->request($key)) {
+            $this->raiseEvent("PageChanged", $request->request($key));
         }
 
         parent::parseRequestForCommand();

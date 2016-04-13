@@ -21,7 +21,6 @@ namespace Rhubarb\Leaf\Views;
 require_once __DIR__ . "/../PresenterViewBase.php";
 
 use Rhubarb\Crown\Application;
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Leaf\Presenters\PresenterDeploymentPackage;

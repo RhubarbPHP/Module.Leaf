@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\Selection;
 
 require_once __DIR__ . "/../ControlPresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Models\Model;
@@ -117,8 +117,8 @@ class SelectionControlPresenter extends ControlPresenter
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $request = Request::current();
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if ($values !== null) {
             if (!is_array($values)) {

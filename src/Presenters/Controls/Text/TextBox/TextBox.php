@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\Text\TextBox;
 
 require_once __DIR__ . "/../../ControlPresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
 /**
@@ -133,8 +133,8 @@ class TextBox extends ControlPresenter
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
-        $text = $request->Post($this->getIndexedPresenterPath());
+        $request = Request::current();
+        $text = $request->post($this->getIndexedPresenterPath());
 
         if ($text !== null) {
             $this->model->Text = $text;

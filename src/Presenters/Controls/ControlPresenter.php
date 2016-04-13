@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls;
 
 require_once __DIR__ . "/../SpawnableByViewBridgePresenter.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Presenters\SpawnableByViewBridgePresenter;
 
@@ -90,8 +90,8 @@ class ControlPresenter extends SpawnableByViewBridgePresenter
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
-        $values = $request->Post($this->getIndexedPresenterPath());
+        $request = Request::current();
+        $values = $request->post($this->getIndexedPresenterPath());
 
         if ($values !== null) {
             $this->model->Value = $values;
