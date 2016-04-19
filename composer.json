@@ -18,6 +18,8 @@
     }
   },
   "require": {
+    "components/jquery": "*",
+    "components/jqueryui": "*",
     "rhubarbphp/rhubarb": "*",
     "rhubarbphp/module-image-processing": "1.0.x"
   },

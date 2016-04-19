@@ -20,8 +20,6 @@ namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
 require_once __DIR__ . '/PagerView.php';
 
-use Rhubarb\Crown\Html\ResourceLoader;
-
 class EventPagerView extends PagerView
 {
     protected function getClientSideViewBridgeName()
@@ -29,14 +27,10 @@ class EventPagerView extends PagerView
         return "EventPager";
     }
 
-    protected function getAdditionalResourceUrls()
-    {
-        return [ResourceLoader::getJqueryUrl("1.9.1")];
-    }
-
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/../../../../../../../vendor/components/jquery/jquery.min.js';
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/application/event-pager.js";
 
