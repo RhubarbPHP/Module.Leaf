@@ -8,14 +8,12 @@ use Rhubarb\Leaf\Presenters\SwitchedPresenter;
 
 class UnitTestSwitchedPresenter extends SwitchedPresenter
 {
-    use ModelProvider;
-
-    protected function getSwitchedPresenters()
+    protected function createSwitchedPresenters()
     {
         return [
-            "Details" => Details::class,
-            "Address" => Address::class,
-            "Thanks" => Thanks::class
+            "Details" => new Details(),
+            "Address" => new Address(),
+            "Thanks" => new Thanks()
         ];
     }
 

@@ -878,8 +878,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
          */
         $request = Request::current();
 
-        $postData = is_array($request->postData) ? $request->postData : [];
-        $filesData = is_array($request->filesData) ? $request->filesData : [];
+        $postData = isset($request->postData) && is_array($request->postData) ? $request->postData : [];
+        $filesData = isset($request->filesData) && is_array($request->filesData) ? $request->filesData : [];
 
         $postData = array_merge($postData, $filesData);
 

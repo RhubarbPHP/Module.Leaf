@@ -20,16 +20,26 @@ use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 
 class PresenterTest extends RhubarbTestCase
 {
+    private $request;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->request = new WebRequest();
+        $this->application->setCurrentRequest($this->request);
+    }
+
     public function testPresenterFoundAndCorrectHtmlReturned()
     {
         LayoutModule::DisableLayout();
         $request = Request::current();
 
         // Simulate an incoming apache request
-        $request->UrlPath = "/simple/";
-        $request->IsWebRequest = true;
+        $request->urlPath = "/simple/";
+        $request->isWebRequest = true;
 
-        $response = Module::GenerateResponseForRequest($request);
+        $response = $this->application->generateResponseForRequest($request);
 
         $this->assertEquals("Don't change this content - it should match the unit test.", $response->GetContent());
 
@@ -96,7 +106,7 @@ class PresenterTest extends RhubarbTestCase
         // Simple has two events. The first is delayed, the second isn't.
         // We should see that the last event to run was actually the first event.
 
-        $simple->generateResponse(Context::CurrentRequest());
+        $simple->generateResponse(Request::current());
 
         $this->assertEquals("FirstEvent", $simple->lastEventProcessed);
     }
@@ -112,8 +122,8 @@ class PresenterTest extends RhubarbTestCase
         // post data for next instance of it to pick up.
         $state = '{"TestValue":"abc123"}';
 
-        $request = Context::CurrentRequest();
-        $request->Post($simple->getPresenterPath() . "State", $state);
+        $request = Request::current();
+        $request->postData[$simple->getPresenterPath() . "State"] = $state;
 
         $simple = new UnitTestStatefulPresenter();
         $simple->initialise();
@@ -123,21 +133,19 @@ class PresenterTest extends RhubarbTestCase
 
     public function testDataBinding()
     {
-        $request = Context::CurrentRequest();
-        $request->Post("Forename", null);
-
+        $request = Request::current();
         // Test model binding 'get'
         $host = new UnitTestSwitchedPresenter();
 
-        $host->generateResponse($request);
+        $html = $host->generateResponse($request);
 
         // The switched presenters model has Forename initialised to John. This test make sures that
         // the text box on the details presenter shows John.
         $this->assertEquals("John", UnitTestTextBox::$textBoxValue);
 
         // Test model binding 'set'
-        $request = Context::CurrentRequest();
-        $request->Post("_1_Forename", "Jeremy");
+        $request = Request::current();
+        $request->postData["UnitTestSwitchedPresenter_Details_Forename"] = "Jeremy";
 
         $host = new UnitTestSwitchedPresenter();
 
@@ -200,8 +208,8 @@ class PresenterTest extends RhubarbTestCase
         $models = $presenter->getChangedPresenterModels();
 
         $this->assertCount(1, $models);
-        $this->assertArrayHasKey("_Goats", $models);
-        $this->assertEquals(999, $models["_Goats"]["NumberOfGoats"]);
+        $this->assertArrayHasKey("Host_Goats", $models);
+        $this->assertEquals(999, $models["Host_Goats"]["NumberOfGoats"]);
     }
 
     public function testDisplayWithIndex()
