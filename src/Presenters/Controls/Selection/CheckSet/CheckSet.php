@@ -20,7 +20,7 @@ namespace Rhubarb\Leaf\Presenters\Controls\Selection\CheckSet;
 
 require_once __DIR__ . '/../DropDown/DropDown.php';
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\Controls\Selection\DropDown\DropDown;
 
 class CheckSet extends DropDown
@@ -37,7 +37,7 @@ class CheckSet extends DropDown
 
     protected function parseRequestForCommand()
     {
-        $request = Context::currentRequest();
+        $request = Request::current();
 
         if ($request->server("REQUEST_METHOD") == "POST") {
             $values = $request->post($this->getIndexedPresenterPath());

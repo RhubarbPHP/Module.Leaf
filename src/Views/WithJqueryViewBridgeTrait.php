@@ -18,15 +18,8 @@
 
 namespace Rhubarb\Leaf\Views;
 
-use Rhubarb\Crown\Html\ResourceLoader;
-
 trait WithJqueryViewBridgeTrait
 {
-    protected function getAdditionalResourceUrls()
-    {
-        return [ResourceLoader::getJqueryUrl("1.9.1")];
-    }
-
     protected function getClientSideViewBridgeName()
     {
         $className = get_class();
@@ -37,6 +30,7 @@ trait WithJqueryViewBridgeTrait
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/../../../../../vendor/components/jquery/jquery.min.js';
         $package->resourcesToDeploy[] = __DIR__ . "/../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = $this->getDeploymentPackageDirectory() . "/" . $this->getClientSideViewBridgeName() . ".js";
 

@@ -20,13 +20,14 @@ namespace Rhubarb\Leaf\Presenters;
 
 require_once __DIR__ . "/../PresenterViewBase.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Logging\Log;
 use Rhubarb\Crown\Modelling\ModelState;
 use Rhubarb\Crown\Request\Request;
-use Rhubarb\Crown\Response\GeneratesResponse;
+use Rhubarb\Crown\Request\WebRequest;
+use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
 use Rhubarb\Crown\Response\Response;
 use Rhubarb\Crown\String\StringTools;
@@ -34,7 +35,6 @@ use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
 use Rhubarb\Leaf\Views\View;
-use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionException;
 use Rhubarb\Stem\Exceptions\ModelConsistencyValidationException;
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Models\Validation\Validator;
@@ -44,7 +44,7 @@ use Rhubarb\Stem\Models\Validation\Validator;
  *
  * @property string $PresenterName
  */
-abstract class Presenter extends PresenterViewBase implements GeneratesResponse
+abstract class Presenter extends PresenterViewBase implements GeneratesResponseInterface
 {
     /**
      * True if this presenter is the target of the invocation, false if it is a sub presenter.
@@ -873,10 +873,13 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
         $path = $this->getIndexedPresenterPath();
 
-        $request = Context::currentRequest();
+        /**
+         * @var WebRequest $request
+         */
+        $request = Request::current();
 
-        $postData = is_array($request->PostData) ? $request->PostData : [];
-        $filesData = is_array($request->FilesData) ? $request->FilesData : [];
+        $postData = isset($request->postData) && is_array($request->postData) ? $request->postData : [];
+        $filesData = isset($request->filesData) && is_array($request->filesData) ? $request->filesData : [];
 
         $postData = array_merge($postData, $filesData);
 
@@ -1036,10 +1039,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
     public final function recursiveRePresent()
     {
         if ($this->rePresent) {
-            $context = new Context();
+            $context = Application::current()->context();
 
             // Note we're bypassing the magic feature for performance.
-            if (!$context->getIsAjaxRequest()) {
+            if (!$context->isXhrRequest()) {
                 // If we're an ajax request and this presenter hasn't been asked to
                 // re-present itself, we do nothing as that makes no sense.
                 return;
@@ -1112,9 +1115,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
      */
     public final function generateResponse($request = null)
     {
-        $context = new Context();
 
-        $isAjax = $context->getIsAjaxRequest();
+        $context = Application::current()->context();
+        $isAjax = $context->isXhrRequest();
 
         // Make sure any event processing is deferred to the correct class if the class is specified.
         // This is used when the presenter is marked as atomic and so does not require the context of it's

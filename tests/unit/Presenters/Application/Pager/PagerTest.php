@@ -2,14 +2,12 @@
 
 namespace Rhubarb\Leaf\Tests\Presenters\ Application\Pager;
 
-use Rhubarb\Crown\Context;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Exceptions\PagerOutOfBoundsException;
 use Rhubarb\Leaf\Presenters\Application\Pager\Pager;
 use Rhubarb\Leaf\Tests\Fixtures\Presenters\UnitTestView;
 use Rhubarb\Stem\Collections\Collection;
-use Rhubarb\Stem\Tests\Fixtures\ModelUnitTestCase;
-use Rhubarb\Stem\Tests\Fixtures\User;
+use Rhubarb\Stem\Tests\unit\Fixtures\ModelUnitTestCase;
 
 class PagerTest extends ModelUnitTestCase
 {

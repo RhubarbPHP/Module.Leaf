@@ -21,7 +21,7 @@ namespace Rhubarb\Leaf\Presenters\Forms;
 require_once __DIR__ . "/Form.php";
 require_once __DIR__ . "/../CreatePresentersFromSchemaTrait.php";
 
-use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\CreatePresentersFromSchemaTrait;
 
 /**
@@ -71,8 +71,8 @@ abstract class MvpRestBoundForm extends Form
 
     public function getXmlRpcUrl()
     {
-        $request = Context::currentRequest();
-        return $request->UrlPath;
+        $request = Request::current();
+        return $request->urlPath;
     }
 
     public function setRestCollection($restCollection)

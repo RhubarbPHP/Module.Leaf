@@ -20,18 +20,12 @@ namespace Rhubarb\Leaf\Presenters\Controls;
 
 require_once __DIR__ . "/ControlView.php";
 
-use Rhubarb\Crown\Html\ResourceLoader;
-
 class JQueryControlView extends ControlView
 {
-    protected function getAdditionalResourceUrls()
-    {
-        return [ResourceLoader::getJqueryUrl("1.9.1")];
-    }
-
     public function getDeploymentPackage()
     {
         $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/../../../../../../vendor/components/jquery/jquery.min.js';
         $package->resourcesToDeploy[] = __DIR__ . "/../../../resources/jquery-presenter.js";
 
         return $package;
