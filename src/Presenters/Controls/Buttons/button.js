@@ -5,6 +5,10 @@ var button = function (presenterPath) {
 
     window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
 
+    if (arguments.length == 0) {
+        return;
+    }
+
     this.useXmlRpc = ( this.element.attr("xmlrpc") == "yes" );
 
     if (this.element.attr("confirm")) {
