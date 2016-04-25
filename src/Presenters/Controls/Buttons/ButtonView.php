@@ -28,7 +28,7 @@ class ButtonView extends JQueryControlView
 
     public $useXmlRpc = false;
     public $validator = null;
-    public $validatorHostPresenterPath = "";
+    public $validatorHostpresenterPath = "";
 
     private $confirmMessage = "";
     private $inputType = "submit";
@@ -45,8 +45,8 @@ class ButtonView extends JQueryControlView
         $validationAttribute = ($this->validator != null) ? " validation=\"" . htmlentities(
                 json_encode($this->validator->getJsonStructure())
             ) . "\"" : "";
-        $validatorAttribute = ($this->validatorHostPresenterPath) ? " validator=\"" . htmlentities(
-                $this->validatorHostPresenterPath
+        $validatorAttribute = ($this->validatorHostpresenterPath) ? " validator=\"" . htmlentities(
+                $this->validatorHostpresenterPath
             ) . "\"" : "";
         $confirmAttribute = ($this->confirmMessage != "") ? " confirm=\"" . htmlentities(
                 $this->confirmMessage

@@ -29,10 +29,10 @@ var dropDown = function (presenterPath) {
 dropDown.prototype = new window.rhubarb.viewBridgeClasses.SelectionControlViewBridge();
 dropDown.prototype.constructor = dropDown;
 
-dropDown.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
+dropDown.spawn = function (spawnSettings, viewIndex, parentpresenterPath) {
     var element = document.createElement("SELECT");
 
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(element, spawnSettings, viewIndex, parentPresenterPath);
+    window.rhubarb.viewBridgeClasses.ViewBridge.applyStandardAttributesToSpawnedElement(element, spawnSettings, viewIndex, parentpresenterPath);
 
     for (var i in spawnSettings.AvailableItems) {
         var item = spawnSettings.AvailableItems[i];

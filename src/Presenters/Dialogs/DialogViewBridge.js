@@ -1,5 +1,5 @@
 var dialog = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 
     this.originalSubPresenterStates = null;
 
@@ -9,7 +9,7 @@ var dialog = function (presenterPath) {
     };
 };
 
-dialog.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+dialog.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 dialog.prototype.constructor = dialog;
 
 dialog.prototype.attachEvents = function () {

@@ -22,6 +22,7 @@ require_once __DIR__ . "/../SpawnableByViewBridgePresenter.php";
 
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\String\StringTools;
+use Rhubarb\Leaf\Presenters\PresenterModel;
 use Rhubarb\Leaf\Presenters\SpawnableByViewBridgePresenter;
 
 /**
@@ -111,5 +112,17 @@ class ControlPresenter extends SpawnableByViewBridgePresenter
         }
 
         return StringTools::wordifyStringByUpperCase($this->getName());
+    }
+
+    /**
+     * The overriding class should implement to return a model class that extends PresenterModel
+     *
+     * This is normally done with an anonymous class for convenience
+     *
+     * @return PresenterModel
+     */
+    protected function createModel()
+    {
+        return new ControlModel();
     }
 }

@@ -2,10 +2,10 @@ var bridge = function (presenterPath) {
     this.entries = [];
     this.controlSpawnSettings = [];
 
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-bridge.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 bridge.prototype.constructor = bridge;
 
 bridge.prototype.attachEvents = function () {

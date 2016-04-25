@@ -25,7 +25,7 @@ use Rhubarb\Crown\Html\ResourceLoader;
 /**
  * Exposes support for spawning a representation of the presenter directly with the view bridge.
  */
-class SpawnableByViewBridgePresenter extends Presenter
+abstract class SpawnableByViewBridgePresenter extends Presenter
 {
     public final function getSpawnStructure()
     {

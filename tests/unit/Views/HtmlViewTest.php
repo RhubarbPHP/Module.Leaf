@@ -17,7 +17,7 @@ class HtmlViewTest extends RhubarbTestCase
         // Careful now! The format of this string is important - don't be tidying it up!
         $this->assertEquals('<div id="Forename" class="TestView" presenter-name="Forename">
 Dummy Output
-<input type="hidden" name="ForenameState" id="ForenameState" value="{&quot;PresenterName&quot;:&quot;Forename&quot;,&quot;PresenterPath&quot;:&quot;Forename&quot;}" />
+<input type="hidden" name="ForenameState" id="ForenameState" value="{&quot;PresenterName&quot;:&quot;Forename&quot;,&quot;presenterPath&quot;:&quot;Forename&quot;}" />
 </div>', $output);
     }
 

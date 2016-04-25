@@ -81,7 +81,7 @@ class TextBox extends ControlPresenter
 
     protected function createView()
     {
-        return new TextBoxView($this->inputHtmlType);
+        return new TextBoxView($this->model, $this->inputHtmlType);
     }
 
     public function setSize($size)
@@ -146,6 +146,6 @@ class TextBox extends ControlPresenter
     {
         parent::initialiseModel();
 
-        $this->model->Text = "";
+        $this->model->value = "";
     }
 }

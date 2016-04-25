@@ -1,8 +1,8 @@
 var formPager = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-formPager.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+formPager.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 formPager.prototype.constructor = formPager;
 
 formPager.prototype.attachEvents = function () {

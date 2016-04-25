@@ -18,12 +18,9 @@
     }
   },
   "require": {
-    "components/jquery": "*",
-    "components/jqueryui": "*",
-    "rhubarbphp/rhubarb": "^1.0.0",
-    "rhubarbphp/module-image-processing": "1.0.x"
+    "rhubarbphp/rhubarb": "^1.0.0@dev"
   },
   "require-dev": {
-    "codeception/codeception": "2.1.0"
+    "codeception/codeception": "2.1.*"
   }
 }

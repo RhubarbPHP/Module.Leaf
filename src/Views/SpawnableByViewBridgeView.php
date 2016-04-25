@@ -18,12 +18,12 @@
 
 namespace Rhubarb\Leaf\Views;
 
-require_once __DIR__ . '/HtmlView.php';
+require_once __DIR__ . '/View.php';
 
 /**
  * Supports creating a JS structure to represent everything needed to create the view on the client.
  */
-class SpawnableByViewBridgeView extends HtmlView
+class SpawnableByViewBridgeView extends View
 {
     use SpawnableByViewBridgeViewTrait;
 }

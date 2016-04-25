@@ -35,7 +35,7 @@ class Button extends ControlPresenter
 
     public $validator = null;
 
-    public $validatorHostPresenterPath = "";
+    public $validatorHostpresenterPath = "";
 
     public $useXhr = false;
 
@@ -141,7 +141,7 @@ class Button extends ControlPresenter
         $this->view->setButtonText($this->model->ButtonText);
         $this->view->useXmlRpc = $this->useXhr;
         $this->view->validator = $this->validator;
-        $this->view->validatorHostPresenterPath = $this->validatorHostPresenterPath;
+        $this->view->validatorHostpresenterPath = $this->validatorHostpresenterPath;
         $this->view->setConfirmMessage($this->confirmMessage);
         $this->view->setButtonType($this->buttonType);
 

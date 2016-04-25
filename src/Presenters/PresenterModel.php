@@ -18,15 +18,28 @@
 
 namespace Rhubarb\Leaf\Presenters;
 
-use Rhubarb\Crown\Modelling\ModelState;
-
 /**
- * A simple extension of Model to add some properties often used by presenters
- *
- * @property string $PresenterName    An optional name for a presenter
- * @property string $PresenterPath    The path within the hierarchy of sub presenters to identify this one.
+ * The foundation of all model objects
  */
-class PresenterModel extends ModelState
+abstract class PresenterModel
 {
+    /**
+     * Returns an array of **publicly viewable** state data required to persist the state or provide state
+     * information to a client side view bridge.
+     *
+     * @return string[] An associative array of state key value pair strings.
+     */
+    public function getState()
+    {
+        return [];
+    }
 
+    /**
+     * Restores the model from the passed state data.
+     * @param string[] $stateData An associative array of state key value pair strings.
+     */
+    public function restoreFromState($stateData)
+    {
+
+    }
 }

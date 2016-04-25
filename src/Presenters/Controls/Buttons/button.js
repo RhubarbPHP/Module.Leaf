@@ -3,7 +3,7 @@ var button = function (presenterPath) {
     this.validator = false;
     this.confirmMessage = false;
 
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 
     this.useXmlRpc = ( this.element.attr("xmlrpc") == "yes" );
 
@@ -22,7 +22,7 @@ var button = function (presenterPath) {
     }
 };
 
-button.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+button.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 button.prototype.constructor = button;
 
 button.prototype.attachEvents = function () {

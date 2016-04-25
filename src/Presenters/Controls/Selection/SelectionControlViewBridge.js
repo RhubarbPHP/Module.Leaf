@@ -1,5 +1,5 @@
 var selectionControl = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 
     /**
      * Set to false if the selection control can't support multiple selections
@@ -10,7 +10,7 @@ var selectionControl = function (presenterPath) {
     this.supportsMultipleSelection = true;
 };
 
-selectionControl.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+selectionControl.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 selectionControl.prototype.constructor = selectionControl;
 
 selectionControl.prototype.setCurrentlyAvailableSelectionItems = function (items) {

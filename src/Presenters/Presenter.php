@@ -59,7 +59,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     /**
      * The model for this presenter
      *
-     * Note that the model is public to allow for unit tests to determine if the
+     * Note that the model is public to allow unit tests to determine if the
      * presenter and view are working correctly.
      *
      * @var ModelState
@@ -97,6 +97,16 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      * @var bool
      */
     private $eventsProcessed = false;
+
+    /**
+     * @var string A name for the presenter
+     */
+    public $presenterName;
+
+    /**
+     * @var string The path within the hierarchy of sub presenters to identify this presenter.
+     */
+    public $presenterPath;
 
     /**
      * A collection of events to run after all other events have ran.
@@ -148,13 +158,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     private $rePresent = false;
 
     /**
-     * An associative array of any validators that have err'd.
-     *
-     * @var array
-     */
-    private $validationErrors = [];
-
-    /**
      * A collection of sub presenter names used on the view
      *
      * Used to ensure presenter names are unique - but only if there is more than
@@ -178,13 +181,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     public $suppressContent = false;
 
     /**
-     * Used to cache the default validator so it isn't created every time getDefaultValidator is called
-     * @var Validator
-     */
-    protected $defaultValidator;
-
-
-    /**
      * @param string $name Defaults to the class name
      */
     public function __construct($name = "")
@@ -194,10 +190,19 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
-        $this->model = new PresenterModel();
-        $this->model->PresenterName = $name;
-        $this->model->PresenterPath = $name;
+        $this->model = $this->createModel();
+        $this->presenterName = $name;
+        $this->presenterPath = $name;
     }
+
+    /**
+     * The overriding class should implement to return a model class that extends PresenterModel
+     *
+     * This is normally done with an anonymous class for convenience
+     *
+     * @return PresenterModel
+     */
+    protected abstract function createModel();
 
     /**
      * Returns the unique path to identify this presenter amongst the hierarchy of sub presenters forming the complete view.
@@ -208,7 +213,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public function getPresenterPath()
     {
-        return $this->model->PresenterPath;
+        return $this->presenterPath;
     }
 
     /**
@@ -232,7 +237,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function setPresenterPath($path)
     {
-        $this->model->PresenterPath = $path;
+        $this->presenterPath = $path;
     }
 
     /**
@@ -242,7 +247,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public function getName()
     {
-        return $this->model->PresenterName;
+        return $this->presenterName;
     }
 
     /**
@@ -255,61 +260,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function setName($presenterName)
     {
-        $this->model->PresenterName = $presenterName;
-    }
-
-    public function getValidationErrorsByName($name)
-    {
-        $returnErrors = [];
-
-        if (isset($this->validationErrors[$name])) {
-            $returnErrors[] = $this->validationErrors[$name];
-        }
-
-        return $returnErrors;
-    }
-
-    /**
-     * This method will be called for any validation Placeholders printed for a View.
-     * It should return the content which should be in the placeholder before it
-     * displays any error.
-     *
-     * By default, if the default validator has any validations matching the validation
-     * name, this will return * to indicate that the field is required.
-     *
-     * @param $validationName
-     * @return string
-     */
-    public function getPlaceholderDefaultContentByName($validationName)
-    {
-        $defaultValidator = $this->getDefaultValidator();
-
-        foreach ($defaultValidator->validations as $validation) {
-            if ($validation->name == $validationName) {
-                return "*";
-            }
-        }
-
-        return "";
-    }
-
-    /**
-     * Performs the validation supplied and if it errors, stores the resultant error in the $validationErrors array.
-     *
-     * @param Validator $validator
-     * @return bool True if the validation succeeded. False if it didn't
-     */
-    public function validate(Validator $validator)
-    {
-        try {
-            $validator->validate($this->model);
-
-            return true;
-        } catch (ModelConsistencyValidationException $er) {
-            $this->validationErrors[] = $er->getErrors();
-        }
-
-        return false;
+        $this->presenterName = $presenterName;
     }
 
     /**
@@ -347,20 +298,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         $this->view->processDelayedEvents();
     }
 
-    protected function getDefaultValidator()
-    {
-        if (!$this->defaultValidator) {
-            $this->defaultValidator = $this->createDefaultValidator();
-        }
-        return $this->defaultValidator;
-    }
-
-    protected function createDefaultValidator()
-    {
-        // Empty validator that will always pass.
-        return new Validator();
-    }
-
     /**
      * Creates and sets a sub presenters path.
      *
@@ -390,7 +327,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         $this->setSubPresenterPath($presenter);
 
         $presenter->attachEventHandler(
-            "GetIndexedPresenterPath",
+            "GetIndexedpresenterPath",
             function () {
                 return $this->getIndexedPresenterPath();
             }
@@ -462,7 +399,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
     public final function getIndexedPresenterPath()
     {
-        $path = $this->raiseEvent("GetIndexedPresenterPath");
+        $path = $this->raiseEvent("GetIndexedpresenterPath");
 
         if ($path !== null) {
             $path .= "_" . $this->PresenterName;
@@ -486,8 +423,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     {
         $this->view = $view;
 
-        $this->view->setName($this->model->PresenterName);
-        $this->view->setPath($this->model->PresenterPath);
+        $this->view->setName($this->presenterName);
+        $this->view->setPath($this->presenterPath);
 
         $view->attachEventHandler(
             "CreatePresenterByName",
@@ -510,7 +447,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         );
 
         $view->attachEventHandler(
-            "GetIndexedPresenterPath",
+            "GetIndexedpresenterPath",
             function () {
                 return $this->getIndexedPresenterPath();
             }
@@ -520,20 +457,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             "OnPresenterAdded",
             function (Presenter $presenter) {
                 return $this->addSubPresenter($presenter);
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetValidationErrors",
-            function ($validationName) {
-                return $this->getValidationErrorsByName($validationName);
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetPlaceholderDefaultContent",
-            function ($validationName) {
-                return $this->getPlaceholderDefaultContentByName($validationName);
             }
         );
 
@@ -673,7 +596,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function getPublicModelPropertyList()
     {
-        return ["PresenterName", "PresenterPath"];
+        return ["PresenterName", "presenterPath"];
     }
 
     /**
@@ -927,16 +850,16 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
         $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_mvpEventTarget"]);
 
-        if (stripos($targetWithoutIndexes, $this->model->PresenterPath) !== false) {
+        if (stripos($targetWithoutIndexes, $this->presenterPath) !== false) {
             $requestTargetParts = explode("_", $_REQUEST["_mvpEventTarget"]);
-            $pathParts = explode("_", $this->model->PresenterPath);
+            $pathParts = explode("_", $this->presenterPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
                 $this->viewIndex = $match[1];
             }
         }
 
-        if ($targetWithoutIndexes == $this->model->PresenterPath) {
+        if ($targetWithoutIndexes == $this->presenterPath) {
             $eventName = $_REQUEST["_mvpEventName"];
             $eventTarget = $_REQUEST["_mvpEventTarget"];
             $eventArguments = [$eventName];
@@ -1056,7 +979,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             $html = ob_get_clean();
 
-            $html = '<htmlupdate id="' . $this->model->PresenterPath . '">
+            $html = '<htmlupdate id="' . $this->presenterPath . '">
 <![CDATA[' . $html . ']]>
 </htmlupdate>';
 
@@ -1132,7 +1055,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             /** @var Presenter $correctPresenter */
             $correctPresenter = new $className();
-            $correctPresenter->setPresenterPath($request->post("_mvpEventPresenterPath"));
+            $correctPresenter->setPresenterPath($request->post("_mvpEventpresenterPath"));
 
             return $correctPresenter->generateResponse($request);
         }
@@ -1340,9 +1263,23 @@ JS;
      */
     protected function restoreModel()
     {
-        $restoredModelData = $this->view->getRestoredModel();
+        $state = $this->view->getPropagatedState();
 
-        $this->model->mergeRawData($restoredModelData);
+        $request = Request::current();
+        $state = $request->post($this->presenterPath . "State");
+
+        if ($state != null) {
+            if (is_string($state)) {
+                $this->model->fromStateData(json_decode($state, true));
+            }
+        }
+    }
+
+    public function getRestoredModel()
+    {
+        $id = $this->presenterPath;
+
+
     }
 
     /**
@@ -1371,7 +1308,7 @@ JS;
      */
     public final function fetchBoundData()
     {
-        $data = $this->raiseEvent("GetBoundData", $this->model->PresenterName, $this->viewIndex);
+        $data = $this->raiseEvent("GetBoundData", $this->presenterName, $this->viewIndex);
 
         if ($data !== null) {
             $this->applyBoundData($data);
@@ -1387,7 +1324,7 @@ JS;
     {
         $data = $this->extractBoundData();
 
-        $this->raiseEvent("SetBoundData", $this->model->PresenterName, $data, $this->viewIndex);
+        $this->raiseEvent("SetBoundData", $this->presenterName, $data, $this->viewIndex);
     }
 
     /**

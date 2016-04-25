@@ -1,8 +1,8 @@
 var tabsPresenter = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-tabsPresenter.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+tabsPresenter.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 tabsPresenter.prototype.constructor = tabsPresenter;
 
 tabsPresenter.prototype.attachEvents = function () {

@@ -43,6 +43,6 @@ class RadioButtons extends SelectionControlPresenter
         $this->applyModelToView();
         $this->beforeRenderView();
 
-        return $this->view->getInputHtml($this->model->PresenterPath, $value, null);
+        return $this->view->getInputHtml($this->presenterPath, $value, null);
     }
 }

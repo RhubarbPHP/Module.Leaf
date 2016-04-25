@@ -1,11 +1,11 @@
 var bridge = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
 };
 
-bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
 bridge.prototype.constructor = bridge;
 
-bridge.spawn = function (spawnData, index, parentPresenterPath) {
+bridge.spawn = function (spawnData, index, parentpresenterPath) {
     var textBox = document.createElement("INPUT");
     textBox.setAttribute("type", spawnData.type);
     textBox.setAttribute("size", spawnData.size);
@@ -13,7 +13,7 @@ bridge.spawn = function (spawnData, index, parentPresenterPath) {
         textBox.setAttribute("maxlength", spawnData.maxLength);
     }
 
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(textBox, spawnData, index, parentPresenterPath);
+    window.rhubarb.viewBridgeClasses.ViewBridge.applyStandardAttributesToSpawnedElement(textBox, spawnData, index, parentpresenterPath);
 
     return textBox;
 };
@@ -25,7 +25,7 @@ bridge.prototype.keyPressed = function(event){
 };
 
 bridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent) {
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.prototype.attachDomChangeEventHandler.apply(this,arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.prototype.attachDomChangeEventHandler.apply(this,arguments);
 
     var self = this;
 

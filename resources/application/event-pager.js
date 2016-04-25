@@ -1,8 +1,8 @@
 var eventPager = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-eventPager.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+eventPager.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 eventPager.prototype.constructor = eventPager;
 
 eventPager.prototype.attachEvents = function () {

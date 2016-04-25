@@ -1,8 +1,8 @@
 var bridge = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
 };
 
-bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
 bridge.prototype.constructor = bridge;
 
 bridge.prototype.setValue = function (value) {
@@ -50,10 +50,10 @@ bridge.prototype.getValue = function () {
     return new Date(2000, 1, 1, hours, minutes, 0);
 };
 
-bridge.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
+bridge.spawn = function (spawnSettings, viewIndex, parentpresenterPath) {
     var container = document.createElement('div');
 
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.applyStandardAttributesToSpawnedElement(container, spawnSettings, viewIndex, parentPresenterPath);
+    window.rhubarb.viewBridgeClasses.ViewBridge.applyStandardAttributesToSpawnedElement(container, spawnSettings, viewIndex, parentpresenterPath);
 
     for (var i in spawnSettings.SpawnSettings) {
         var control = window.rhubarb.spawn(spawnSettings.SpawnSettings[i], null, container.id);

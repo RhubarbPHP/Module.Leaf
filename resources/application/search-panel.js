@@ -1,8 +1,8 @@
 var searchPanel = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-searchPanel.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+searchPanel.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 searchPanel.prototype.constructor = searchPanel;
 
 searchPanel.prototype.attachEvents = function () {

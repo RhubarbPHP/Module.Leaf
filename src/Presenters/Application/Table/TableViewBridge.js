@@ -1,8 +1,8 @@
 var table = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-table.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+table.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 table.prototype.constructor = table;
 
 table.prototype.attachEvents = function () {

@@ -1,8 +1,8 @@
 var datePicker = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
-datePicker.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
+datePicker.prototype = new window.rhubarb.viewBridgeClasses.JqueryViewBridge();
 datePicker.prototype.constructor = datePicker;
 
 datePicker.prototype.attachEvents = function () {

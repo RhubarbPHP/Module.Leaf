@@ -10,6 +10,7 @@ use Rhubarb\Crown\Tests\Fixtures\TestCases\RhubarbTestCase;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
+use Rhubarb\Leaf\Presenters\PresenterModel;
 use Rhubarb\Leaf\Tests\Fixtures\Presenters\Simple;
 use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\DetailsView;
 use Rhubarb\Leaf\Tests\Fixtures\Presenters\Switched\UnitTestSwitchedPresenter;
@@ -64,8 +65,8 @@ class PresenterTest extends RhubarbTestCase
 
         $this->assertCount(2, $subPresenters);
 
-        $this->assertEquals("Simple_Forename", $subPresenters["Forename"]->PresenterPath);
-        $this->assertEquals("Simple_Forename2", $subPresenters["Forename2"]->PresenterPath);
+        $this->assertEquals("Simple_Forename", $subPresenters["Forename"]->presenterPath);
+        $this->assertEquals("Simple_Forename2", $subPresenters["Forename2"]->presenterPath);
 
     }
 
@@ -386,6 +387,21 @@ class Host extends Presenter
     protected function createView()
     {
         $this->registerView(new AutoBindingViewTest());
+    }
+
+    /**
+     * The overriding class should implement to return a model class that extends PresenterModel
+     *
+     * This is normally done with an anonymous class for convenience
+     *
+     * @return PresenterModel
+     */
+    protected function createModel()
+    {
+        return new class extends PresenterModel
+        {
+
+        };
     }
 }
 

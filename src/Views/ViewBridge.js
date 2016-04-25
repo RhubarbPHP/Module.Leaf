@@ -5,11 +5,11 @@ if (!window.rhubarb) {
 window.rhubarb.registeredPresenters = {};
 window.rhubarb.viewBridgeClasses = {};
 
-window.rhubarb.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
+window.rhubarb.spawn = function (spawnSettings, viewIndex, parentpresenterPath) {
     var viewBridgeClass = window.rhubarb.viewBridgeClasses[spawnSettings.ViewBridgeClass];
 
     if (viewBridgeClass.spawn) {
-        var element = viewBridgeClass.spawn(spawnSettings, viewIndex, parentPresenterPath);
+        var element = viewBridgeClass.spawn(spawnSettings, viewIndex, parentpresenterPath);
 
         var bridge = new viewBridgeClass(element);
 
@@ -33,7 +33,7 @@ window.rhubarb.spawn = function (spawnSettings, viewIndex, parentPresenterPath) 
  * @param presenter Either an ID string or an HTMLElement
  * @constructor
  */
-function HtmlViewBridge(presenter) {
+function ViewBridge(presenter) {
     if (arguments.length == 0) {
         return;
     }
@@ -110,7 +110,7 @@ function HtmlViewBridge(presenter) {
     this.attachDomChangeEventHandler();
 }
 
-HtmlViewBridge.prototype.hasValue = function () {
+ViewBridge.prototype.hasValue = function () {
     if (!this.viewNode) {
         return false;
     }
@@ -132,7 +132,7 @@ HtmlViewBridge.prototype.hasValue = function () {
 /**
  * Override to attach the DOM listeners required so you can call the valueChanged() method.
  */
-HtmlViewBridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent) {
+ViewBridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent) {
     if (!triggerChangeEvent) {
         triggerChangeEvent = false;
     }
@@ -156,7 +156,7 @@ HtmlViewBridge.prototype.attachDomChangeEventHandler = function (triggerChangeEv
     }
 };
 
-HtmlViewBridge.prototype.getViewIndex = function () {
+ViewBridge.prototype.getViewIndex = function () {
     var pattern = /\((\d+)\)$/;
 
     var match = pattern.exec(this.viewNode.id);
@@ -175,9 +175,9 @@ HtmlViewBridge.prototype.getViewIndex = function () {
  *
  * @param spawnData
  * @param [index]
- * @param [parentPresenterPath]
+ * @param [parentpresenterPath]
  */
-HtmlViewBridge.spawn = function (spawnData, index, parentPresenterPath) {
+ViewBridge.spawn = function (spawnData, index, parentpresenterPath) {
 
 };
 
@@ -189,8 +189,8 @@ HtmlViewBridge.spawn = function (spawnData, index, parentPresenterPath) {
  * @param node
  * @param [index]
  */
-HtmlViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index, parentPresenterPath) {
-    var id = parentPresenterPath ? parentPresenterPath + '_' + spawnData.PresenterName : spawnData.PresenterPath;
+ViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index, parentpresenterPath) {
+    var id = parentpresenterPath ? parentpresenterPath + '_' + spawnData.PresenterName : spawnData.presenterPath;
 
     if (index !== null && index !== false && (typeof index !== "undefined")) {
         id += "(" + index + ")";
@@ -201,29 +201,29 @@ HtmlViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnDa
     node.setAttribute("presenter-name", spawnData.PresenterName);
 };
 
-HtmlViewBridge.prototype.registerPresenter = function () {
+ViewBridge.prototype.registerPresenter = function () {
     window.rhubarb.registeredPresenters[this.presenterPath] = this;
 
     this.onRegistered();
     this.attachEvents();
 };
 
-HtmlViewBridge.prototype.onReattached = function () {
+ViewBridge.prototype.onReattached = function () {
 
 };
 
 
-HtmlViewBridge.prototype.onRegistered = function () {
+ViewBridge.prototype.onRegistered = function () {
 
 };
 
-HtmlViewBridge.prototype.onParentsReady = function () {
+ViewBridge.prototype.onParentsReady = function () {
     if (!this.eventHost) {
         this.eventHost = this.findEventHost();
     }
 };
 
-HtmlViewBridge.prototype.findContainingViewBridge = function () {
+ViewBridge.prototype.findContainingViewBridge = function () {
     var parent = this.viewNode.parentNode;
 
     while (parent) {
@@ -237,13 +237,13 @@ HtmlViewBridge.prototype.findContainingViewBridge = function () {
     return false;
 };
 
-HtmlViewBridge.prototype.getContainingViewBridge = HtmlViewBridge.prototype.findContainingViewBridge;
+ViewBridge.prototype.getContainingViewBridge = ViewBridge.prototype.findContainingViewBridge;
 
-HtmlViewBridge.prototype.findParent = HtmlViewBridge.prototype.findContainingViewBridge;
+ViewBridge.prototype.findParent = ViewBridge.prototype.findContainingViewBridge;
 
-HtmlViewBridge.prototype.attachServerEventResponseHandlerTo = function (domElement, event, callback) {
+ViewBridge.prototype.attachServerEventResponseHandlerTo = function (domElement, event, callback) {
     if (domElement.viewBridge) {
-        domElement.HtmlViewBridge.attachServerEventResponseHandler(event, callback);
+        domElement.ViewBridge.attachServerEventResponseHandler(event, callback);
     }
     else {
         if (!domElement.serverEventResponseHandlers) {
@@ -268,7 +268,7 @@ HtmlViewBridge.prototype.attachServerEventResponseHandlerTo = function (domEleme
  * @param [viewIndex] If you're looking for an indexed view bridge, you'll need to pass it's index here. If you don't
  *                      you'll get the first it comes across.
  */
-HtmlViewBridge.prototype.findChildViewBridge = function (presenterName, viewIndex) {
+ViewBridge.prototype.findChildViewBridge = function (presenterName, viewIndex) {
     var presenterPaths = [];
 
     for (var i in window.rhubarb.registeredPresenters) {
@@ -277,7 +277,7 @@ HtmlViewBridge.prototype.findChildViewBridge = function (presenterName, viewInde
 
     presenterPaths.sort();
 
-    var thisPresenterPath = this.presenterPath + '_';
+    var thispresenterPath = this.presenterPath + '_';
 
     for (i in presenterPaths) {
         var presenter = window.rhubarb.registeredPresenters[presenterPaths[i]];
@@ -286,8 +286,8 @@ HtmlViewBridge.prototype.findChildViewBridge = function (presenterName, viewInde
             var presenterPath = presenter.presenterPath;
 
             // Check the viewBridge we're considering is a child of this one.
-            if (presenterPath.indexOf(thisPresenterPath) == 0) {
-                if (presenterPath.replace(thisPresenterPath, '').indexOf("_") == -1) {
+            if (presenterPath.indexOf(thispresenterPath) == 0) {
+                if (presenterPath.replace(thispresenterPath, '').indexOf("_") == -1) {
                     return presenter;
                 }
             }
@@ -304,7 +304,7 @@ HtmlViewBridge.prototype.findChildViewBridge = function (presenterName, viewInde
  * @param [viewIndex]    If you're looking for an indexed view bridge, you'll need to pass its index here. If you don't
  *                    you'll get the first it comes across.
  */
-HtmlViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
+ViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
     var presenterPaths = [];
 
     for (var i in window.rhubarb.registeredPresenters) {
@@ -313,7 +313,7 @@ HtmlViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
 
     presenterPaths.sort();
 
-    var thisPresenterPath = this.presenterPath + '_';
+    var thispresenterPath = this.presenterPath + '_';
 
     for (i in presenterPaths) {
         var presenter = window.rhubarb.registeredPresenters[presenterPaths[i]];
@@ -321,7 +321,7 @@ HtmlViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
         if (presenter.presenterName == presenterName) {
             // This viewBridge is indexed, so check the viewBridge we're considering matches this one's index
             // Check the viewBridge we're considering is a child of this one.
-            if (presenter.presenterPath.indexOf(thisPresenterPath) == 0) {
+            if (presenter.presenterPath.indexOf(thispresenterPath) == 0) {
                 return presenter;
             }
         }
@@ -330,12 +330,12 @@ HtmlViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
     return false;
 };
 
-HtmlViewBridge.prototype.clearServerEventResponseHandlers = function (event) {
+ViewBridge.prototype.clearServerEventResponseHandlers = function (event) {
     this.serverEventResponseHandlers = {};
 
 };
 
-HtmlViewBridge.prototype.attachServerEventResponseHandler = function (event, callback) {
+ViewBridge.prototype.attachServerEventResponseHandler = function (event, callback) {
     if (!this.serverEventResponseHandlers[event]) {
         this.serverEventResponseHandlers[event] = [];
     }
@@ -352,7 +352,7 @@ HtmlViewBridge.prototype.attachServerEventResponseHandler = function (event, cal
  * @param event
  * @param callback
  */
-HtmlViewBridge.prototype.attachClientEventHandler = function (event, callback) {
+ViewBridge.prototype.attachClientEventHandler = function (event, callback) {
     if (!this.clientEventHandlers[event]) {
         this.clientEventHandlers[event] = [];
     }
@@ -360,7 +360,7 @@ HtmlViewBridge.prototype.attachClientEventHandler = function (event, callback) {
     this.clientEventHandlers[event][this.clientEventHandlers[event].length] = callback;
 };
 
-HtmlViewBridge.prototype.removeClientEventHandler = function (event, callback) {
+ViewBridge.prototype.removeClientEventHandler = function (event, callback) {
     if (!this.clientEventHandlers[event]) {
         return;
     }
@@ -371,14 +371,14 @@ HtmlViewBridge.prototype.removeClientEventHandler = function (event, callback) {
     }
 };
 
-HtmlViewBridge.prototype.removeClientEventHandlers = function (event) {
+ViewBridge.prototype.removeClientEventHandlers = function (event) {
     this.clientEventHandlers[event] = [];
 };
 
 /**
  * Loads the state of the viewBridge model
  */
-HtmlViewBridge.prototype.loadState = function () {
+ViewBridge.prototype.loadState = function () {
     var path = this.presenterPath;
 
     if (!document.getElementById(path + 'State') || ( document.getElementById(path + 'State').value == '' )) {
@@ -399,7 +399,7 @@ HtmlViewBridge.prototype.loadState = function () {
 /**
  * Loads the state of the viewBridge model
  */
-HtmlViewBridge.prototype.saveState = function () {
+ViewBridge.prototype.saveState = function () {
     if (!document.getElementById(this.presenterPath + 'State')) {
         return;
     }
@@ -407,11 +407,11 @@ HtmlViewBridge.prototype.saveState = function () {
     document.getElementById(this.presenterPath + 'State').value = JSON.stringify(this.model);
 };
 
-HtmlViewBridge.prototype.onStateLoaded = function () {
+ViewBridge.prototype.onStateLoaded = function () {
 
 };
 
-HtmlViewBridge.prototype.getSubPresenters = function () {
+ViewBridge.prototype.getSubPresenters = function () {
     var subPresenters = [];
 
     for (var subPath in window.rhubarb.registeredPresenters) {
@@ -428,11 +428,11 @@ HtmlViewBridge.prototype.getSubPresenters = function () {
     return subPresenters;
 };
 
-HtmlViewBridge.prototype.onSubPresenterValueChanged = function () {
+ViewBridge.prototype.onSubPresenterValueChanged = function () {
 
 };
 
-HtmlViewBridge.prototype.subPresenterValueChanged = function (viewBridge, newValue) {
+ViewBridge.prototype.subPresenterValueChanged = function (viewBridge, newValue) {
     this.onSubPresenterValueChanged.apply(this, arguments);
 
     var container = this.getContainingViewBridge();
@@ -442,7 +442,7 @@ HtmlViewBridge.prototype.subPresenterValueChanged = function (viewBridge, newVal
     }
 };
 
-HtmlViewBridge.prototype.valueChanged = function () {
+ViewBridge.prototype.valueChanged = function () {
     var newValue = this.getValue();
 
     var container = this.getContainingViewBridge();
@@ -461,7 +461,7 @@ HtmlViewBridge.prototype.valueChanged = function () {
  *
  * @returns {string}
  */
-HtmlViewBridge.prototype.getValue = function () {
+ViewBridge.prototype.getValue = function () {
     if (this.viewNode && this.viewNode.value) {
         return this.viewNode.value;
     }
@@ -469,21 +469,21 @@ HtmlViewBridge.prototype.getValue = function () {
     return "";
 };
 
-HtmlViewBridge.prototype.getSerializableValue = function () {
+ViewBridge.prototype.getSerializableValue = function () {
     return this.getValue();
 };
 
-HtmlViewBridge.prototype.getDisplayView = function () {
+ViewBridge.prototype.getDisplayView = function () {
     return this.getValue();
 };
 
-HtmlViewBridge.prototype.setValue = function (value) {
+ViewBridge.prototype.setValue = function (value) {
     if (this.viewNode && ( "value" in this.viewNode )) {
         this.viewNode.value = value;
     }
 };
 
-HtmlViewBridge.prototype.getSubPresenterValues = function () {
+ViewBridge.prototype.getSubPresenterValues = function () {
     // Get all the values from all the sub presenters to build our model to validate.
     var subPresenters = this.getSubPresenters();
     var model = {};
@@ -497,7 +497,7 @@ HtmlViewBridge.prototype.getSubPresenterValues = function () {
     return model;
 };
 
-HtmlViewBridge.prototype.validate = function (validator) {
+ViewBridge.prototype.validate = function (validator) {
     var model = this.getSubPresenterValues();
 
     var placeholders = document.getElementsByTagName("em");
@@ -526,7 +526,7 @@ HtmlViewBridge.prototype.validate = function (validator) {
  *
  * Called once the state has been restored.
  */
-HtmlViewBridge.prototype.attachEvents = function () {
+ViewBridge.prototype.attachEvents = function () {
 
 };
 
@@ -535,7 +535,7 @@ HtmlViewBridge.prototype.attachEvents = function () {
  *
  * @return {*}
  */
-HtmlViewBridge.prototype.findEventHost = function () {
+ViewBridge.prototype.findEventHost = function () {
     var selfNode = document.getElementById(this.presenterPath);
 
     while (selfNode) {
@@ -551,7 +551,7 @@ HtmlViewBridge.prototype.findEventHost = function () {
                     testNode.id = "host";
                 }
 
-                new window.HtmlViewBridge(testNode.id);
+                new window.ViewBridge(testNode.id);
 
                 if (testNode.className.indexOf("host") == 0 || testNode.className.indexOf("host") > 0) {
                     testNode.viewBridge.host = true;
@@ -572,7 +572,7 @@ HtmlViewBridge.prototype.findEventHost = function () {
  *
  * @param eventName
  */
-HtmlViewBridge.prototype.raiseClientEvent = function (eventName) {
+ViewBridge.prototype.raiseClientEvent = function (eventName) {
     if (!this.clientEventHandlers[eventName]) {
         return;
     }
@@ -594,7 +594,7 @@ HtmlViewBridge.prototype.raiseClientEvent = function (eventName) {
 };
 
 
-HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete) {
+ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete) {
     if (!this.eventHost) {
         this.eventHost = this.findEventHost();
     }
@@ -639,7 +639,7 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
 
         if (hostPresenter.eventHostClassName != "") {
             formData.append("_mvpEventClass", hostPresenter.eventHostClassName);
-            formData.append("_mvpEventPresenterPath", hostPresenter.presenterPath);
+            formData.append("_mvpEventpresenterPath", hostPresenter.presenterPath);
         }
 
         formData.append(this.presenterPath, file);
@@ -665,7 +665,7 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
     return xmlhttp;
 };
 
-HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
+ViewBridge.prototype.raisePostBackEvent = function (eventName) {
     var argumentsArray = [];
     var callback = false;
 
@@ -684,13 +684,13 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
 
     // Standardise the arguments list by ensuring the targeted viewBridge is the last parameter.
 
-    var targetHtmlViewBridge;
-    if (argumentsArray[argumentsArray.length - 1] instanceof HtmlViewBridge) {
-        targetHtmlViewBridge = argumentsArray[argumentsArray.length - 1];
+    var targetViewBridge;
+    if (argumentsArray[argumentsArray.length - 1] instanceof ViewBridge) {
+        targetViewBridge = argumentsArray[argumentsArray.length - 1];
     }
     else {
-        targetHtmlViewBridge = this;
-        argumentsArray[argumentsArray.length] = targetHtmlViewBridge;
+        targetViewBridge = this;
+        argumentsArray[argumentsArray.length] = targetViewBridge;
     }
 
     if (!this.eventHost) {
@@ -700,8 +700,8 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
     // If we're not the host we need to find the host and call it's raise event instead.
     var hostPresenter = this.eventHost;
 
-    var target = targetHtmlViewBridge.presenterPath;
-    var index = targetHtmlViewBridge.getViewIndex();
+    var target = targetViewBridge.presenterPath;
+    var index = targetViewBridge.getViewIndex();
 
     if (index) {
         target = target.replace(/\(\d+\)$/, '');
@@ -727,7 +727,7 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
         var eventTargetInput = createOrFindHiddenInput("_mvpEventTarget");
         var eventTargetIndexInput = createOrFindHiddenInput("_mvpTargetIndex");
         var eventClassInput = createOrFindHiddenInput("_mvpClass");
-        var eventPresenterPathInput = createOrFindHiddenInput("_mvpPresenterPath");
+        var eventpresenterPathInput = createOrFindHiddenInput("_mvppresenterPath");
         var eventArgumentsInput = createOrFindHiddenInput("_mvpEventArgumentsJson");
 
         eventNameInput.value = eventName;
@@ -739,7 +739,7 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
 
         if (hostPresenter.eventHostClassName != "") {
             eventClassInput.value = hostPresenter.eventHostClassName;
-            eventPresenterPathInput.value = hostPresenter.presenterPath;
+            eventpresenterPathInput.value = hostPresenter.presenterPath;
         }
 
         var flatArguments = [];
@@ -747,7 +747,7 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
         for (i = 1; i < arguments.length; i++) {
             var argument = arguments[i];
 
-            if (!(argument instanceof HtmlViewBridge ) && !( argument instanceof Function )) {
+            if (!(argument instanceof ViewBridge ) && !( argument instanceof Function )) {
                 flatArguments.push(argument);
             }
         }
@@ -762,12 +762,12 @@ HtmlViewBridge.prototype.raisePostBackEvent = function (eventName) {
 /**
  * Raises an event via an XMLHttpRequest
  *
- * If this is not the host viewBridge we bubble the event up to the host HtmlViewBridge.
+ * If this is not the host viewBridge we bubble the event up to the host ViewBridge.
  *
  * @param eventName The name of the event to trigger
- * @param targetHtmlViewBridge The name of the viewBridge the event is being triggered for
+ * @param targetViewBridge The name of the viewBridge the event is being triggered for
  */
-HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
+ViewBridge.prototype.raiseServerEvent = function (eventName) {
     var self = this;
     var argumentsArray = [];
     var successCallback = false;
@@ -792,13 +792,13 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
 
     // Standardise the arguments list by ensuring the targeted viewBridge is the last parameter.
 
-    var targetHtmlViewBridge;
-    if (argumentsArray[argumentsArray.length - 1] instanceof HtmlViewBridge) {
-        targetHtmlViewBridge = argumentsArray[argumentsArray.length - 1];
+    var targetViewBridge;
+    if (argumentsArray[argumentsArray.length - 1] instanceof ViewBridge) {
+        targetViewBridge = argumentsArray[argumentsArray.length - 1];
     }
     else {
-        targetHtmlViewBridge = this;
-        argumentsArray[argumentsArray.length] = targetHtmlViewBridge;
+        targetViewBridge = this;
+        argumentsArray[argumentsArray.length] = targetViewBridge;
     }
 
     if (!this.eventHost) {
@@ -818,15 +818,15 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
             self.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
-                targetHtmlViewBridge.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, successCallback, failureCallback);
+                targetViewBridge.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, successCallback, failureCallback);
             } else if (self.isFailureCode(xmlhttp.status) && failureCallback) {
                 failureCallback(xmlhttp.responseText, xmlhttp.status);
             }
         }
     };
 
-    var target = targetHtmlViewBridge.presenterPath;
-    var index = targetHtmlViewBridge.getViewIndex();
+    var target = targetViewBridge.presenterPath;
+    var index = targetViewBridge.getViewIndex();
 
     if (index) {
         target = target.replace(/\(\d+\)$/, '');
@@ -841,13 +841,13 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
         }
 
         if (hostPresenter.eventHostClassName != "") {
-            formData += "&_mvpEventClass=" + hostPresenter.eventHostClassName + "&_mvpEventPresenterPath=" + hostPresenter.presenterPath;
+            formData += "&_mvpEventClass=" + hostPresenter.eventHostClassName + "&_mvpEventpresenterPath=" + hostPresenter.presenterPath;
         }
 
         for (i = 1; i < arguments.length; i++) {
             var argument = arguments[i];
 
-            if (!(argument instanceof HtmlViewBridge ) && !( argument instanceof Function )) {
+            if (!(argument instanceof ViewBridge ) && !( argument instanceof Function )) {
                 argument = JSON.stringify(argument);
                 formData += "&_mvpEventArguments[]=" + encodeURIComponent(argument);
             }
@@ -869,19 +869,19 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
         xmlhttp.send(formData);
 
         document.body.className += " event-processing";
-        targetHtmlViewBridge.onEventProcessingStarted();
+        targetViewBridge.onEventProcessingStarted();
     }
 
     return xmlhttp;
 };
 
-HtmlViewBridge.prototype.onEventProcessingStarted = function () {
+ViewBridge.prototype.onEventProcessingStarted = function () {
     if (this.viewNode) {
         this.viewNode.className += " my-event-processing";
     }
 };
 
-HtmlViewBridge.prototype.onEventProcessingFinished = function () {
+ViewBridge.prototype.onEventProcessingFinished = function () {
     if (this.viewNode) {
         this.viewNode.className = this.viewNode.className.replace(" my-event-processing", "");
     }
@@ -894,11 +894,11 @@ HtmlViewBridge.prototype.onEventProcessingFinished = function () {
  *
  * @returns {XMLHttpRequest}
  */
-HtmlViewBridge.prototype.createXmlHttpRequest = function () {
+ViewBridge.prototype.createXmlHttpRequest = function () {
     return new XMLHttpRequest();
 };
 
-HtmlViewBridge.prototype.loadJson = function (url, callback) {
+ViewBridge.prototype.loadJson = function (url, callback) {
     var xmlhttp = this.createXmlHttpRequest();
 
     xmlhttp.onreadystatechange = function () {
@@ -914,11 +914,11 @@ HtmlViewBridge.prototype.loadJson = function (url, callback) {
     xmlhttp.send();
 };
 
-HtmlViewBridge.prototype.isSuccessCode = function (httpResponseCode) {
+ViewBridge.prototype.isSuccessCode = function (httpResponseCode) {
     return httpResponseCode >= 200 && httpResponseCode < 300;
 };
 
-HtmlViewBridge.prototype.isFailureCode = function (httpResponseCode) {
+ViewBridge.prototype.isFailureCode = function (httpResponseCode) {
     return httpResponseCode >= 400 && httpResponseCode < 600;
 };
 
@@ -934,7 +934,7 @@ HtmlViewBridge.prototype.isFailureCode = function (httpResponseCode) {
  * @param successCallback
  * @param failureCallback
  */
-HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseCode, responseXml, successCallback, failureCallback) {
+ViewBridge.prototype.parseEventResponse = function (eventName, responseCode, responseXml, successCallback, failureCallback) {
     var updateElements = responseXml.getElementsByTagName("htmlupdate");
     var eventResponses = responseXml.getElementsByTagName("eventresponse");
     var scripts = responseXml.getElementsByTagName("script");
@@ -979,7 +979,7 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseCode,
         }
     }
 
-    this.reAttachHtmlViewBridges();
+    this.reAttachViewBridges();
 
     for (i = 0; i < models.length; i++) {
         var model = models[i];
@@ -1063,11 +1063,11 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseCode,
 /**
  * Override this method to perform anything required before the DOM is updated
  */
-HtmlViewBridge.prototype.onBeforeUpdateDomUpdateFromServer = function () {
+ViewBridge.prototype.onBeforeUpdateDomUpdateFromServer = function () {
 
 };
 
-HtmlViewBridge.prototype.modelUpdatedByEvent = function () {
+ViewBridge.prototype.modelUpdatedByEvent = function () {
     this.loadState();
     this.onModelUpdatedByEvent();
 };
@@ -1075,10 +1075,10 @@ HtmlViewBridge.prototype.modelUpdatedByEvent = function () {
 /**
  * Override this to handle detection of changes to the public model passed back from the server.
  */
-HtmlViewBridge.prototype.onModelUpdatedByEvent = function () {
+ViewBridge.prototype.onModelUpdatedByEvent = function () {
 };
 
-HtmlViewBridge.prototype.reAttachHtmlViewBridges = function () {
+ViewBridge.prototype.reAttachViewBridges = function () {
 
     for (var path in window.rhubarb.registeredPresenters) {
         var presenter = window.rhubarb.registeredPresenters[path];
@@ -1104,7 +1104,7 @@ HtmlViewBridge.prototype.reAttachHtmlViewBridges = function () {
  * @param containingDiv
  * @return {String}
  */
-HtmlViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
+ViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
     var subPresenters = this.getSubPresenters();
 
     for (var i in subPresenters) {
@@ -1126,7 +1126,7 @@ HtmlViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
  * @param containingDiv
  * @return {String}
  */
-HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
+ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
     var subPresenters = this.getSubPresenters();
     var serialString = "";
 
@@ -1170,7 +1170,7 @@ HtmlViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
     return serialString;
 };
 
-HtmlViewBridge.prototype.addElementsToArray = function (elementCollection, inputArray) {
+ViewBridge.prototype.addElementsToArray = function (elementCollection, inputArray) {
     for (var i = 0; i < elementCollection.length; i++) {
         inputArray.push(elementCollection[i]);
     }
@@ -1185,7 +1185,7 @@ HtmlViewBridge.prototype.addElementsToArray = function (elementCollection, input
  * @param eventName
  * @param response
  */
-HtmlViewBridge.prototype.triggerServerEventResponseHandlers = function (eventName, response) {
+ViewBridge.prototype.triggerServerEventResponseHandlers = function (eventName, response) {
     if (!this.serverEventResponseHandlers[eventName]) {
         return;
     }
@@ -1204,7 +1204,7 @@ HtmlViewBridge.prototype.triggerServerEventResponseHandlers = function (eventNam
  * @param responseText
  * @return {*}
  */
-HtmlViewBridge.prototype.onServerEventResponseReceived = function (eventName, responseText) {
+ViewBridge.prototype.onServerEventResponseReceived = function (eventName, responseText) {
     this.triggerServerEventResponseHandlers(eventName, responseText);
 
     if (this[eventName + "ResponseReceived"]) {
@@ -1214,7 +1214,7 @@ HtmlViewBridge.prototype.onServerEventResponseReceived = function (eventName, re
     return null;
 };
 
-HtmlViewBridge.prototype.setFocus = function () {
+ViewBridge.prototype.setFocus = function () {
     if (this.viewNode.focus) {
         this.viewNode.focus();
     }
@@ -1247,9 +1247,9 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
 
     var matchedPresenters = new Array(presenterNames.length);
 
-    var containingPresenterPath = containingPresenter.presenterPath;
+    var containingpresenterPath = containingPresenter.presenterPath;
 
-    containingPresenterPath += '_';
+    containingpresenterPath += '_';
 
     for (var i = 0; i < presenterNames.length; i++) {
         var presenterName = presenterNames[i];
@@ -1273,7 +1273,7 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
             if (registeredPresenter.presenterName == presenterName) {
                 if (containingPresenter) {
                     // We must be a parent of this viewBridge
-                    if (registeredPresenter.presenterPath.indexOf(containingPresenterPath) != 0) {
+                    if (registeredPresenter.presenterPath.indexOf(containingpresenterPath) != 0) {
                         continue;
                     }
                 }
@@ -1291,19 +1291,19 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
 /**
  * @deprecated Presenters are now initialised synchronously, so this just uses getPresentersByName internally
  */
-HtmlViewBridge.prototype.waitForPresenters = function (presenters, callback) {
+ViewBridge.prototype.waitForPresenters = function (presenters, callback) {
     return window.rhubarb.waitForPresenters(presenters, callback, this);
 };
 
-HtmlViewBridge.prototype.hide = function () {
+ViewBridge.prototype.hide = function () {
     this.viewNode.style.display = 'none';
 };
 
-HtmlViewBridge.prototype.show = function () {
+ViewBridge.prototype.show = function () {
     this.viewNode.style.display = this.getCssDisplayType();
 };
 
-HtmlViewBridge.prototype.getCssDisplayType = function () {
+ViewBridge.prototype.getCssDisplayType = function () {
     return 'block';
 };
 
@@ -1313,4 +1313,4 @@ if (!String.prototype.trim) {
     };
 }
 
-window.rhubarb.viewBridgeClasses.HtmlViewBridge = HtmlViewBridge;
+window.rhubarb.viewBridgeClasses.ViewBridge = ViewBridge;

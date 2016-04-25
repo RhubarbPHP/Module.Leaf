@@ -20,7 +20,10 @@ namespace Rhubarb\Leaf\Presenters\Controls\Text\TextBox;
 
 require_once __DIR__ . '/../../ControlView.php';
 
+use Rhubarb\Leaf\Presenters\Controls\ControlModel;
 use Rhubarb\Leaf\Presenters\Controls\ControlView;
+use Rhubarb\Leaf\Presenters\Presenter;
+use Rhubarb\Leaf\Presenters\PresenterModel;
 
 class TextBoxView extends ControlView
 {
@@ -30,8 +33,15 @@ class TextBoxView extends ControlView
 
     protected $allowBrowserAutoComplete = true;
 
-    public function __construct($htmlType = "text")
+    /**
+     * @var ControlModel
+     */
+    protected $model;
+
+    public function __construct(PresenterModel $model, $htmlType = "text")
     {
+        parent::__construct($model);
+
         $this->htmlType = $htmlType;
 
         $this->requiresContainer = false;
@@ -51,11 +61,9 @@ class TextBoxView extends ControlView
         return "TextBoxViewBridge";
     }
 
-    protected $text = "";
-
     public function setText($text)
     {
-        $this->text = $text;
+        $this->model->value = $text;
     }
 
     public function setAllowBrowserAutoComplete($allowBrowserAutoComplete)
@@ -79,7 +87,7 @@ class TextBoxView extends ControlView
         $placeholderText = $this->placeholderText ? ' placeholder="' . \htmlentities($this->placeholderText) . '"' : "";
         ?>
         <input type="<?= \htmlentities($this->htmlType); ?>" size="<?= $this->size; ?>" <?= $maxLength; ?>
-               name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" value="<?= \htmlentities($this->text); ?>"
+               name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" value="<?= \htmlentities($this->model->value); ?>"
                id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" presenter-name="<?= \htmlentities(
             $this->presenterName
         ); ?>"<?= $autoCompleteAttribute . $this->getHtmlAttributeTags() . $placeholderText . $this->getClassTag() ?> />

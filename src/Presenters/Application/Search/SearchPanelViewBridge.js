@@ -1,14 +1,14 @@
 var bridge = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
 
     this.searchTimer = null;
 };
 
-bridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBridge();
+bridge.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
 bridge.prototype.constructor = bridge;
 
 bridge.prototype.onRegistered = function() {
-    window.rhubarb.viewBridgeClasses.HtmlViewBridge.prototype.onRegistered.apply(this,arguments);
+    window.rhubarb.viewBridgeClasses.ViewBridge.prototype.onRegistered.apply(this,arguments);
 
     if ( this.model.AutoSubmit ){
         var subPresenters = this.getSubPresenters();

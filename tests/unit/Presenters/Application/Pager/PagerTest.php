@@ -100,7 +100,7 @@ class PagerTest extends ModelUnitTestCase
         $context = new Context();
         $context->Request = $request;
 
-        $request->request($this->pager->PresenterPath . "-page", 3);
+        $request->request($this->pager->presenterPath . "-page", 3);
 
         $this->createMocks();
 
