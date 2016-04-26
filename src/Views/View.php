@@ -21,6 +21,7 @@ namespace Rhubarb\Leaf\Views;
 require_once __DIR__ . "/../PresenterViewBase.php";
 
 use Rhubarb\Crown\Application;
+use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\Request;
@@ -45,10 +46,6 @@ abstract class View extends PresenterViewBase implements Deployable
      * @var Presenter[]
      */
     protected $presenters = [];
-
-    protected $presenterName;
-
-    protected $presenterPath;
 
     /**
      * Wraps are closures which wrap the printed view content in additional supporting content (to support state etc.)
@@ -91,7 +88,17 @@ abstract class View extends PresenterViewBase implements Deployable
      */
     protected $model;
 
-    public function __construct(PresenterModel $model)
+    /**
+     * @var Event
+     */
+    public $presenterAddedEvent;
+
+    public function __construct()
+    {
+        $this->presenterAddedEvent = new Event();
+    }
+
+    public function setModel(PresenterModel $model)
     {
         $this->model = $model;
     }
@@ -258,7 +265,7 @@ abstract class View extends PresenterViewBase implements Deployable
         if ($this->requiresContainer) {
             $wrappers[] = function ($content) {
                 $path = $this->getIndexedPresenterPath();
-                $name = $this->presenterName;
+                $name = $this->model->presenterName;
 
                 $classes = [basename(str_replace("\\", "/", get_class($this)))];
 
@@ -282,7 +289,7 @@ abstract class View extends PresenterViewBase implements Deployable
             };
         }
 
-        if ($this->raiseEvent("IsRootPresenter")) {
+        if ($this->model->isRootPresenter) {
             $formWrapper = $this->getFormWrapper();
             if ($formWrapper) {
                 $wrappers[] = $formWrapper;
@@ -336,7 +343,7 @@ HTML;
     protected final function raiseEventOnViewBridge($eventName)
     {
         $args = func_get_args();
-        array_unshift($args, $this->presenterPath);
+        array_unshift($args, $this->model->presenterPath);
         call_user_func_array(['\Rhubarb\Leaf\Presenters\Presenter', "raiseEventOnViewBridge"], $args);
     }
 
@@ -347,7 +354,7 @@ HTML;
      */
     public function getPropagatedState()
     {
-        $id = $this->presenterPath;
+        $id = $this->model->presenterPath;
 
         $request = Request::current();
         $state = $request->post($id . "State");
@@ -393,25 +400,7 @@ HTML;
      */
     protected function getIndexedPresenterPath()
     {
-        return $this->raiseEvent("GetIndexedpresenterPath");
-    }
-
-    protected function getData($key)
-    {
-        return $this->raiseEvent("GetData", $key);
-    }
-
-    /**
-     * Gets model from the presenter.
-     *
-     * This should be used carefully - it is only intended to provide efficient access to the model for display,
-     * business logic should not be performed in the View using this Model.
-     *
-     * @return null|Model
-     */
-    protected function getModel()
-    {
-        return $this->raiseEvent("GetModel");
+        return $this->model->indexedPresenterPath;
     }
 
     /**
@@ -426,12 +415,12 @@ HTML;
 
     public function setName($viewName)
     {
-        $this->presenterName = $viewName;
+        $this->model->presenterName = $viewName;
     }
 
     public function setPath($viewPath)
     {
-        $this->presenterPath = $viewPath;
+        $this->model->presenterPath = $viewPath;
     }
 
     public function registerEventReceiver(\Closure $receiver)
@@ -479,8 +468,7 @@ HTML;
 
             if ($presenter instanceof Presenter) {
                 $this->onPresenterAdded($presenter);
-                $this->raiseEvent("OnPresenterAdded", $presenter);
-
+                $this->presenterAddedEvent->raise($presenter);
                 $name = (is_numeric($index)) ? $presenter->getName() : $index;
 
                 $this->presenters[$name] = $presenter;
@@ -528,10 +516,10 @@ HTML;
      * While views can't raised delayed events their hosted presenters can.
      *
      */
-    public final function processDelayedEvents()
+    public final function processAfterEventsCallbacks()
     {
         foreach ($this->presenters as $presenter) {
-            $presenter->processDelayedEvents();
+            $presenter->processAfterEventsCallbacks();
         }
     }
 

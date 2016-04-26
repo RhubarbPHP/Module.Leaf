@@ -18,12 +18,12 @@
 
 namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
-require_once __DIR__ . "/../../../Views/HtmlView.php";
+require_once __DIR__ . "/../../../Views/View.php";
 
 use Rhubarb\Crown\Request\Request;
-use Rhubarb\Leaf\Views\HtmlView;
+use Rhubarb\Leaf\Views\View;
 
-class PagerView extends HtmlView
+class PagerView extends View
 {
     public $numberOfPages;
     public $pageNumber;
@@ -68,7 +68,7 @@ class PagerView extends HtmlView
         }
 
         $pages = [];
-        $stub = $this->presenterPath;
+        $stub = $this->model->presenterPath;
         $request = Request::current();
 
         $iteration = 0;

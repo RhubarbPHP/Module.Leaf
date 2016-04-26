@@ -2,9 +2,9 @@
 
 namespace Rhubarb\Leaf\Tests\Fixtures\Presenters\Cruds;
 
-use Rhubarb\Leaf\Views\HtmlView;
+use Rhubarb\Leaf\Views\View;
 
-class CrudsDetailsView extends HtmlView
+class CrudsDetailsView extends View
 {
     public function printViewContent()
     {

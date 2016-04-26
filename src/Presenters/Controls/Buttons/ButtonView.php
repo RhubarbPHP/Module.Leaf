@@ -18,11 +18,11 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\Buttons;
 
-require_once __DIR__ . "/../JQueryControlView.php";
+require_once __DIR__ . "/../ControlView.php";
 
-use Rhubarb\Leaf\Presenters\Controls\JQueryControlView;
+use Rhubarb\Leaf\Presenters\Controls\ControlView;
 
-class ButtonView extends JQueryControlView
+class ButtonView extends ControlView
 {
     private $text;
 
@@ -54,7 +54,7 @@ class ButtonView extends JQueryControlView
 
         ?>
         <input type="<?= $this->inputType ?>" name="<?= htmlentities($this->getIndexedPresenterPath()); ?>"
-               presenter-name="<?= htmlentities($this->presenterName); ?>"
+               presenter-name="<?= htmlentities($this->model->presenterName); ?>"
                id="<?= htmlentities($this->getIndexedPresenterPath()); ?>"
                value="<?= htmlentities($this->text); ?>"<?= $this->getClassTag() . $this->getHtmlAttributeTags() . $xmlAttribute . $validationAttribute . $validatorAttribute . $confirmAttribute ?>/>
         <?php

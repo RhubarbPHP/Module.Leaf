@@ -5,18 +5,20 @@ namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Leaf\Views\View;
 
-class SimpleView extends View implements ISimpleView
+class SimpleView extends View
 {
-    private $text;
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->requiresContainer = false;
+        $this->requiresStateInputs = false;
+    }
 
     public function printViewContent()
     {
-        print $this->text;
-    }
-
-    public function setText($text)
-    {
-        $this->text = $text;
+        print $this->model->text;
+        print $this->presenters["ForenameA"];
     }
 
     public function createPresenters()

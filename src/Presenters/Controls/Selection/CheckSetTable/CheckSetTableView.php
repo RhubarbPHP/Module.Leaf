@@ -21,7 +21,7 @@ class CheckSetTableView extends SelectionControlView
         $name = \htmlentities($name) . '[]';
 
         $presenterPath = \htmlentities($this->getIndexedPresenterPath());
-        $presenterName = \htmlentities($this->presenterName);
+        $presenterName = \htmlentities($this->model->presenterName);
         $attributes = $this->getHtmlAttributeTags();
 
         $checkRow = $headerRow = '';

@@ -18,13 +18,13 @@
 
 namespace Rhubarb\Leaf\Presenters\Application\Search;
 
-require_once __DIR__ . "/../../../Views/HtmlView.php";
+require_once __DIR__ . "/../../../Views/View.php";
 
 use Rhubarb\Leaf\Presenters\Controls\Buttons\Button;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
-use Rhubarb\Leaf\Views\HtmlView;
+use Rhubarb\Leaf\Views\View;
 
-class SearchPanelView extends HtmlView
+class SearchPanelView extends View
 {
     protected function getClientSideViewBridgeName()
     {

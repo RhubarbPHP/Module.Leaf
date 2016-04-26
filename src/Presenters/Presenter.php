@@ -21,6 +21,7 @@ namespace Rhubarb\Leaf\Presenters;
 require_once __DIR__ . "/../PresenterViewBase.php";
 
 use Rhubarb\Crown\Application;
+use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Logging\Log;
@@ -35,10 +36,6 @@ use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\PresenterViewBase;
 use Rhubarb\Leaf\Views\View;
-use Rhubarb\Stem\Exceptions\ModelConsistencyValidationException;
-use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Models\Validation\Validator;
-
 /**
  * The base class for presenters
  *
@@ -85,6 +82,12 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     protected $viewIndex = "";
 
     /**
+     * Used to calculate the indexed presenter path of this presenter.
+     * @var string
+     */
+    protected $parentIndexedPresenterPath = "";
+
+    /**
      * True if the view has been configured.
      *
      * @var bool
@@ -121,7 +124,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      *
      * @var array
      */
-    private $delayedEvents = [];
+    private $afterEventsCallbacks = [];
 
     /**
      * A count of the number of presenters hosted on our view.
@@ -191,8 +194,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         }
 
         $this->model = $this->createModel();
-        $this->presenterName = $name;
-        $this->presenterPath = $name;
+        $this->model->presenterName = $name;
+        $this->model->presenterPath = $name;
+
+        $this->initialise();
     }
 
     /**
@@ -213,7 +218,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public function getPresenterPath()
     {
-        return $this->presenterPath;
+        return $this->model->presenterPath;
     }
 
     /**
@@ -237,7 +242,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function setPresenterPath($path)
     {
-        $this->presenterPath = $path;
+        $this->model->presenterPath = $path;
     }
 
     /**
@@ -247,7 +252,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public function getName()
     {
-        return $this->presenterName;
+        return $this->model->presenterName;
     }
 
     /**
@@ -260,26 +265,24 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function setName($presenterName)
     {
-        $this->presenterName = $presenterName;
+        $this->model->presenterName = $presenterName;
     }
 
     /**
-     * Delays an event until after other events have processed.
+     * Delays code execution ntil after all events have processed.
      *
      * This is normally used by controls on a view that need to run after all other
      * updates to the model have taken place.
      *
-     * Events are queued by calling DelayEvent() and executed by ProcessDelayedEvents();
+     * Events are queued by calling runAfterEventsProcessed() and executed by processAfterEventsCallbacks();
      *
-     * @see Presenter::processDelayedEvents()
-     * @param string $event The event code
+     * @see Presenter::processAfterEventsCallbacks()
+     * @param Callable Normally a closure to run.
      * @return void
      */
-    protected function raiseDelayedEvent($event)
+    protected function runAfterEventsProcessed($event)
     {
-        $args = func_get_args();
-
-        $this->delayedEvents[] = $args;
+        $this->afterEventsCallbacks[] = $event;
     }
 
     /**
@@ -287,15 +290,15 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      *
      * @see Presenter::raiseDelayedEvent()
      */
-    public final function processDelayedEvents()
+    public final function processAfterEventsCallbacks()
     {
-        foreach ($this->delayedEvents as $event) {
-            call_user_func_array([$this, "raiseEvent"], $event);
+        foreach ($this->afterEventsCallbacks as $callback) {
+            $callback();
         }
 
-        $this->delayedEvents = [];
+        $this->afterEventsCallbacks = [];
 
-        $this->view->processDelayedEvents();
+        $this->view->processAfterEventsCallbacks();
     }
 
     /**
@@ -320,53 +323,14 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         $this->subPresenterNamesUsed[] = $subPresenterName;
     }
 
+    /**
+     * @var Presenter[]
+     */
     protected $subPresenters = [];
 
     public function addSubPresenter(Presenter $presenter)
     {
         $this->setSubPresenterPath($presenter);
-
-        $presenter->attachEventHandler(
-            "GetIndexedpresenterPath",
-            function () {
-                return $this->getIndexedPresenterPath();
-            }
-        );
-
-        $presenter->attachEventHandler(
-            "GetBoundData",
-            function ($dataKey, $viewIndex = false) {
-                return $this->getDataForPresenter($dataKey, $viewIndex);
-            }
-        );
-
-        $presenter->attachEventHandler(
-            "GetData",
-            function ($dataKey, $viewIndex = false) {
-                return $this->getData($dataKey, $viewIndex);
-            }
-        );
-
-        $presenter->attachEventHandler(
-            "GetModel",
-            function () {
-                return $this->getModel();
-            }
-        );
-
-        $presenter->attachEventHandler(
-            "SetData",
-            function ($dataKey, $data, $viewIndex = false) {
-                $this->setData($dataKey, $data, $viewIndex);
-            }
-        );
-
-        $presenter->attachEventHandler(
-            "SetBoundData",
-            function ($dataKey, $data, $viewIndex = false) {
-                $this->setDataFromPresenter($dataKey, $data, $viewIndex);
-            }
-        );
 
         try {
             $presenter->initialise();
@@ -376,12 +340,37 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             // However as we're still in the middle of the initialisation we don't need to handle it here
         }
 
+        $presenter->parentIndexedPresenterPathChanged($this->model->indexedPresenterPath);
         $presenter->hosted = true;
         $presenter->onHosted();
 
         $this->onPresenterAdded($presenter);
 
         $this->subPresenters[$presenter->getName()] = $presenter;
+
+        if ($presenter instanceof BindablePresenterInterface){
+            $presenter->bindingValueChangedEvent = new Event();
+            $name = $presenter->getName();
+            $presenter->bindingValueChangedEvent->attachHandler(function() use ($presenter, $name)
+            {
+                $bindingValue = $presenter->getBindingValue();
+
+                if ($this->viewIndex){
+                    $this->model->$name[$this->viewIndex] = $bindingValue;
+                } else {
+                    $this->model->$name = $bindingValue;
+                }
+            });
+
+            if (isset($this->model->$name)){
+                if ($this->viewIndex){
+                    $presenter->setBindingValue($this->model->$name[$this->viewIndex]);
+                } else {
+                    $presenter->setBindingValue($this->model->$name);
+                }
+
+            }
+        }
 
         return $presenter;
     }
@@ -397,21 +386,31 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         return null;
     }
 
-    public final function getIndexedPresenterPath()
+    public final function parentIndexedPresenterPathChanged($parentIndexedPresenterPath)
     {
-        $path = $this->raiseEvent("GetIndexedpresenterPath");
+        $this->parentIndexedPresenterPath = $parentIndexedPresenterPath;
+        $this->calculateIndexedPresenterPath();
+    }
+
+    protected final function calculateIndexedPresenterPath()
+    {
+        $path = $this->parentIndexedPresenterPath;
 
         if ($path !== null) {
-            $path .= "_" . $this->PresenterName;
+            $path .= "_" . $this->model->presenterName;
         } else {
-            $path = $this->PresenterName;
+            $path = $this->model->presenterName;
         }
 
         if (($this->viewIndex !== null) && ($this->viewIndex !== "")) {
             $path .= "(" . $this->viewIndex . ")";
         }
 
-        return $path;
+        $this->model->indexedPresenterPath = $path;
+
+        foreach($this->subPresenters as $subPresenter){
+            $subPresenter->parentIndexedPresenterPathChanged($path);
+        }
     }
 
     /**
@@ -421,65 +420,12 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected final function registerView(View $view)
     {
+        $view->setModel($this->model);
+        $view->presenterAddedEvent->attachHandler(function(Presenter $presenter){
+            $this->addSubPresenter($presenter);
+        });
+
         $this->view = $view;
-
-        $this->view->setName($this->presenterName);
-        $this->view->setPath($this->presenterPath);
-
-        $view->attachEventHandler(
-            "CreatePresenterByName",
-            function ($presenterName) {
-                return $this->createPresenterByName($presenterName);
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetData",
-            function ($dataKey, $viewIndex = false) {
-                return $this->getData($dataKey, $viewIndex);
-            }
-        );
-        $view->attachEventHandler(
-            "GetModel",
-            function () {
-                return $this->getModel();
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetIndexedpresenterPath",
-            function () {
-                return $this->getIndexedPresenterPath();
-            }
-        );
-
-        $view->attachEventHandler(
-            "OnPresenterAdded",
-            function (Presenter $presenter) {
-                return $this->addSubPresenter($presenter);
-            }
-        );
-
-        $view->attachEventHandler(
-            "IsRootPresenter",
-            function () {
-                return ($this->isExecutionTarget && !$this->hosted);
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetEventHostClassName",
-            function () {
-                return $this->getEventHostClassName();
-            }
-        );
-
-        $view->attachEventHandler(
-            "GetModelState",
-            function () {
-                return $this->getModelState();
-            }
-        );
 
         $this->onViewRegistered();
     }
@@ -544,15 +490,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     }
 
     /**
-     * Where relevant a presenter may realise another present is better doing the
-     * work for the given request.
-     */
-    protected function getSubPresenter()
-    {
-
-    }
-
-    /**
      * Pass Display Identifier from View
      *
      * @return string
@@ -560,88 +497,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     public function getDisplayIdentifier()
     {
         return $this->view->getDisplayIdentifier();
-    }
-
-    /**
-     * Override this to configure how your model is applied to your view.
-     *
-     * The view should be created first through CreateView()
-     *
-     * @see Presenter::createView()
-     */
-    protected function applyModelToView()
-    {
-        $this->view->setIndex($this->viewIndex);
-    }
-
-    public final function applyModelsToViews()
-    {
-        $this->applyModelToView();
-        $this->view->applyModelsToViews();
-        $this->onModelAppliedToView();
-    }
-
-    protected function onModelAppliedToView()
-    {
-
-    }
-
-    /**
-     * Returns the list of properties that should appear in the model.
-     *
-     * This does seem like duplicated effort as ModelState has a similar convention however the burden of creating
-     * a separate model object for every presenter just to set this data is overkill
-     *
-     * @return array
-     */
-    protected function getPublicModelPropertyList()
-    {
-        return ["PresenterName", "presenterPath"];
-    }
-
-    /**
-     * Returns an array of model data permitted for sending to a client.
-     *
-     * @see getPublicModelPropertyList()
-     * @return array
-     */
-    protected final function getPublicModelData()
-    {
-        $publicProperties = $this->getPublicModelPropertyList();
-        $data = $this->model->exportRawData();
-
-        $publicData = [];
-
-        foreach ($publicProperties as $property) {
-            if (isset($data[$property])) {
-                $publicData[$property] = $data[$property];
-            }
-        }
-
-        return $publicData;
-    }
-
-    /**
-     * Returns true if the presenter has been configured such that it can't be re-instantiated perfectly
-     * from the public model.
-     *
-     * @return bool
-     */
-    public function isConfigured()
-    {
-        $properties = $this->getPublicModelPropertyList();
-
-        $data = $this->model->exportRawData();
-
-        $keys = array_keys($data);
-
-        $result = array_diff($keys, $properties);
-
-        if (sizeof($result) > 0) {
-            return true;
-        }
-
-        return $this->hasExternallyAttachedEventHandlers();
     }
 
     /**
@@ -662,37 +517,11 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      * Note that this will not be called if a previous view has been registered.
      *
      * @see Presenter::registerView()
+     * @return View
      */
     protected function createView()
     {
-
-    }
-
-    /**
-     * Called to initialise the view.
-     *
-     * This method should be used to attach any event handlers. The view must first be created
-     * using CreateView
-     *
-     * Do not apply any settings that might be overriden with default values in ApplyModelToView() or that
-     * need to use the model. The reason for this is that after the view is initialised events are
-     * processed that might change the model or view directly. Just before presenting the view we
-     * call ApplyModelToView() to apply any remaining settings to the view (usually model data). If we apply the
-     * model data too early it will be re-applied just before presentation with results that can sometimes
-     * be hard to predict.
-     *
-     * @see Presenter::createView()
-     * @see Presenter::updateView()
-     */
-    protected function configureView()
-    {
-        $this->view->suppressContent = $this->suppressContent;
-    }
-
-    public function setSuppressContent($suppress)
-    {
-        $this->view->suppressContent = $suppress;
-        $this->suppressContent = $suppress;
+        return null;
     }
 
     /**
@@ -701,15 +530,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     public function rePresent()
     {
         $this->rePresent = true;
-    }
-
-    protected function getEventHostClassName()
-    {
-        if ($this->atomic) {
-            return get_class($this);
-        }
-
-        return "";
     }
 
     public static $rePresenting = false;
@@ -724,11 +544,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             throw new ImplementationException("Your presenter has no view.");
         }
 
-        $this->fetchBoundData();
-        $this->beforeRenderView();
-        $this->applyModelToView();
-        $this->onModelAppliedToView();
+        $this->model->isRootPresenter = $this->isExecutionTarget && !$this->hosted;
 
+        $this->beforeRenderView();
         print $this->view->renderView();
     }
 
@@ -743,37 +561,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     }
 
     /**
-     * Dispatches a command to a function that can deal with it.
-     *
-     * Functions to handle commands should be of the form Command{CommandName}
-     * e.g CommandDeleteCustomer.
-     *
-     * This convention means all presenter commands are alphabetically grouped in the IDE
-     * inspectors and guarantees the
-     *
-     * All arguments apart from the first are passed to the function.
-     *
-     * @param $command
-     */
-    public final function dispatchCommand($command)
-    {
-        if (!$this->initialised) {
-            // Make sure the presenter is initialised.
-            $this->initialise();
-        }
-
-        $functionName = "Command" . $command;
-
-        $args = func_get_args();
-        $args = array_slice($args, 1);
-
-        if (method_exists($this, $functionName)) {
-            call_user_func_array([$this, $functionName], $args);
-        }
-    }
-
-    /**
      * Parses the request for any command actions.
+     *
+     * @param WebRequest $request
      */
     protected function parseRequestForCommand()
     {
@@ -794,7 +584,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
         $this->processStartupEvents();
 
-        $path = $this->getIndexedPresenterPath();
+        $path = $this->model->indexedPresenterPath;
 
         /**
          * @var WebRequest $request
@@ -819,18 +609,20 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             }
         }
 
+        $request = Request::current();
+
         if (sizeof($indexes) > 0) {
             foreach ($indexes as $index) {
                 $this->viewIndex = $index;
 
-                $this->parseRequestForCommand();
+                $this->parseRequestForCommand($request);
                 $this->view->processUserInterfaceEvents();
                 $this->parseRequestForEvent();
             }
 
             $this->viewIndex = "";
         } else {
-            $this->parseRequestForCommand();
+            $this->parseRequestForCommand($request);
             $this->view->processUserInterfaceEvents();
             $this->parseRequestForEvent();
         }
@@ -850,16 +642,16 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
         $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_mvpEventTarget"]);
 
-        if (stripos($targetWithoutIndexes, $this->presenterPath) !== false) {
+        if (stripos($targetWithoutIndexes, $this->model->presenterPath) !== false) {
             $requestTargetParts = explode("_", $_REQUEST["_mvpEventTarget"]);
-            $pathParts = explode("_", $this->presenterPath);
+            $pathParts = explode("_", $this->model->presenterPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
                 $this->viewIndex = $match[1];
             }
         }
 
-        if ($targetWithoutIndexes == $this->presenterPath) {
+        if ($targetWithoutIndexes == $this->model->presenterPath) {
             $eventName = $_REQUEST["_mvpEventName"];
             $eventTarget = $_REQUEST["_mvpEventTarget"];
             $eventArguments = [$eventName];
@@ -910,9 +702,14 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public final function displayWithIndex($index)
     {
-        $this->viewIndex = $index;
+        $this->setViewIndex($index);
+        print (string)$this;
+    }
 
-        print ( string )$this;
+    protected final function setViewIndex($index)
+    {
+        $this->viewIndex = $index;
+        $this->calculateIndexedPresenterPath();
     }
 
     /**
@@ -927,7 +724,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     {
         $this->viewIndex = $index;
 
-        return ( string )$this;
+        return (string) $this;
     }
 
     public final function __toString()
@@ -944,19 +741,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             Log::error("Unhandled " . basename(get_class($er)) . " `" . $er->getMessage() . "` in line " . $er->getLine() . " in " . $er->getFile(), 'ERROR');
             return $er->getMessage();
         }
-    }
-
-    public final function getChangedPresenterModels()
-    {
-        $models = [];
-
-        if ($this->model->hasChanged()) {
-            $models[$this->getPresenterPath()] = $this->getPublicModelData();
-        }
-
-        $models = array_merge($models, $this->view->getChangedPresenterModels());
-
-        return $models;
     }
 
     public final function recursiveRePresent()
@@ -979,7 +763,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             $html = ob_get_clean();
 
-            $html = '<htmlupdate id="' . $this->presenterPath . '">
+            $html = '<htmlupdate id="' . $this->model->presenterPath . '">
 <![CDATA[' . $html . ']]>
 </htmlupdate>';
 
@@ -1061,8 +845,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         }
 
 
-        /** @var array $modelChanges Keeps track of changes in any model or sub model. */
-        $modelChanges = [];
+        /** @var array $newState Keeps track of changes in any model or sub model. */
+        $newState = [];
 
         // If $request is passed in we are being targeted by the request itself.
         $this->isExecutionTarget = ($request != null);
@@ -1098,9 +882,8 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
         }
 
         if ($this->isExecutionTarget && $isAjax) {
-            $this->applyModelsToViews();
             $this->recursiveRePresent();
-            $modelChanges = $this->getChangedPresenterModels();
+            $newState = $this->model->getState();
         } else {
             $this->present();
         }
@@ -1117,7 +900,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
             $response = new HtmlResponse($this);
 
             if ($this->isExecutionTarget) {
-                foreach ($modelChanges as $path => $modelChange) {
+                foreach ($newState as $path => $modelChange) {
                     $html .= "<model id=\"" . $path . "\"><![CDATA[" . json_encode($modelChange) . "]]></model>";
                 }
 
@@ -1160,7 +943,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
                         registeredPresenter.raiseClientEvent.apply(registeredPresenter, $eventParams);
                     }
 JS;
-                ResourceLoader::addScriptCodeOnReady($javascript);
+                ResourceLoader::addScriptCode($javascript);
             }
         }
 
@@ -1183,9 +966,8 @@ JS;
      */
     private function processEvents()
     {
-        $this->applyModelsToViews();
         $this->processUserInterfaceEvents();
-        $this->processDelayedEvents();
+        $this->processAfterEventsCallbacks();
     }
 
     /**
@@ -1204,10 +986,8 @@ JS;
         if (!$this->initialised) {
             $this->initialised = true;
             $this->initialiseModel();
+            $this->model->indexedPresenterPath = $this->model->presenterPath;
             $this->initialiseView();
-
-            // Snapshot the model so we can track if it changes during execution.
-            $this->model->takeChangeSnapshot();
         }
     }
 
@@ -1249,8 +1029,6 @@ JS;
             $this->restoreModel();
         }
 
-        $this->configureView();
-
         $this->view->createPresenters();
     }
 
@@ -1266,18 +1044,18 @@ JS;
         $state = $this->view->getPropagatedState();
 
         $request = Request::current();
-        $state = $request->post($this->presenterPath . "State");
+        $state = $request->post($this->model->presenterPath . "State");
 
         if ($state != null) {
             if (is_string($state)) {
-                $this->model->fromStateData(json_decode($state, true));
+                $this->model->restoreFromState(json_decode($state, true));
             }
         }
     }
 
     public function getRestoredModel()
     {
-        $id = $this->presenterPath;
+        $id = $this->model->presenterPath;
 
 
     }
@@ -1308,7 +1086,7 @@ JS;
      */
     public final function fetchBoundData()
     {
-        $data = $this->raiseEvent("GetBoundData", $this->presenterName, $this->viewIndex);
+        $data = $this->raiseEvent("GetBoundData", $this->model->presenterName, $this->viewIndex);
 
         if ($data !== null) {
             $this->applyBoundData($data);
@@ -1324,7 +1102,7 @@ JS;
     {
         $data = $this->extractBoundData();
 
-        $this->raiseEvent("SetBoundData", $this->presenterName, $data, $this->viewIndex);
+        $this->raiseEvent("SetBoundData", $this->model->presenterName, $data, $this->viewIndex);
     }
 
     /**

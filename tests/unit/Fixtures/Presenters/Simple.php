@@ -10,33 +10,25 @@ class Simple extends Presenter
     {
         parent::__construct("Simple");
 
-        $this->attachEventHandler("FirstEvent", function () {
+        $this->model->firstEvent->attachHandler(function () {
             $this->lastEventProcessed = "FirstEvent";
         });
 
-        $this->attachEventHandler("SecondEvent", function () {
+        $this->model->secondEvent->attachHandler(function () {
             $this->lastEventProcessed = "SecondEvent";
         });
     }
 
-    public function removeEventHandlers()
+    /**
+     * The overriding class should implement to return a model class that extends PresenterModel
+     *
+     * This is normally done with an anonymous class for convenience
+     *
+     * @return PresenterModel
+     */
+    protected function createModel()
     {
-        $this->clearEventHandlers();
-    }
-
-    protected function getPublicModelPropertyList()
-    {
-        $properties = parent::getPublicModelPropertyList();
-        $properties[] = "ModelSetting";
-
-        return $properties;
-    }
-
-    public $supportsLatePresenterRegistration = false;
-
-    protected function supportsLateSubPresenterRegistration()
-    {
-        return $this->supportsLatePresenterRegistration;
+        return new SimpleModel();
     }
 
     protected function parseRequestForCommand()
@@ -44,8 +36,11 @@ class Simple extends Presenter
         parent::parseRequestForCommand();
 
         // Fire two events for our unit test.
-        $this->raiseDelayedEvent("FirstEvent");
-        $this->raiseEvent("SecondEvent");
+        $this->runAfterEventsProcessed(function(){
+            $this->model->firstEvent->raise();
+        });
+
+        $this->model->secondEvent->raise();
     }
 
     /**
@@ -57,6 +52,12 @@ class Simple extends Presenter
 
     protected function createView()
     {
+        $this->model->saveEvent->attachHandler(function () {
+            $this->save();
+        });
+
+        $this->model->text = "Don't change this content - it should match the unit test.";
+
         return new SimpleView();
     }
 
@@ -65,24 +66,13 @@ class Simple extends Presenter
         return $this->subPresenters;
     }
 
-    protected function configureView()
-    {
-        parent::configureView();
-
-        $this->view->attachEventHandler("Save", function () {
-            $this->save();
-        });
-
-        $this->view->setText("Don't change this content - it should match the unit test.");
-    }
-
     protected function save()
     {
 
     }
 
-    protected function commandUpdateText($text = "The text has changed!")
+    public function updateText($text = "The text has changed!")
     {
-        $this->view->setText($text);
+        $this->model->text = $text;
     }
 }

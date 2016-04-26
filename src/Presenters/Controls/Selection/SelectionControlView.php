@@ -18,11 +18,11 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\Selection;
 
-require_once __DIR__ . "/../JQueryControlView.php";
+require_once __DIR__ . "/../ControlView.php";
 
-use Rhubarb\Leaf\Presenters\Controls\JQueryControlView;
+use Rhubarb\Leaf\Presenters\Controls\ControlView;
 
-class SelectionControlView extends JQueryControlView
+class SelectionControlView extends ControlView
 {
     protected $availableItems = [];
 

@@ -27,7 +27,7 @@ class FormPagerView extends PagerView
         parent::printViewContent();
 
         ?>
-        <input type="hidden" name="<?= $this->presenterPath; ?>-page" class="page-input" value=""/>
+        <input type="hidden" name="<?= $this->model->presenterPath; ?>-page" class="page-input" value=""/>
         <?php
     }
 }

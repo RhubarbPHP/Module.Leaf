@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e4e41ba986ad9ea954349666176138b7",
+    "hash": "d68757f70b5605b20001e5cce37c0258",
     "packages": [
         {
             "name": "rhubarbphp/rhubarb",
-            "version": "dev-master",
+            "version": "dev-feature/Events",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RhubarbPHP/Rhubarb.git",
-                "reference": "2db14d631050b1bb9ea9dd15ad911fdef9ba5dc5"
+                "reference": "0aaa995dc022cd86867666fbe14188f9c66c8a8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RhubarbPHP/Rhubarb/zipball/2db14d631050b1bb9ea9dd15ad911fdef9ba5dc5",
-                "reference": "2db14d631050b1bb9ea9dd15ad911fdef9ba5dc5",
+                "url": "https://api.github.com/repos/RhubarbPHP/Rhubarb/zipball/0aaa995dc022cd86867666fbe14188f9c66c8a8f",
+                "reference": "0aaa995dc022cd86867666fbe14188f9c66c8a8f",
                 "shasum": ""
             },
             "require": {
@@ -33,12 +33,12 @@
                 "sebastian/phpcpd": "^2.0.0",
                 "squizlabs/php_codesniffer": "^2.0.0",
                 "tan-tan-kanarek/github-php-client": "dev-master as 1.0",
-                "theseer/phpdox": "*"
+                "theseer/phpdox": "0.8.1.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.0-dev"
                 }
             },
             "autoload": {
@@ -57,7 +57,7 @@
                 "framework",
                 "php"
             ],
-            "time": "2016-04-25 10:36:07"
+            "time": "2016-04-26 19:31:27"
         }
     ],
     "packages-dev": [
@@ -1940,7 +1940,14 @@
             "time": "2016-03-04 07:55:57"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "1.0.0",
+            "alias_normalized": "1.0.0.0",
+            "version": "dev-feature/Events",
+            "package": "rhubarbphp/rhubarb"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "rhubarbphp/rhubarb": 20

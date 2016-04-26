@@ -94,7 +94,7 @@ class Pager extends HtmlPresenter
 
     protected function parseRequestForCommand()
     {
-        $key = $this->presenterPath . "-page";
+        $key = $this->model->presenterPath . "-page";
 
         $request = Request::current();
 
@@ -128,7 +128,7 @@ class Pager extends HtmlPresenter
         $this->view->setNumberOfPages($this->NumberOfPages);
         $this->view->setNumberPerPage($this->model->PerPage);
         $this->view->setPageNumber($this->model->PageNumber);
-        $this->view->setPath($this->presenterPath);
+        $this->view->setPath($this->model->presenterPath);
 
         parent::beforeRenderView();
     }

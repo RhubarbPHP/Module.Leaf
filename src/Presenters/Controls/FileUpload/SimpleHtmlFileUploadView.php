@@ -65,7 +65,7 @@ class SimpleHtmlFileUploadView extends ControlView
 
         ?>
         <input type="file" name="<?= $this->getIndexedPresenterPath(); ?>" id="<?= $this->getIndexedPresenterPath(); ?>"
-               presenter-name="<?= $this->presenterName ?>"<?= $accepts . $this->getHtmlAttributeTags() . $this->getClassTag() ?>/>
+               presenter-name="<?= $this->model->presenterName ?>"<?= $accepts . $this->getHtmlAttributeTags() . $this->getClassTag() ?>/>
         <?php
     }
 }

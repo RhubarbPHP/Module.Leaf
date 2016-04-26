@@ -10,7 +10,7 @@ use Rhubarb\Leaf\Presenters\Controls\Text\Password\Password;
 use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
 use Rhubarb\Leaf\Presenters\Forms\MvpRestBoundForm;
 use Rhubarb\Leaf\UrlHandlers\MvpRestHandler;
-use Rhubarb\Leaf\Views\HtmlView;
+use Rhubarb\Leaf\Views\View;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnumColumn;
 use Rhubarb\Stem\Tests\Fixtures\User;
@@ -109,6 +109,6 @@ class ModelBoundTestForm extends MvpRestBoundForm
 
     protected function createView()
     {
-        return new HtmlView();
+        return new View();
     }
 }

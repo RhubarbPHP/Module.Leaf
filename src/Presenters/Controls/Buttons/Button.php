@@ -18,7 +18,7 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\Buttons;
 
-require_once __DIR__ . "/../JQueryControlView.php";
+require_once __DIR__ . "/../ControlView.php";
 
 use Rhubarb\Crown\Exceptions\ImplementationException;
 use Rhubarb\Crown\Request\Request;

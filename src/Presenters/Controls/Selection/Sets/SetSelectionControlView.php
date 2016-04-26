@@ -64,7 +64,7 @@ abstract class SetSelectionControlView extends SelectionControlView
      */
     public function getItemOptionHtml($value, $label, $item, $classSuffix = "")
     {
-        $name = $this->presenterPath;
+        $name = $this->model->presenterPath;
         $id = $this->getInputId($name, $value);
 
         $inputHtml = $this->getInputHtml($name, $value, $item, $id);

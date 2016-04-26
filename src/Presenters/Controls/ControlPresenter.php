@@ -21,8 +21,8 @@ namespace Rhubarb\Leaf\Presenters\Controls;
 require_once __DIR__ . "/../SpawnableByViewBridgePresenter.php";
 
 use Rhubarb\Crown\Request\Request;
-use Rhubarb\Crown\String\StringTools;
-use Rhubarb\Leaf\Presenters\PresenterModel;
+use Rhubarb\Leaf\Presenters\BindablePresenterInterface;
+use Rhubarb\Leaf\Presenters\BindablePresenterTrait;
 use Rhubarb\Leaf\Presenters\SpawnableByViewBridgePresenter;
 
 /**
@@ -30,88 +30,45 @@ use Rhubarb\Leaf\Presenters\SpawnableByViewBridgePresenter;
  *
  * Adds data binding support to a hosting presenter's model.
  *
- * @property string $CssClassNames The names of the CSS classes to pass to our view.
  */
-class ControlPresenter extends SpawnableByViewBridgePresenter
+class ControlPresenter extends SpawnableByViewBridgePresenter implements BindablePresenterInterface
 {
-    protected $label = "";
+    use BindablePresenterTrait;
+
+    /**
+     * @var ControlModel
+     */
+    public $model;
 
     public function setLabel($labelText)
     {
-        $this->label = $labelText;
+        $this->model->label = $labelText;
     }
 
     public function addCssClassNames($classNames = [])
     {
-        $classes = $this->CssClassNames;
-
-        if (!is_array($classes)) {
-            $classes = [];
-        }
-
-        $classes = array_merge($classes, $classNames);
-        $this->CssClassNames = $classes;
+        $this->model->addCssClassNames($classNames);
     }
 
     public function addCssClassName($className)
     {
-        $this->addCssClassNames([$className]);
+        $this->model->addCssClassName($className);
     }
 
     public function addHtmlAttribute($attributeName, $attributeValue)
     {
-        $attributes = $this->HtmlAttributes;
-
-        if (!is_array($attributes)) {
-            $attributes = [];
-        }
-
-        $attributes[$attributeName] = $attributeValue;
-
-        $this->HtmlAttributes = $attributes;
-    }
-
-    protected function applyModelToView()
-    {
-        $this->view->cssClassNames = $this->CssClassNames;
-        $this->view->htmlAttributes = $this->HtmlAttributes;
-
-        parent::applyModelToView();
-    }
-
-    protected function applyBoundData($data)
-    {
-        $this->model->Value = $data;
-    }
-
-    protected function extractBoundData()
-    {
-        return $this->model->Value;
+        $this->model->addHtmlAttribute($attributeName, $attributeValue);
     }
 
     protected function parseRequestForCommand()
     {
         $request = Request::current();
-        $values = $request->post($this->getIndexedPresenterPath());
+        $values = $request->post($this->model->indexedPresenterPath);
 
         if ($values !== null) {
-            $this->model->Value = $values;
-            $this->setBoundData();
+            $this->model->value = $values;
+            $this->bindingValueChangedEvent->raise();
         }
-    }
-
-    /**
-     * Returns a label that the hosting view can use in the HTML output.
-     *
-     * @return string
-     */
-    public function getLabel()
-    {
-        if ($this->label != "") {
-            return $this->label;
-        }
-
-        return StringTools::wordifyStringByUpperCase($this->getName());
     }
 
     /**
@@ -124,5 +81,15 @@ class ControlPresenter extends SpawnableByViewBridgePresenter
     protected function createModel()
     {
         return new ControlModel();
+    }
+
+    public function getBindingValue()
+    {
+        return $this->model->value;
+    }
+
+    public function setBindingValue($bindingValue)
+    {
+        return $this->model->value = $bindingValue;
     }
 }

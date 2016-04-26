@@ -51,7 +51,7 @@ class CheckBoxView extends ControlView
         ?>
         <input type="checkbox" value="1" name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
                id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"<?= $checked; ?>
-               presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() ?> />
+               presenter-name="<?= \htmlentities($this->model->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() ?> />
         <?php
     }
 

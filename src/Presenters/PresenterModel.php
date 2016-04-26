@@ -21,8 +21,29 @@ namespace Rhubarb\Leaf\Presenters;
 /**
  * The foundation of all model objects
  */
-abstract class PresenterModel
+class PresenterModel
 {
+    /**
+     * @var string The name of the presenter
+     */
+    public $presenterName;
+
+    /**
+     * @var string The full path hierarchy to uniquely identify this presenter
+     */
+    public $presenterPath;
+
+    /**
+     * @var string The full path heirarchy to uniquely identify this presenter along with the currently displayed
+     * view index.
+     */
+    public $indexedPresenterPath;
+
+    /**
+     * @var bool True if the view is the root presenter on the page.
+     */
+    public $isRootPresenter = false;
+
     /**
      * Returns an array of **publicly viewable** state data required to persist the state or provide state
      * information to a client side view bridge.
@@ -31,7 +52,21 @@ abstract class PresenterModel
      */
     public function getState()
     {
-        return [];
+        $state = get_object_vars($this);
+
+        $publicState = array_intersect_key($state, $this->getExposableModelProperties());
+
+        return $publicState;
+    }
+
+    /**
+     * Return the list of properties that can be exposed publically
+     *
+     * @return array
+     */
+    protected function getExposableModelProperties()
+    {
+        return ["presenterName", "presenterPath"];
     }
 
     /**
@@ -40,6 +75,12 @@ abstract class PresenterModel
      */
     public function restoreFromState($stateData)
     {
+        $publicProperties = $this->getExposableModelProperties();
 
+        foreach($publicProperties as $key){
+            if (isset($stateData[$key])){
+                $this->$key = $stateData[$key];
+            }
+        }
     }
 }

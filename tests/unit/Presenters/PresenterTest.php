@@ -65,39 +65,19 @@ class PresenterTest extends RhubarbTestCase
 
         $this->assertCount(2, $subPresenters);
 
-        $this->assertEquals("Simple_Forename", $subPresenters["Forename"]->presenterPath);
-        $this->assertEquals("Simple_Forename2", $subPresenters["Forename2"]->presenterPath);
+        $this->assertEquals("Simple_Forename", $subPresenters["Forename"]->model->presenterPath);
+        $this->assertEquals("Simple_Forename2", $subPresenters["Forename2"]->model->presenterPath);
 
-    }
-
-    public function testPresenterHandlesCommand()
-    {
-        $simple = new Simple();
-        $simple->dispatchCommand("UpdateText");
-
-        $html = $simple->generateResponse();
-
-        $this->assertEquals("The text has changed!", $html);
-    }
-
-    public function testPresenterHandlesCommandWithParameter()
-    {
-        $simple = new Simple();
-        $simple->dispatchCommand("UpdateText", "Some param text");
-
-        $html = $simple->generateResponse();
-
-        $this->assertEquals("Some param text", $html);
     }
 
     public function testPresenterCanBePrintedWithToString()
     {
         $simple = new Simple();
-        $simple->dispatchCommand("UpdateText", "Some param text");
+        $simple->updateText("Some param text");
 
         $html = (string)$simple;
 
-        $this->assertEquals("Some param text", $html);
+        $this->assertContains("Some param text", $html);
     }
 
     public function testDelayedEventRunsAfterOtherEvents()
@@ -121,7 +101,7 @@ class PresenterTest extends RhubarbTestCase
 
         // To simulate the posting of state data we're going to encode the state and set it in our
         // post data for next instance of it to pick up.
-        $state = '{"TestValue":"abc123"}';
+        $state = '{"testValue":"abc123"}';
 
         $request = Request::current();
         $request->postData[$simple->getPresenterPath() . "State"] = $state;
@@ -129,100 +109,45 @@ class PresenterTest extends RhubarbTestCase
         $simple = new UnitTestStatefulPresenter();
         $simple->initialise();
 
-        $this->assertEquals("abc123", $simple->model->TestValue);
+        $this->assertEquals("abc123", $simple->model->testValue);
     }
 
     public function testDataBinding()
     {
         $request = Request::current();
         // Test model binding 'get'
-        $host = new UnitTestSwitchedPresenter();
+        $host = new Simple();
 
         $html = $host->generateResponse($request);
 
         // The switched presenters model has Forename initialised to John. This test make sures that
         // the text box on the details presenter shows John.
-        $this->assertEquals("John", UnitTestTextBox::$textBoxValue);
+        $this->assertContains("John", $html);
 
         // Test model binding 'set'
         $request = Request::current();
-        $request->postData["UnitTestSwitchedPresenter_Details_Forename"] = "Jeremy";
+        $request->postData["Simple_Forename"] = "Jeremy";
 
-        $host = new UnitTestSwitchedPresenter();
+        $host = new Simple();
 
         $host->generateResponse($request);
 
         $this->assertEquals("Jeremy", $host->model->Forename);
     }
 
-    /*
-     * Suspended while validation is in flux
-    public function testPresenterValidates()
-    {
-        $simple = new Simple();
-        $simple->Forename = "";
-        $simple->Surname = "";
-
-        $validator = new Validator();
-        $validator->validations[] = new HasValue( "Forename" );
-        $validator->validations[] = new HasValue( "Surname" );
-
-        $result = $simple->validate( $validator );
-
-        $this->assertFalse( $result );
-
-        // Check that we can get the validation error.
-        $errors = $simple->getValidationErrorsByName( "Forename" );
-
-        $this->assertCount( 1, $errors );
-        $this->assertInstanceOf( "Rhubarb\Stem\Models\Validation\ValidationError", $errors[0] );
-    }
-    */
-
-    public function testPresenterMarkedAsConfigured()
-    {
-        $presenter = new Simple();
-        $presenter->removeEventHandlers();
-
-        $this->assertFalse($presenter->isConfigured());
-
-        $presenter->ModelSetting = "abc";
-
-        $this->assertFalse($presenter->isConfigured());
-
-        $presenter->ConfiguredSetting = "abc";
-
-        $this->assertTrue($presenter->isConfigured());
-    }
-
-    public function testPresenterGetsChangedModels()
-    {
-        SubPresenterTest::$hosted = new Hosted("Goats");
-        SubPresenterTest::$hostedView = new UnitTestView();
-
-        $presenter = new Host();
-        $presenter->generateResponse();
-
-        $hosted = SubPresenterTest::$hosted;
-        $hosted->NumberOfGoats = 999;
-
-        $models = $presenter->getChangedPresenterModels();
-
-        $this->assertCount(1, $models);
-        $this->assertArrayHasKey("Host_Goats", $models);
-        $this->assertEquals(999, $models["Host_Goats"]["NumberOfGoats"]);
-    }
-
     public function testDisplayWithIndex()
     {
-        $host = new UnitTestSwitchedPresenter();
+        $host = new Simple();
         $host->test();
-
-        $presenter = DetailsView::$forename;
 
         ob_start();
 
-        $host->Forename = [4 => "def"];
+        $host->model->Forename = [4 => "def"];
+
+        /**
+         * @var Presenter $presenter
+         */
+        $presenter = $host->getSubPresenters()["Forename"];
         $presenter->displayWithIndex("4");
 
         $content = ob_get_clean();
@@ -398,10 +323,7 @@ class Host extends Presenter
      */
     protected function createModel()
     {
-        return new class extends PresenterModel
-        {
-
-        };
+        return new PresenterModel();
     }
 }
 

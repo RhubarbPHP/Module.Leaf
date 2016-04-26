@@ -35,7 +35,7 @@ class TextAreaView extends TextBoxView
         <textarea rows="<?= $this->rows; ?>" cols="<?= $this->cols; ?>"
                   name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
                   id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>"
-                  presenter-name="<?= \htmlentities($this->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() . $placeholderText ?>><?= $this->text; ?></textarea>
+                  presenter-name="<?= \htmlentities($this->model->presenterName); ?>"<?= $this->getHtmlAttributeTags() . $this->getClassTag() . $placeholderText ?>><?= $this->text; ?></textarea>
         <?php
     }
 }

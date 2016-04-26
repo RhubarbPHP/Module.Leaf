@@ -27,22 +27,14 @@ use Rhubarb\Leaf\Presenters\PresenterModel;
 
 class TextBoxView extends ControlView
 {
-    protected $htmlType = "text";
-
-    protected $placeholderText = "";
-
-    protected $allowBrowserAutoComplete = true;
-
     /**
-     * @var ControlModel
+     * @var TextBoxModel
      */
     protected $model;
 
-    public function __construct(PresenterModel $model, $htmlType = "text")
+    public function __construct($htmlType = "text")
     {
-        parent::__construct($model);
-
-        $this->htmlType = $htmlType;
+        parent::__construct();
 
         $this->requiresContainer = false;
         $this->requiresStateInputs = false;
@@ -61,35 +53,17 @@ class TextBoxView extends ControlView
         return "TextBoxViewBridge";
     }
 
-    public function setText($text)
-    {
-        $this->model->value = $text;
-    }
-
-    public function setAllowBrowserAutoComplete($allowBrowserAutoComplete)
-    {
-        $this->allowBrowserAutoComplete = $allowBrowserAutoComplete;
-    }
-
-    /**
-     * @param string $placeholderText
-     */
-    public function setPlaceholderText($placeholderText)
-    {
-        $this->placeholderText = $placeholderText;
-    }
-
     public function printViewContent()
     {
         $maxLength = ($this->maxLength) ? "maxlength=\"" . $this->maxLength . "\"" : "";
-        $autoCompleteAttribute = (!$this->allowBrowserAutoComplete) ? " autocomplete=\"off\"" : "";
+        $autoCompleteAttribute = (!$this->model->allowBrowserAutoComplete) ? " autocomplete=\"off\"" : "";
 
-        $placeholderText = $this->placeholderText ? ' placeholder="' . \htmlentities($this->placeholderText) . '"' : "";
+        $placeholderText = $this->model->placeholderText ? ' placeholder="' . \htmlentities($this->model->placeholderText) . '"' : "";
         ?>
-        <input type="<?= \htmlentities($this->htmlType); ?>" size="<?= $this->size; ?>" <?= $maxLength; ?>
+        <input type="<?= \htmlentities($this->model->inputHtmlType); ?>" size="<?= $this->size; ?>" <?= $maxLength; ?>
                name="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" value="<?= \htmlentities($this->model->value); ?>"
                id="<?= \htmlentities($this->getIndexedPresenterPath()); ?>" presenter-name="<?= \htmlentities(
-            $this->presenterName
+            $this->model->presenterName
         ); ?>"<?= $autoCompleteAttribute . $this->getHtmlAttributeTags() . $placeholderText . $this->getClassTag() ?> />
         <?php
     }
@@ -111,10 +85,10 @@ class TextBoxView extends ControlView
     public function getSpawnSettings()
     {
         $settings = parent::getSpawnSettings();
-        $settings["type"] = $this->htmlType;
-        $settings["size"] = $this->size;
-        $settings["maxLength"] = $this->maxLength;
-        $settings["allowBrowserAutoComplete"] = $this->allowBrowserAutoComplete;
+        $settings["type"] = $this->model->htmlType;
+        $settings["size"] = $this->model->size;
+        $settings["maxLength"] = $this->model->maxLength;
+        $settings["allowBrowserAutoComplete"] = $this->model->allowBrowserAutoComplete;
 
         return $settings;
     }

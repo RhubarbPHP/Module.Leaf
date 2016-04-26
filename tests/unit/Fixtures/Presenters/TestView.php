@@ -2,19 +2,16 @@
 
 namespace Rhubarb\Leaf\Tests\Fixtures\Presenters;
 
-use Rhubarb\Leaf\Views\HtmlView;
+use Rhubarb\Leaf\Views\View;
 
-class TestView extends HtmlView
+class TestView extends View
 {
     public function __construct($requireContainer = true, $requireState = true)
     {
+        parent::__construct();
+        
         $this->requiresContainer = $requireContainer;
         $this->requiresStateInputs = $requireState;
-    }
-
-    public function testRaiseEventOnViewBridge()
-    {
-        $this->raiseEventOnViewBridge("TestEvent", 123, 234);
     }
 
     public function printViewContent()

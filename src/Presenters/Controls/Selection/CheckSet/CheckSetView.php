@@ -28,7 +28,7 @@ class CheckSetView extends SetSelectionControlView
     {
         $checked = ($this->isValueSelected($value)) ? ' checked="checked"' : '';
 
-        return '<input type="checkbox" name="' . htmlentities($name) . '[]" value="' . htmlentities($value) . '" presenter-name="' . htmlentities($this->presenterName) . '" id="' . htmlentities($this->getInputId($name,
+        return '<input type="checkbox" name="' . htmlentities($name) . '[]" value="' . htmlentities($value) . '" presenter-name="' . htmlentities($this->model->presenterName) . '" id="' . htmlentities($this->getInputId($name,
             $value)) . '"' . $checked . '>';
     }
 

@@ -28,19 +28,22 @@ use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
  */
 class TextBox extends ControlPresenter
 {
-    protected $size = 40;
-    protected $maxLength;
-    protected $allowBrowserAutoComplete = true;
-    protected $defaultValue = "";
-    protected $placeholderText = "";
-    protected $inputHtmlType;
+    /**
+     * @var TextBoxModel
+     */
+    public $model;
 
     public function __construct($name = "", $size = 40, $inputHtmlType = 'text')
     {
         parent::__construct($name);
 
-        $this->size = $size;
-        $this->inputHtmlType = $inputHtmlType;
+        $this->model->size = $size;
+        $this->model->inputHtmlType = $inputHtmlType;
+    }
+
+    protected function createModel()
+    {
+        return new TextBoxModel();
     }
 
     /**
@@ -48,10 +51,10 @@ class TextBox extends ControlPresenter
      */
     public function setDefaultValue($defaultValue)
     {
-        $this->defaultValue = $defaultValue;
+        $this->model->defaultValue = $defaultValue;
 
-        if (!$this->Text) {
-            $this->Text = $this->defaultValue;
+        if (!$this->model->value) {
+            $this->model->value = $this->defaultValue;
         }
     }
 
@@ -60,7 +63,7 @@ class TextBox extends ControlPresenter
      */
     public function getDefaultValue()
     {
-        return $this->defaultValue;
+        return $this->model->defaultValue;
     }
 
     /**
@@ -68,7 +71,7 @@ class TextBox extends ControlPresenter
      */
     public function setPlaceholderText($placeholderText)
     {
-        $this->placeholderText = $placeholderText;
+        $this->model->placeholderText = $placeholderText;
     }
 
     /**
@@ -76,76 +79,30 @@ class TextBox extends ControlPresenter
      */
     public function getPlaceholderText()
     {
-        return $this->placeholderText;
+        return $this->model->placeholderText;
     }
 
     protected function createView()
     {
-        return new TextBoxView($this->model, $this->inputHtmlType);
+        return new TextBoxView();
     }
 
     public function setSize($size)
     {
-        $this->size = $size;
+        $this->model->size = $size;
 
         return $this;
     }
 
     public function setMaxLength($length)
     {
-        $this->maxLength = $length;
+        $this->model->maxLength = $length;
 
         return $this;
     }
 
     public function setAllowBrowserAutoComplete($allowBrowserAutoComplete)
     {
-        $this->allowBrowserAutoComplete = $allowBrowserAutoComplete;
-    }
-
-    protected function applyBoundData($data)
-    {
-        if ($data === null) {
-            $data = $this->defaultValue;
-        }
-
-        $this->model->Text = $data;
-    }
-
-    protected function extractBoundData()
-    {
-        return $this->model->Text;
-    }
-
-    protected function applyModelToView()
-    {
-        parent::applyModelToView();
-
-        $this->view->setText($this->model->Text);
-        $this->view->setSize($this->size);
-        $this->view->setPlaceholderText($this->placeholderText);
-        $this->view->setAllowBrowserAutoComplete($this->allowBrowserAutoComplete);
-
-        if ($this->maxLength) {
-            $this->view->setMaxLength($this->maxLength);
-        }
-    }
-
-    protected function parseRequestForCommand()
-    {
-        $request = Request::current();
-        $text = $request->post($this->getIndexedPresenterPath());
-
-        if ($text !== null) {
-            $this->model->Text = $text;
-            $this->setBoundData();
-        }
-    }
-
-    protected function initialiseModel()
-    {
-        parent::initialiseModel();
-
-        $this->model->value = "";
+        $this->model->allowBrowserAutoComplete = $allowBrowserAutoComplete;
     }
 }

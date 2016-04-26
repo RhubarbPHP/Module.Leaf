@@ -18,10 +18,11 @@
 
 namespace Rhubarb\Leaf\Presenters\Forms;
 
-require_once __DIR__ . "/../HtmlPresenter.php";
+require_once __DIR__ . "/../Presenter.php";
 require_once __DIR__ . "/../ModelProvider.php";
 
-use Rhubarb\Leaf\Presenters\HtmlPresenter;
+use Rhubarb\Leaf\Presenters\Presenter;
+use Rhubarb\Leaf\Presenters\PresenterModel;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 
 /**
@@ -29,16 +30,12 @@ use Rhubarb\Leaf\Presenters\ModelProvider;
  *
  * This basic plumbing allows for HTTP post to initiate commands on the presenter.
  */
-class Form extends HtmlPresenter
+class Form extends Presenter
 {
     use ModelProvider;
 
-    public function __construct($name = "")
+    public function createModel()
     {
-        if ($name == "") {
-            $name = basename(str_replace("\\", "/", get_class($this)));
-        }
-
-        parent::__construct($name);
+        return new PresenterModel();
     }
 }
