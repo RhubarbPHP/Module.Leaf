@@ -1009,6 +1009,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
     public final function __toString()
     {
+        $levelBefore = ob_get_level();
         try {
             $response = $this->generateResponse();
 
@@ -1018,6 +1019,12 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             return $response;
         } catch (\Exception $er) {
+            $levelAfter = ob_get_level();
+            while ($levelAfter > $levelBefore) {
+                ob_end_clean();
+                $levelAfter--;
+            }
+
             Log::error("Unhandled " . basename(get_class($er)) . " `" . $er->getMessage() . "` in line " . $er->getLine() . " in " . $er->getFile(), 'ERROR');
             return $er->getMessage();
         }
