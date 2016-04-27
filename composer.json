@@ -18,7 +18,8 @@
     }
   },
   "require": {
-    "rhubarbphp/rhubarb": "dev-feature/Events as 1.0.0"
+    "rhubarbphp/rhubarb": "dev-feature/Events as 1.0.0",
+    "rhubarbphp/custard": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "2.1.*"

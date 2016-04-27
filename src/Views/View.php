@@ -46,6 +46,23 @@ class View implements Deployable
      */
     private $request;
 
+    /**
+     * A named collection of sub leafs populated by calling registerSubLeaf
+     *
+     * @see registerSubLeaf()
+     * @var Leaf[]
+     */
+    protected $leaves;
+
+    /**
+     * Tracks the number of times a leaf name has occurred for sub leafs
+     *
+     * This is used to ensure if two leaves get added with the same name, they are differentiated by a numerical suffix.
+     *
+     * @var int[]
+     */
+    private $namesUsed = [];
+
     public final function __construct(LeafModel $model)
     {
         $this->model = $model;
@@ -60,7 +77,7 @@ class View implements Deployable
 
     private function restoreStateIntoModel()
     {
-        $stateKey = $this->model->leafName."_state";
+        $stateKey = $this->getStateKey();
 
         if ($this->request){
             $state = $this->request->post($stateKey);
@@ -85,10 +102,21 @@ class View implements Deployable
 
     protected function registerSubLeaf(Leaf $subLeaf)
     {
+        $name = $subLeaf->getName();
+
+        if (isset($this->namesUsed[$name])){
+            $this->namesUsed[$name]++;
+            $name .= $this->namesUsed[$name];
+        } else {
+            $this->namesUsed[$name] = 0;
+        }
+
+        $subLeaf->setName($name);
+        $this->leaves[$name] = $subLeaf;
+
         if ($subLeaf instanceof BindableLeafInterface){
             // Setup data bindings
             $event = $subLeaf->getBindingValueChangedEvent();
-            $name = $subLeaf->getName();
 
             $event->attachHandler(function() use ($name, $subLeaf){
                 $this->model->$name = $subLeaf->getBindingValue();
@@ -121,6 +149,20 @@ class View implements Deployable
 
         $content = ob_get_clean();
 
+        $state = $this->model->getState();
+        $state = json_encode($state);
+
+        $content .= '
+<input type="hidden" name="'.$this->getStateKey().'" value="'.htmlentities($state).'" />';
+
         return $content;
+    }
+
+    /**
+     * @return string
+     */
+    private function getStateKey()
+    {
+        return $this->model->leafName . "_state";
     }
 }

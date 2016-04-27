@@ -24,7 +24,7 @@ class SubLeavesTest extends LeafTestCase
     public function testSubLeavesPrint()
     {
         $response = $this->renderLeafAndGetContent();
-        $this->assertContains("Sub View", $response);
+        $this->assertContains("name=forename", $response);
     }
 
     public function testSubLeavesWithBinding()
@@ -36,6 +36,13 @@ class SubLeavesTest extends LeafTestCase
 
         $response = $this->renderLeafAndGetContent();
         $this->assertContains("John", $response);
+    }
+
+    public function testUniqueNames()
+    {
+        $response = $this->renderLeafAndGetContent();
+        $this->assertContains("name=forename1", $response);
+
     }
 }
 
@@ -75,17 +82,18 @@ class LeafWithSubLeavesView extends View
      */
     protected $model;
 
+    private $secondForename;
+
     protected function createSubLeaves()
     {
-        $this->subLeaf = new SubLeaf("forename");
-        $this->registerSubLeaf($this->subLeaf);
+        $this->registerSubLeaf(new SubLeaf("forename"));
+        $this->registerSubLeaf($this->secondForename = new SubLeaf("forename"));
     }
-
-    private $subLeaf;
 
     protected function printViewContent()
     {
-        print $this->subLeaf;
+        print $this->leaves["forename"];
+        print $this->secondForename;
         print $this->model->forename;
     }
 }
@@ -140,7 +148,7 @@ class SubLeafView extends View
 {
     protected function printViewContent()
     {
-        print "Sub View";
+        print "name=".$this->model->leafName;
     }
 }
 

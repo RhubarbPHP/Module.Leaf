@@ -54,7 +54,12 @@ class LeafModel
     {
         $state = get_object_vars($this);
 
-        $publicState = array_intersect_key($state, $this->getExposableModelProperties());
+        $publicState = [];
+        foreach($this->getExposableModelProperties() as $property){
+            if (isset($state[$property])) {
+                $publicState[$property] = $state[$property];
+            }
+        }
 
         return $publicState;
     }

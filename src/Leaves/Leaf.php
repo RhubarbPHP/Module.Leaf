@@ -24,15 +24,6 @@ abstract class Leaf implements GeneratesResponseInterface
     protected $model;
 
     /**
-     * A name for the leaf.
-     *
-     * If no name is given the class name will be used.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
      * The WebRequest that the presenter is responding to.
      *
      * @var WebRequest
@@ -54,7 +45,6 @@ abstract class Leaf implements GeneratesResponseInterface
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
-        $this->name = $name;
         $this->model->leafName = $name;
     }
 
@@ -66,14 +56,26 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
-     * Get's the name of the leaf.
+     * Gets the name of the leaf.
      *
      * @see $name
      * @return string
      */
     public function getName()
     {
-        return $this->name;
+        return $this->model->leafName;
+    }
+
+    /**
+     * Sets the name of the leaf.
+     *
+     * @param $name string The new name for the leaf
+     * @return string
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        $this->model->leafName = $name;
     }
 
     /**

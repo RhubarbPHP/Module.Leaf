@@ -26,6 +26,14 @@ class StateTest extends LeafTestCase
         $this->assertEquals("John", $model->forename);
     }
 
+    public function testLeafOutputsState()
+    {
+        $response = $this->renderLeafAndGetContent();
+
+        $this->assertContains("LeafWithState_state", $response);
+        $this->assertContains(':&quot;Billy&quot;', $response);
+    }
+    
     /**
      * @return Leaf
      */
@@ -61,12 +69,20 @@ class LeafWithState extends Leaf
 
 class LeafWithStateView extends View
 {
+    protected function createSubLeaves()
+    {
+        $this->registerSubLeaf(new SubLeaf());
+    }
 
+    protected function printViewContent()
+    {
+        print $this->leaves["SubLeaf"];
+    }
 }
 
 class LeafWithStateModel extends TestLeafModel
 {
-    public $forename;
+    public $forename = "Billy";
 
     protected function getExposableModelProperties()
     {
@@ -74,5 +90,38 @@ class LeafWithStateModel extends TestLeafModel
         $list[] = "forename";
 
         return $list;
+    }
+}
+
+
+class SubLeaf extends Leaf
+{
+
+    /**
+     * Returns the name of the standard view used for this leaf.
+     *
+     * @return string
+     */
+    protected function getViewClass()
+    {
+        return SubLeafView::class;
+    }
+
+    /**
+     * Should return a class that derives from LeafModel
+     *
+     * @return LeafModel
+     */
+    protected function createModel()
+    {
+        return new LeafModel();
+    }
+}
+
+class SubLeafView extends View
+{
+    protected function printViewContent()
+    {
+        print "SubLeafView";
     }
 }
