@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "d68757f70b5605b20001e5cce37c0258",
+    "content-hash": "3726ec88c9726ae3cdec6e0e639c121c",
     "packages": [
         {
             "name": "rhubarbphp/rhubarb",
