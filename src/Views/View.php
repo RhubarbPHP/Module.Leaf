@@ -18,9 +18,11 @@
 
 namespace Rhubarb\Leaf\Views;
 
+use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
@@ -37,18 +39,40 @@ class View implements Deployable
      */
     protected $model;
 
+    /**
+     * The WebRequest we are generating a response for.
+     *
+     * @var WebRequest
+     */
+    private $request;
+
     public final function __construct(LeafModel $model)
     {
         $this->model = $model;
-        $this->restoreStateIntoModel();
-
         $this->createSubLeaves();
+    }
+
+    public function setWebRequest(WebRequest $request)
+    {
+        $this->request = $request;
+        $this->restoreStateIntoModel();
     }
 
     private function restoreStateIntoModel()
     {
         $stateKey = $this->model->leafName."_state";
 
+        if ($this->request){
+            $state = $this->request->post($stateKey);
+
+            if ($state !== null) {
+                $state = json_decode($state, true);
+
+                if ($state) {
+                    $this->model->restoreFromState($state);
+                }
+            }
+        }
     }
 
     /**

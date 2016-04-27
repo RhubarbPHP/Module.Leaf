@@ -10,7 +10,7 @@ use Rhubarb\Leaf\Views\View;
 
 class StateTest extends LeafTestCase
 {
-    public function testLeafOutputsState()
+    public function testLeafRestoresState()
     {
         $request = $this->getRequestWithPostData(
             [
@@ -19,6 +19,8 @@ class StateTest extends LeafTestCase
         );
 
         $this->leaf = $this->createLeaf();
+        $this->leaf->setWebRequest($request);
+
         $model = TestLeafModel::getModel();
 
         $this->assertEquals("John", $model->forename);
@@ -53,11 +55,24 @@ class LeafWithState extends Leaf
      */
     protected function createModel()
     {
-        return new TestLeafModel();
+        return new LeafWithStateModel();
     }
 }
 
 class LeafWithStateView extends View
 {
 
+}
+
+class LeafWithStateModel extends TestLeafModel
+{
+    public $forename;
+
+    protected function getExposableModelProperties()
+    {
+        $list = parent::getExposableModelProperties();
+        $list[] = "forename";
+
+        return $list;
+    }
 }

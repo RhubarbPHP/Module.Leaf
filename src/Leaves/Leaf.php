@@ -2,7 +2,9 @@
 
 namespace Rhubarb\Leaf\Leaves;
 
+use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\DependencyInjection\Container;
+use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
 use Rhubarb\Crown\String\StringTools;
@@ -30,6 +32,13 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     private $name;
 
+    /**
+     * The WebRequest that the presenter is responding to.
+     *
+     * @var WebRequest
+     */
+    private $request;
+
     public function __construct($name = "")
     {
         $this->model = $this->createModel();
@@ -46,6 +55,7 @@ abstract class Leaf implements GeneratesResponseInterface
         }
 
         $this->name = $name;
+        $this->model->leafName = $name;
     }
 
     protected function initialiseView()
@@ -82,7 +92,18 @@ abstract class Leaf implements GeneratesResponseInterface
 
     private function createView()
     {
-        return Container::instance($this->getViewClass(), $this->model);
+        $view = Container::instance($this->getViewClass(), $this->model);
+
+        return $view;
+    }
+
+    public function setWebRequest(WebRequest $request)
+    {
+        $this->request = $request;
+
+        if ($this->request) {
+            $this->view->setWebRequest($this->request);
+        }
     }
 
     private final function render()
@@ -100,6 +121,8 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     public function generateResponse($request = null)
     {
+        $this->setWebRequest($request);
+
         $response = new HtmlResponse($this);
         $response->setContent($this->render());
 
