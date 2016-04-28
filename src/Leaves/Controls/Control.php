@@ -42,4 +42,14 @@ class Control extends Leaf implements BindableLeafInterface
     {
         $this->model->value = $bindingValue;
     }
+
+    public function addCssClassNames(...$classNames)
+    {
+        $this->model->addCssClassNames(...$classNames);
+    }
+
+    public function addHtmlAttribute($attributeName, $attributeValue)
+    {
+        $this->model->addHtmlAttribute($attributeName, $attributeValue);
+    }
 }
