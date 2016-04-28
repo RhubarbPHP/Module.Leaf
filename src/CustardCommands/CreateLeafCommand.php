@@ -63,6 +63,11 @@ use Rhubarb\Leaf\Leaves\Leaf;
 
 class {$name} extends Leaf
 {
+    /**
+    * @var {$name}Model
+    */
+    protected \$model;
+    
     protected function getViewClass()
     {
         return {$name}View::class;
@@ -71,8 +76,11 @@ class {$name} extends Leaf
     protected function createModel()
     {
         \$model = new {$name}Model();
-        // Set initial model values and initialise event objects
-        // e.g. \$model->saveEvent = new Event();
+
+        // If your model has events you want to listen to you should attach the handlers here
+        // e.g.
+        // \$model->selectedUserChangedEvent->attachListener(function(){ ... });
+
         return \$model;
     }
 }
@@ -85,6 +93,11 @@ use Rhubarb\Leaf\Views\View;
 
 class {$name}View extends View
 {
+    /**
+    * @var {$name}Model
+    */
+    protected \$model;
+    
     protected function printViewContent()
     {
         // Print your HTML here.
@@ -100,6 +113,34 @@ use Rhubarb\Leaf\Leaves\LeafModel;
 
 class {$name}Model extends LeafModel
 {
+    // Define public properties for your module
+    // e.g.
+    //
+    // /**
+    //  * The selected user
+    //  *
+    //  * @var string 
+    //  */
+    // public \$selectedUser;
+    //
+    // Also you can should define any events you need to raise
+    // e.g.
+    //
+    // /**
+    //  * Raised when the selected user changes.
+    //  *
+    //  * @var Rhubarb\Crown\Events\Event 
+    //  */
+    // public \$selectedUserChangedEvent;
+
+    public function __construct()
+    {
+        // Here you should initialise any event handlers to a new Event object
+        // e.g.
+        // \$this->selectedUserChangedEvent = new Event();
+        //
+        // You can also non scalar properties to initial values.
+    }
 }
 END
         );

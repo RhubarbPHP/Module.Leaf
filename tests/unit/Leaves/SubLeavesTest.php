@@ -5,6 +5,9 @@ namespace Rhubarb\Leaf\Tests\Leaves;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\BindableLeafTrait;
+use Rhubarb\Leaf\Leaves\Controls\Control;
+use Rhubarb\Leaf\Leaves\Controls\ControlModel;
+use Rhubarb\Leaf\Leaves\Controls\ControlView;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
 use Rhubarb\Leaf\Tests\Fixtures\LeafTestCase;
@@ -25,17 +28,14 @@ class SubLeavesTest extends LeafTestCase
     {
         $response = $this->renderLeafAndGetContent();
         $this->assertContains("name=forename", $response);
+        $this->assertTrue($this->leaf->getModel()->isRootLeaf);
+        $this->assertFalse($this->leaf->getView()->secondForename->getModel()->isRootLeaf);
     }
 
     public function testSubLeavesWithBinding()
     {
-        // In this example the sub leaf is bound to the "John" property of the parent model
-        $model = SubLeafModel::getModel();
-        $model->value = "John";
-        $model->valueChangedEvent->raise();
-
-        $response = $this->renderLeafAndGetContent();
-        $this->assertContains("John", $response);
+        $response = $this->renderLeafAndGetContent($this->getRequestWithPostData(["LeafWithSubLeaves_surname" => "Smith"]));
+        $this->assertContains("Smith", $response);
     }
 
     public function testUniqueNames()
@@ -67,6 +67,16 @@ class LeafWithSubLeaves extends Leaf
     {
         return new LeafWithSubLeavesModel();
     }
+
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    public function getView()
+    {
+        return $this->view;
+    }
 }
 
 class LeafWithSubLeavesModel extends LeafModel
@@ -82,11 +92,17 @@ class LeafWithSubLeavesView extends View
      */
     protected $model;
 
-    private $secondForename;
+    /**
+     * Marked public for unit test analysis
+     *
+     * @var
+     */
+    public $secondForename;
 
     protected function createSubLeaves()
     {
         $this->registerSubLeaf(new SubLeaf("forename"));
+        $this->registerSubLeaf(new SubLeaf("surname"));
         $this->registerSubLeaf($this->secondForename = new SubLeaf("forename"));
     }
 
@@ -94,14 +110,12 @@ class LeafWithSubLeavesView extends View
     {
         print $this->leaves["forename"];
         print $this->secondForename;
-        print $this->model->forename;
+        print $this->model->surname;
     }
 }
 
-class SubLeaf extends Leaf implements BindableLeafInterface
+class SubLeaf extends Control
 {
-    use BindableLeafTrait;
-
     /**
      * @var SubLeafModel
      */
@@ -117,6 +131,11 @@ class SubLeaf extends Leaf implements BindableLeafInterface
         return SubLeafView::class;
     }
 
+    public function getModel()
+    {
+        return $this->model;
+    }
+
     /**
      * Should return a class that derives from LeafModel
      *
@@ -124,27 +143,11 @@ class SubLeaf extends Leaf implements BindableLeafInterface
      */
     protected function createModel()
     {
-        $model = new SubLeafModel();
-
-        $model->valueChangedEvent->attachHandler(function(){
-            $this->bindingValueChangedEvent->raise();
-        });
-
-        return $model;
-    }
-
-    public function getBindingValue()
-    {
-        return $this->model->value;
-    }
-
-    public function setBindingValue($bindingValue)
-    {
-        $this->model->value = $bindingValue;
+        return new SubLeafModel();
     }
 }
 
-class SubLeafView extends View
+class SubLeafView extends ControlView
 {
     protected function printViewContent()
     {
@@ -152,7 +155,7 @@ class SubLeafView extends View
     }
 }
 
-class SubLeafModel extends TestLeafModel
+class SubLeafModel extends ControlModel
 {
     public $value;
 

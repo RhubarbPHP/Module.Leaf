@@ -71,12 +71,12 @@ class LeafWithStateView extends View
 {
     protected function createSubLeaves()
     {
-        $this->registerSubLeaf(new SubLeaf());
+        $this->registerSubLeaf(new SubLeaf2());
     }
 
     protected function printViewContent()
     {
-        print $this->leaves["SubLeaf"];
+        print $this->leaves["SubLeaf2"];
     }
 }
 
@@ -94,7 +94,7 @@ class LeafWithStateModel extends TestLeafModel
 }
 
 
-class SubLeaf extends Leaf
+class SubLeaf2 extends Leaf
 {
 
     /**
@@ -104,7 +104,7 @@ class SubLeaf extends Leaf
      */
     protected function getViewClass()
     {
-        return SubLeafView::class;
+        return SubLeafView2::class;
     }
 
     /**
@@ -118,7 +118,7 @@ class SubLeaf extends Leaf
     }
 }
 
-class SubLeafView extends View
+class SubLeafView2 extends View
 {
     protected function printViewContent()
     {

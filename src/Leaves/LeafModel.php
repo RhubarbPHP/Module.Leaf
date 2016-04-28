@@ -42,7 +42,7 @@ class LeafModel
     /**
      * @var bool True if the view is the root leaf on the page.
      */
-    public $isRootLeaf = false;
+    public $isRootLeaf = true;
 
     /**
      * Returns an array of **publicly viewable** state data required to persist the state or provide state

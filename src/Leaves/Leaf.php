@@ -16,7 +16,7 @@ abstract class Leaf implements GeneratesResponseInterface
     /**
      * @var View
      */
-    private $view;
+    protected $view;
 
     /**
      * @var LeafModel
@@ -33,6 +33,7 @@ abstract class Leaf implements GeneratesResponseInterface
     public function __construct($name = "")
     {
         $this->model = $this->createModel();
+        $this->onModelCreated();
 
         $this->initialiseView();
 
@@ -45,7 +46,16 @@ abstract class Leaf implements GeneratesResponseInterface
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
-        $this->model->leafName = $name;
+        $this->setName($name);
+    }
+
+    /**
+     * Provides an opportunity for extending classes to modify the model in some way when they themselves are not
+     * directly responsible for the model creation.
+     */
+    protected function onModelCreated()
+    {
+
     }
 
     protected function initialiseView()
@@ -70,12 +80,20 @@ abstract class Leaf implements GeneratesResponseInterface
      * Sets the name of the leaf.
      *
      * @param $name string The new name for the leaf
+     * @param $parentPath string The leaf path for the containing leaf
      * @return string
      */
-    public function setName($name)
+    public function setName($name, $parentPath = "")
     {
-        $this->name = $name;
         $this->model->leafName = $name;
+        if ($parentPath != "") {
+            $this->model->leafPath = $parentPath . "_" . $name;
+            $this->model->isRootLeaf = false;
+        } else {
+            $this->model->leafPath = $name;
+        }
+
+        $this->view->leafPathChanged();
     }
 
     /**

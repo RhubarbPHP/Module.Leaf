@@ -23,6 +23,18 @@ class ControlTest extends LeafTestCase
         $this->assertEquals("TestValue", $this->leaf->getModel()->value);
     }
 
+    public function testSubControlDataBinds()
+    {
+        $request = $this->getRequestWithPostData([
+            "TestControl_Test" => "AnotherTestValue"
+        ]);
+
+        $this->leaf = new TestControl();
+        $this->leaf->setWebRequest($request);
+
+        $this->assertEquals("AnotherTestValue", $this->leaf->getModel()->Test);
+    }
+
     /**
      * @return Leaf
      */
@@ -65,6 +77,43 @@ class TestControl extends Control
 }
 
 class TestControlView extends ControlView
+{
+    public static $subControl;
+
+    protected function createSubLeaves()
+    {
+        parent::createSubLeaves();
+
+        $this->registerSubLeaf(
+            self::$subControl = new TestSubControl("Test")
+        );
+    }
+}
+
+class TestSubControl extends Control
+{
+    /**
+     * Returns the name of the standard view used for this leaf.
+     *
+     * @return string
+     */
+    protected function getViewClass()
+    {
+        return TestSubControlView::class;
+    }
+
+    /**
+     * Should return a class that derives from LeafModel
+     *
+     * @return LeafModel
+     */
+    protected function createModel()
+    {
+        return new ControlModel();
+    }
+}
+
+class TestSubControlView extends ControlView
 {
 
 }

@@ -2,10 +2,20 @@
 
 namespace Rhubarb\Leaf\Leaves\Controls;
 
+use Rhubarb\Crown\Events\Event;
+use Rhubarb\Leaf\Leaves\BindableLeafInterface;
+use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
 
-class Control extends Leaf
+class Control extends Leaf implements BindableLeafInterface
 {
+    use BindableLeafTrait;
+
+    /**
+     * @var ControlModel
+     */
+    protected $model;
+
     protected function getViewClass()
     {
         return ControlView::class;
@@ -13,9 +23,23 @@ class Control extends Leaf
     
     protected function createModel()
     {
-        $model = new ControlModel();
-        // Set initial model values and initialise event objects
-        // e.g. $model->saveEvent = new Event();
-        return $model;
+        return new ControlModel();
+    }
+
+    protected function onModelCreated()
+    {
+        $this->model->valueChangedEvent->attachHandler(function(){
+            $this->getBindingValueChangedEvent()->raise();
+        });
+    }
+
+    public function getBindingValue()
+    {
+        return $this->model->value;
+    }
+
+    public function setBindingValue($bindingValue)
+    {
+        $this->model->value = $bindingValue;
     }
 }
