@@ -70,9 +70,15 @@ class View implements Deployable
      */
     private $namesUsed = [];
 
+    /**
+     * @var Event
+     */
+    private $beforeRenderEvent;
+
     public final function __construct(LeafModel $model)
     {
         $this->model = $model;
+        $this->beforeRenderEvent = new Event();
         $this->createSubLeaves();
     }
 
@@ -96,7 +102,7 @@ class View implements Deployable
     {
     }
 
-    private function restoreStateIntoModel()
+    private final function restoreStateIntoModel()
     {
         $stateKey = $this->getStateKey();
 
@@ -137,7 +143,7 @@ class View implements Deployable
     /**
      * @param Leaf[] ...$subLeaves
      */
-    protected function registerSubLeaf(...$subLeaves)
+    protected final function registerSubLeaf(...$subLeaves)
     {
         foreach($subLeaves as $subLeaf) {
             $name = $subLeaf->getName();
@@ -156,13 +162,31 @@ class View implements Deployable
                 // Setup data bindings
                 $event = $subLeaf->getBindingValueChangedEvent();
 
-                $event->attachHandler(function () use ($name, $subLeaf) {
-                    $this->model->$name = $subLeaf->getBindingValue();
-                });
+                $event->attachHandler(function ($index = null) use ($name, $subLeaf) {
+                    $bindingValue = $subLeaf->getBindingValue();
+                    if ($index !== null){
+                        if (!isset($this->model->$name) || !is_array($this->model->$name)){
+                            $this->model->$name = [];
+                        }
 
-                if (isset($this->model->$name)) {
-                    $subLeaf->setBindingValue($this->model->$name);
-                }
+                        $this->model->$name[$index] = $bindingValue;
+                    } else {
+                        $this->model->$name = $bindingValue;
+                    }
+                });
+                
+                $event = $subLeaf->getBindingValueRequestedEvent();
+                $event->attachHandler(function($index = null) use ($name){
+                    if ($index !== null ){
+                        if (isset($this->model->$name[$index])){
+                            return $this->model->$name[$index];
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        return isset($this->model->$name) ? $this->model->$name : null;
+                    }
+                });
             }
         }
     }
@@ -180,10 +204,11 @@ class View implements Deployable
 
     }
 
-    public function renderContent()
+    public final function renderContent()
     {
         ob_start();
 
+        $this->beforeRenderEvent->raise();
         $this->printViewContent();
 
         $content = ob_get_clean();
@@ -212,6 +237,6 @@ class View implements Deployable
      */
     private function getStateKey()
     {
-        return $this->model->leafName . "_state";
+        return $this->model->leafPath . "_state";
     }
 }

@@ -28,9 +28,14 @@ class Control extends Leaf implements BindableLeafInterface
 
     protected function onModelCreated()
     {
-        $this->model->valueChangedEvent->attachHandler(function(){
-            $this->getBindingValueChangedEvent()->raise();
+        $this->model->valueChangedEvent->attachHandler(function($index = null){
+            $this->getBindingValueChangedEvent()->raise($index);
         });
+    }
+
+    protected function beforeRender()
+    {
+        $this->model->value = $this->getBindingValueRequestedEvent()->raise($this->model->leafIndex);
     }
 
     public function getBindingValue()

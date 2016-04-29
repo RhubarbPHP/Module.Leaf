@@ -58,7 +58,10 @@ abstract class Leaf implements GeneratesResponseInterface
 
     }
 
-    protected function initialiseView()
+    /**
+     * Creates and attaches the view.
+     */
+    protected final function initialiseView()
     {
         $view = $this->createView();
 
@@ -71,7 +74,7 @@ abstract class Leaf implements GeneratesResponseInterface
      * @see $name
      * @return string
      */
-    public function getName()
+    public final function getName()
     {
         return $this->model->leafName;
     }
@@ -83,17 +86,49 @@ abstract class Leaf implements GeneratesResponseInterface
      * @param $parentPath string The leaf path for the containing leaf
      * @return string
      */
-    public function setName($name, $parentPath = "")
+    public final function setName($name, $parentPath = "")
     {
         $this->model->leafName = $name;
+
         if ($parentPath != "") {
-            $this->model->leafPath = $parentPath . "_" . $name;
+            $this->model->parentPath = $parentPath;
             $this->model->isRootLeaf = false;
         } else {
-            $this->model->leafPath = $name;
+            $this->model->parentPath = "";
         }
 
+        $this->updatePath();
+    }
+
+    public final function updatePath()
+    {
+        $ourPath = $this->model->leafName;
+
+        if ($this->model->parentPath) {
+            // Prepend the parent path if we have one.
+            $ourPath = $this->model->parentPath . "_" . $ourPath;
+        }
+
+        if ($this->model->leafIndex !== null){
+            // Append the view index if we have one.
+            $ourPath .= "(".$this->model->leafIndex.")";
+        }
+
+        $this->model->leafPath = $ourPath;
+
+        // Signal to all or any sub leaves that need to recompute their own path now.
         $this->view->leafPathChanged();
+    }
+
+    /**
+     * Sets a view index for subsequent renders.
+     *
+     * @param $index
+     */
+    protected final function setIndex($index)
+    {
+        $this->model->leafIndex = $index;
+        $this->updatePath();
     }
 
     /**
@@ -117,7 +152,12 @@ abstract class Leaf implements GeneratesResponseInterface
         return $view;
     }
 
-    public function setWebRequest(WebRequest $request)
+    /**
+     * Set's the web request being used to render the tree of leaves.
+     *
+     * @param WebRequest $request
+     */
+    public final function setWebRequest(WebRequest $request)
     {
         $this->request = $request;
 
@@ -126,8 +166,26 @@ abstract class Leaf implements GeneratesResponseInterface
         }
     }
 
+    /**
+     * Prints the leaf using an index
+     *
+     * @param $index
+     */
+    public final function printWithIndex($index)
+    {
+        $this->setIndex($index);
+
+        print $this->render();
+    }
+
+    protected function beforeRender()
+    {
+
+    }
+
     private final function render()
     {
+        $this->beforeRender();
         $html = $this->view->renderContent();
 
         return $html;
@@ -139,7 +197,7 @@ abstract class Leaf implements GeneratesResponseInterface
      * @param null $request
      * @return HtmlResponse
      */
-    public function generateResponse($request = null)
+    public final function generateResponse($request = null)
     {
         $this->setWebRequest($request);
 

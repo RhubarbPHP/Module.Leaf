@@ -11,6 +11,11 @@ trait BindableLeafTrait
      */
     public $bindingValueChangedEvent;
 
+    /**
+     * @var Event
+     */
+    public $bindingValueRequestedEvent;
+
     public function getBindingValueChangedEvent()
     {
         if ($this->bindingValueChangedEvent == null){
@@ -18,5 +23,14 @@ trait BindableLeafTrait
         }
         
         return $this->bindingValueChangedEvent;
+    }
+
+    public function getBindingValueRequestedEvent()
+    {
+        if ($this->bindingValueRequestedEvent == null){
+            $this->bindingValueRequestedEvent = new Event();
+        }
+
+        return $this->bindingValueRequestedEvent;
     }
 }

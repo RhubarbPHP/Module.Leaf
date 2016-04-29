@@ -29,15 +29,21 @@ class LeafModel
     public $leafName;
 
     /**
+     * @var string The full path hierarchy to uniquely identify the parent of this leaf
+     */
+    public $parentPath;
+
+    /**
      * @var string The full path hierarchy to uniquely identify this leaf
      */
     public $leafPath;
 
     /**
-     * @var string The full path heirarchy to uniquely identify this leaf along with the currently displayed
-     * view index.
+     * The current leaf index. Null means no leaf index applies.
+     *
+     * @var mixed
      */
-    public $indexedLeafPath;
+    public $leafIndex = null;
 
     /**
      * @var bool True if the view is the root leaf on the page.

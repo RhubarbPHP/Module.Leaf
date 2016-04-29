@@ -13,4 +13,9 @@ interface BindableLeafInterface
      * @return Event
      */
     public function getBindingValueChangedEvent();
+
+    /**
+     * @return Event
+     */
+    public function getBindingValueRequestedEvent();
 }
