@@ -43,4 +43,18 @@ abstract class ControlView extends View
         $this->model->value = $value;
         $this->model->valueChangedEvent->raise($index);
     }
+
+    protected function getNameValueClassAndAttributeString($includeValue = true)
+    {
+        $classes = $this->model->getClassAttribute();
+        $otherAttributes = $this->model->getHtmlAttributes();
+
+        $string = 'name="'.$this->model->leafPath.'" '.$classes.$otherAttributes;
+
+        if ($includeValue) {
+            $string .= ' value="' . htmlentities($this->model->value) . '" ';
+        }
+
+        return $string;
+    }
 }
