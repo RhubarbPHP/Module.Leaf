@@ -141,6 +141,13 @@ class View implements Deployable
 
     }
 
+    public function runBeforeRenderCallbacks()
+    {
+        foreach($this->leaves as $leaf) {
+            $leaf->runBeforeRenderCallbacks();
+        }
+    }
+
     /**
      * @param Leaf[] ...$subLeaves
      */
