@@ -25,6 +25,15 @@ class ControlModel extends LeafModel
 
     public $htmlAttributes = [];
 
+    /**
+     * Some auto layout features may ask a Control leaf to supply a label. If this property has
+     * a value it will be used otherwise the controls name will be auto converted to Title Case.
+     *
+     * @see Control::getLabel()
+     * @var string
+     */
+    public $label = "";
+
     public function __construct()
     {
         $this->valueChangedEvent = new Event();

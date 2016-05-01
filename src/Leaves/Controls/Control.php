@@ -3,6 +3,7 @@
 namespace Rhubarb\Leaf\Leaves\Controls;
 
 use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\BindableLeafTrait;
 use Rhubarb\Leaf\Leaves\Leaf;
@@ -56,5 +57,19 @@ class Control extends Leaf implements BindableLeafInterface
     public function addHtmlAttribute($attributeName, $attributeValue)
     {
         $this->model->addHtmlAttribute($attributeName, $attributeValue);
+    }
+
+    /**
+     * Returns a label that the hosting view can use in the HTML output.
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        if ($this->model->label != "") {
+            return $this->model->label;
+        }
+
+        return StringTools::wordifyStringByUpperCase($this->getName());
     }
 }

@@ -23,6 +23,7 @@ use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Request\WebRequest;
+use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
@@ -238,5 +239,36 @@ class View implements Deployable
     private function getStateKey()
     {
         return $this->model->leafPath . "_state";
+    }
+
+    /**
+     * Gets the default layout provider and binds to the generateValueEvent event
+     *
+     * @return LayoutProvider
+     */
+    protected final function getLayoutProvider()
+    {
+        $layout = LayoutProvider::getProvider();
+        $layout->generateValueEvent->attachHandler(function($elementName){
+            if (isset($this->leaves[$elementName])){
+                return $this->leaves[$elementName];
+            }
+
+            return null;
+        });
+
+        return $layout;
+    }
+
+    protected function layoutItemsWithContainer($containerTitle = "", $items = [])
+    {
+        $layout = $this->getLayoutProvider();
+        $layout->printItemsWithContainer($containerTitle, $items);
+    }
+
+    protected function layoutItems($items = [])
+    {
+        $layout = $this->getLayoutProvider();
+        $layout->printItems($items);
     }
 }
