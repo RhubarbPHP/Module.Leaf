@@ -16,21 +16,13 @@
  *  limitations under the License.
  */
 
-namespace Rhubarb\Leaf\Presenters;
+namespace Rhubarb\Leaf\UrlHandlers;
 
-trait MessagePresenterTrait
+use Rhubarb\Crown\UrlHandlers\NamespaceMappedUrlHandler;
+
+/**
+ * The URL handler for MVP activity
+ */
+class LeafUrlHandler extends NamespaceMappedUrlHandler
 {
-    protected $message = false;
-
-    protected function activateMessage($message)
-    {
-        $this->message = $message;
-    }
-
-    protected function onModelAppliedToView()
-    {
-        $this->view->message = $this->message;
-
-        parent::onModelAppliedToView();
-    }
 }

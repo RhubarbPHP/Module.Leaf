@@ -319,10 +319,10 @@ class View implements Deployable
         return $layout;
     }
 
-    protected function layoutItemsWithContainer($containerTitle = "", $items = [])
+    protected function layoutItemsWithContainer($containerTitle = "", ...$items)
     {
         $layout = $this->getLayoutProvider();
-        $layout->printItemsWithContainer($containerTitle, $items);
+        $layout->printItemsWithContainer($containerTitle, ...$items);
     }
 
     protected function layoutItems($items = [])
