@@ -368,8 +368,10 @@ class Table extends HtmlPresenter
 
     public function configureFilters()
     {
-        $this->raiseEvent("GetFilter", function (Filter $filter) {
-            $this->collection->filter($filter);
+        $this->raiseEvent("GetFilter", function($filter){
+            if ($filter) {
+                $this->collection->filter($filter);
+            }
         });
 
         $this->applySort();
