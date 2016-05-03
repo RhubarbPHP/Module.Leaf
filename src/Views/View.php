@@ -18,69 +18,264 @@
 
 namespace Rhubarb\Leaf\Views;
 
-require_once __DIR__ . "/../PresenterViewBase.php";
-
-use Rhubarb\Crown\Context;
+use Codeception\Lib\Interfaces\Web;
+use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
-use Rhubarb\Crown\Events\EventEmitter;
-use Rhubarb\Leaf\Presenters\Presenter;
-use Rhubarb\Leaf\Presenters\PresenterDeploymentPackage;
-use Rhubarb\Leaf\PresenterViewBase;
-use Rhubarb\Stem\Models\Model;
+use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\Html\ResourceLoader;
+use Rhubarb\Crown\Request\WebRequest;
+use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
+use Rhubarb\Leaf\Leaves\BindableLeafInterface;
+use Rhubarb\Leaf\Leaves\Leaf;
+use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
+use Rhubarb\Leaf\Leaves\LeafModel;
 
 /**
  * The base class for a View
  */
-abstract class View extends PresenterViewBase implements Deployable
+class View implements Deployable
 {
-    private $eventReceiver;
-
     /**
-     * A view can contain any number of presenters within it.
+     * The shared model between leaf and view.
      *
-     * @see View::AddPresenter()
-     * @var Presenter[]
+     * @var LeafModel
      */
-    protected $presenters = array();
-
-    protected $presenterName;
-
-    protected $presenterPath;
+    protected $model;
 
     /**
-     * Wraps are closures which wrap the printed view content in additional supporting content (to support state etc.)
+     * The WebRequest we are generating a response for.
      *
-     * @var \Closure[]
+     * @var WebRequest
      */
-    protected $wrappers = [];
-
-    protected $index = "";
+    private $request;
 
     /**
-     * If we need the presenter to be available but not actually printed
+     * A named collection of sub leafs populated by calling registerSubLeaf
+     *
+     * @see registerSubLeaf()
+     * @var Leaf[]
+     */
+    protected $leaves = [];
+
+    /**
+     * True if the leaf needs a hidden state input to propogate it's state.
+     *
      * @var bool
      */
-    public $suppressContent = false;
+    protected $requiresStateInput = true;
 
     /**
-     * @param string $index
+     * Tracks the number of times a leaf name has occurred for sub leafs
+     *
+     * This is used to ensure if two leaves get added with the same name, they are differentiated by a numerical suffix.
+     *
+     * @var int[]
      */
-    public function setIndex($index)
+    private $namesUsed = [];
+
+    /**
+     * @var Event
+     */
+    private $beforeRenderEvent;
+
+    public final function __construct(LeafModel $model)
     {
-        $this->index = $index;
+        $this->model = $model;
+        $this->beforeRenderEvent = new Event();
+        $this->createSubLeaves();
     }
 
-    protected function addWrapper(\Closure $wrapClosure)
+    public final function setWebRequest(WebRequest $request)
     {
-        $this->wrappers[] = $wrapClosure;
+        $this->request = $request;
+        $this->restoreStateIntoModel();
+        $this->parseRequest($request);
+
+        foreach($this->leaves as $leaf){
+            $leaf->setWebRequest($request);
+        }
     }
 
     /**
-     * Returns an array of resource URLs this presenter depends on that do not require deployment.
+     * Provides the extending class an opportunity to examine the incoming request and raise events if appropriate.
      *
-     * If you need to deploy a script or stylesheet override the GetDeploymentPackage() method instead.
+     * @param WebRequest $request
+     */
+    protected function parseRequest(WebRequest $request)
+    {
+    }
+
+    private final function restoreStateIntoModel()
+    {
+        $stateKey = $this->getStateKey();
+
+        if ($this->request){
+            $state = $this->request->post($stateKey);
+
+            if ($state !== null) {
+                $state = json_decode($state, true);
+
+                if ($state) {
+                    $this->model->restoreFromState($state);
+                }
+            }
+        }
+    }
+
+    /**
+     * Called by the view's leaf class when it's leaf path is changed.
      *
-     * @return array
+     * This cascades down all sub view and leaves.
+     */
+    public final function leafPathChanged()
+    {
+        foreach($this->leaves as $leaf){
+            $leaf->setName($leaf->getName(), $this->model->leafPath);
+        }
+    }
+
+
+    /**
+     * The place where extending classes should create and register new Views
+     */
+    protected function createSubLeaves()
+    {
+
+    }
+
+    public function runBeforeRenderCallbacks()
+    {
+        foreach($this->leaves as $leaf) {
+            $leaf->runBeforeRenderCallbacks();
+        }
+    }
+
+    /**
+     * @param Leaf[] ...$subLeaves
+     */
+    protected final function registerSubLeaf(...$subLeaves)
+    {
+        foreach($subLeaves as $subLeaf) {
+            $name = $subLeaf->getName();
+
+            if (isset($this->namesUsed[$name])) {
+                $this->namesUsed[$name]++;
+                $name .= $this->namesUsed[$name];
+            } else {
+                $this->namesUsed[$name] = 0;
+            }
+
+            $subLeaf->setName($name, $this->model->leafPath);
+            $this->leaves[$name] = $subLeaf;
+
+            if ($subLeaf instanceof BindableLeafInterface) {
+                // Setup data bindings
+                $event = $subLeaf->getBindingValueChangedEvent();
+
+                $event->attachHandler(function ($index = null) use ($name, $subLeaf) {
+                    $bindingValue = $subLeaf->getBindingValue();
+                    if ($index !== null){
+                        if (!isset($this->model->$name) || !is_array($this->model->$name)){
+                            $this->model->$name = [];
+                        }
+
+                        $this->model->$name[$index] = $bindingValue;
+                    } else {
+                        $this->model->$name = $bindingValue;
+                    }
+                });
+                
+                $event = $subLeaf->getBindingValueRequestedEvent();
+                $event->attachHandler(function($index = null) use ($name){
+                    if ($index !== null ){
+                        if (isset($this->model->$name[$index])){
+                            return $this->model->$name[$index];
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        return isset($this->model->$name) ? $this->model->$name : null;
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * @return DeploymentPackage
+     */
+    public function getDeploymentPackage()
+    {
+        return null;
+    }
+
+    protected function printViewContent()
+    {
+
+    }
+
+    public final function renderContent()
+    {
+        $resourcePackage = $this->getDeploymentPackage();
+        $viewBridge = $this->getViewBridgeName();
+
+        if ($viewBridge){
+            $jsAndCssUrls = [];
+
+            if ($resourcePackage != null){
+                $urls = $resourcePackage->getDeployedUrls();
+                $urls = array_merge($this->getAdditionalResourceUrls(), $urls);
+
+                $jsAndCssUrls = [];
+
+                foreach ($urls as $url) {
+                    if (preg_match("/\.js$/", $url) || preg_match("/\.css$/", $url)) {
+                        $jsAndCssUrls[] = $url;
+                    }
+                }
+            }
+            ResourceLoader::addScriptCode(
+                "new window.rhubarb.viewBridgeClasses." . $this->getViewBridgeName() . "( '" . $this->model->leafPath . "' );",
+                $jsAndCssUrls
+            );
+        }
+
+        if ($resourcePackage != null){
+            $resourcePackage->deploy();
+        }
+
+        ob_start();
+
+        $this->beforeRenderEvent->raise();
+        $this->printViewContent();
+
+        $content = ob_get_clean();
+
+        $state = $this->model->getState();
+        $state = json_encode($state);
+
+        if ($this->requiresStateInput) {
+            $content .= '
+<input type="hidden" name="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
+        }
+
+        if ($this->model->isRootLeaf){
+            $content = '
+<form method="post">
+'.$content.'
+</form>
+';
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns an array of resource URLs required by this View that don't need deployed.
+     *
+     * Normally these would be externally hosted scripts and css files.
+     *
+     * @return string[]
      */
     protected function getAdditionalResourceUrls()
     {
@@ -88,290 +283,51 @@ abstract class View extends PresenterViewBase implements Deployable
     }
 
     /**
-     * Returns the presenter path with a suffix to represent the index if it is in play
+     * If the leaf requires a view bridge this returns it's name.
      *
-     * e.g. Forename[2]
+     * @return string|bool
      */
-    protected function getIndexedPresenterPath()
+    protected function getViewBridgeName()
     {
-        return $this->raiseEvent("GetIndexedPresenterPath");
-    }
-
-    protected function getData($key)
-    {
-        return $this->raiseEvent("GetData", $key);
+        return false;
     }
 
     /**
-     * Gets model from the presenter.
-     *
-     * This should be used carefully - it is only intended to provide efficient access to the model for display,
-     * business logic should not be performed in the View using this Model.
-     *
-     * @return null|Model
-     */
-    protected function getModel()
-    {
-        return $this->raiseEvent("GetModel");
-    }
-
-    /**
-     * Gets the Display Identifier
-     *
      * @return string
      */
-    public function getDisplayIdentifier()
+    private function getStateKey()
     {
-        return $this->getIndexedPresenterPath();
+        return $this->model->leafPath . "_state";
     }
 
     /**
-     * Returns the deployment package required for this view.
+     * Gets the default layout provider and binds to the generateValueEvent event
      *
-     * @return PresenterDeploymentPackage
+     * @return LayoutProvider
      */
-    public function getDeploymentPackage()
+    protected final function getLayoutProvider()
     {
-        return null;
-    }
-
-    public function setName($viewName)
-    {
-        $this->presenterName = $viewName;
-    }
-
-    public function setPath($viewPath)
-    {
-        $this->presenterPath = $viewPath;
-    }
-
-    public function registerEventReceiver(\Closure $receiver)
-    {
-        $this->eventReceiver = $receiver;
-    }
-
-    public final function getChangedPresenterModels()
-    {
-        $models = [];
-
-        foreach ($this->presenters as $presenter) {
-            $models = array_merge($models, $presenter->getChangedPresenterModels());
-        }
-
-        return $models;
-    }
-
-    /**
-     * Recursively descends through the presenter tree and makes sure that all children have been updated
-     * by their parent to reflect the current model state.
-     */
-    public final function applyModelsToViews()
-    {
-        $this->configurePresenters();
-
-        foreach ($this->presenters as $presenter) {
-            $presenter->applyModelsToViews();
-        }
-    }
-
-    private final function createPresenterByName($presenterName)
-    {
-        return $this->raiseEvent("CreatePresenterByName", $presenterName);
-    }
-
-    public final function addPresenters($presenter)
-    {
-        $args = (isset($presenter) && is_array($presenter)) ? $presenter : func_get_args();
-
-        foreach ($args as $index => $presenter) {
-            if (is_string($presenter)) {
-                $presenter = $this->createPresenterByName($presenter);
+        $layout = LayoutProvider::getProvider();
+        $layout->generateValueEvent->attachHandler(function($elementName){
+            if (isset($this->leaves[$elementName])){
+                return $this->leaves[$elementName];
             }
 
-            if ($presenter instanceof Presenter) {
-                $this->onPresenterAdded($presenter);
-                $this->raiseEvent("OnPresenterAdded", $presenter);
+            return null;
+        });
 
-                $name = (is_numeric($index)) ? $presenter->getName() : $index;
-
-                $this->presenters[$name] = $presenter;
-            }
-        }
+        return $layout;
     }
 
-    /**
-     * An opportunity to configure presenters as they are added.
-     *
-     * This is most useful when presenters are being generated through automation e.g. model bindings.
-     *
-     * @param Presenter $presenter
-     */
-    protected function onPresenterAdded(Presenter $presenter)
+    protected function layoutItemsWithContainer($containerTitle = "", ...$items)
     {
+        $layout = $this->getLayoutProvider();
+        $layout->printItemsWithContainer($containerTitle, ...$items);
     }
 
-    /**
-     * Called to allow a view to instantiate any sub presenters that may be needed.
-     *
-     * Called by the presenter when it is ready to receive any corresponding events.
-     */
-    public function createPresenters()
+    protected function layoutItems($items = [])
     {
-
-    }
-
-    /**
-     * Called just before a view is printed.
-     *
-     * Allows a view to update the sub presenters to reflect the current state of the view/presenter/model.
-     */
-    protected function configurePresenters()
-    {
-
-    }
-
-    protected function parseRequestForCommand()
-    {
-
-    }
-
-    /**
-     * While views can't raised delayed events their hosted presenters can.
-     *
-     */
-    public final function processDelayedEvents()
-    {
-        foreach ($this->presenters as $presenter) {
-            $presenter->processDelayedEvents();
-        }
-    }
-
-    public final function recursiveRePresent()
-    {
-        foreach ($this->presenters as $presenter) {
-            $presenter->recursiveRePresent();
-        }
-    }
-
-    /**
-     * During post back parsing, this will look to see if view indexes are being used for this presenter
-     *
-     * If so the view indexes will be extracted and subsequent event processing will be done for each
-     * and every index.
-     */
-    private final function checkForViewIndexInRequest()
-    {
-
-    }
-
-    /**
-     * Processes the request for events and asks any hosted presenters to do the same.
-     */
-    public final function processUserInterfaceEvents()
-    {
-        $this->parseRequestForCommand();
-
-        foreach ($this->presenters as $presenter) {
-            $presenter->processUserInterfaceEvents();
-        }
-    }
-
-    protected function getState()
-    {
-        return $this->raiseEvent("GetModelState");
-    }
-
-    /**
-     * Should return an array of Closures to use to wrap the content with.
-     *
-     *
-     */
-    protected function getWrappers()
-    {
-        return $this->wrappers;
-    }
-
-    /**
-     * An opportunity for an extender or a trait to perform some last minute manipulation
-     *
-     * If this method returns false, we cancel the call the PrintViewContent()
-     */
-    protected function onBeforePrintViewContent()
-    {
-
-    }
-
-    public final function renderView()
-    {
-        $this->configurePresenters();
-
-        $deploymentPackage = $this->getDeploymentPackage();
-
-        if ($deploymentPackage != null) {
-            // If we're in developer mode - make the deployment
-            $context = new Context();
-
-            if ($context->DeveloperMode) {
-                $deploymentPackage->deploy();
-            }
-        }
-
-        ob_start();
-        if (!$this->suppressContent) {
-            // Allow super classes and traits to do their own interception and printing.
-            $result = $this->onBeforePrintViewContent();
-
-            // Should the super class return false we know it has handled the output already.
-            if ($result !== false) {
-                $this->printViewContent();
-            }
-        }
-
-        $viewContent = ob_get_clean();
-
-        $wrappers = $this->getWrappers();
-
-        foreach ($wrappers as $wrap) {
-            $newContent = $wrap($viewContent);
-
-            // Allow for wrappers that don't return new content but just have other side effects
-            // like throwing events or requiring resources
-            if ($newContent !== null) {
-                $viewContent = $newContent;
-            }
-        }
-
-        return $viewContent;
-    }
-
-    protected function printViewContent()
-    {
-        print "";
-    }
-
-    /**
-     * Returns any validation errors for the given validation name.
-     *
-     * Used primarily by validation placeholders and acts as a middle man between the same method on the presenter.
-     *
-     * @param $validationName
-     * @return array
-     */
-    public function getValidationErrors($validationName)
-    {
-        return $this->raiseEvent("GetValidationErrors", $validationName);
-    }
-
-    /**
-     * Allows the view to return persisted model data back to the presenter.
-     *
-     * Some views persist state between connections. As it is the view that is responsible for the perisistance, it
-     * must also be responsible for the restoration of that data.
-     *
-     * @return array
-     */
-    public function getRestoredModel()
-    {
-        return [];
+        $layout = $this->getLayoutProvider();
+        $layout->printItems($items);
     }
 }

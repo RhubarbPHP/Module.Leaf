@@ -16,19 +16,13 @@
  *  limitations under the License.
  */
 
-namespace Rhubarb\Leaf\Exceptions;
+namespace Rhubarb\Leaf\UrlHandlers;
 
-use Rhubarb\Crown\Exceptions\RhubarbException;
+use Rhubarb\Crown\UrlHandlers\NamespaceMappedUrlHandler;
 
 /**
- * A very specialised exception to cause the regeneration of a presenter's view
- *
- * This has to be thrown during the event processing and allows a sub presenter to
- * ensure the presenter resets and reconfigures the view.
- *
- * For example SwitchedPresenter uses this when it knows that the switched presenter needs
- * to change - it must make sure the rendering pipeline re-initialises the view.
+ * The URL handler for MVP activity
  */
-class RequiresViewReconfigurationException extends RhubarbException
+class LeafUrlHandler extends NamespaceMappedUrlHandler
 {
 }

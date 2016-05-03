@@ -18,6 +18,9 @@
 
 namespace Rhubarb\Leaf\LayoutProviders;
 
+use Rhubarb\Crown\DependencyInjection\ProviderTrait;
+use Rhubarb\Crown\Events\Event;
+
 /**
  * A layout provider translates a data structure of text and objects into an HTML structure.
  *
@@ -29,8 +32,8 @@ namespace Rhubarb\Leaf\LayoutProviders;
  *
  * Method 1:
  *
- * $layout = LayoutProvider::GetDefaultLayoutProvider();
- * $layout->PrintItems(
+ * $layout = LayoutProvider::getDefaultLayoutProvider();
+ * $layout->printItems(
  *      [
  *          "Forename",
  *          "Surname"
@@ -38,7 +41,7 @@ namespace Rhubarb\Leaf\LayoutProviders;
  *
  * Method 2:
  *
- * $layout = LayoutProvider::GetDefaultLayoutProvider(
+ * $layout = LayoutProvider::getDefaultLayoutProvider(
  *      [
  *          "Forename",
  *          "Surname"
@@ -49,31 +52,23 @@ namespace Rhubarb\Leaf\LayoutProviders;
  */
 abstract class LayoutProvider
 {
+    use ProviderTrait;
+
+    /**
+     * Raised when the layout provider needs a host to generate a value to match a named element.
+     *
+     * The element name is passed as an argument.
+     *
+     * @var Event
+     */
+    public $generateValueEvent;
+
     protected $items = [];
 
     public function __construct($items = [])
     {
         $this->items = $items;
-    }
-
-    private static $defaultLayoutProviderClassName = '\Rhubarb\Leaf\LayoutProviders\FieldSetWithLabelsLayoutProvider';
-
-    public static function setDefaultLayoutProviderClassName($defaultLayoutProviderClassName)
-    {
-        self::$defaultLayoutProviderClassName = $defaultLayoutProviderClassName;
-    }
-
-    /**
-     * Creates an instance of the default layout provider.
-     *
-     * @param array $items Optionally an array of items to print if using the toString approach.
-     * @return LayoutProvider
-     */
-    public static function getDefaultLayoutProvider($items = [])
-    {
-        $provider = self::$defaultLayoutProviderClassName;
-
-        return new $provider();
+        $this->generateValueEvent = new Event();
     }
 
     /**
@@ -180,71 +175,14 @@ abstract class LayoutProvider
         return ob_get_clean();
     }
 
-    /**
-     * @var Callback
-     */
-    private $valueGenerationCallBack = null;
-
-    /**
-     * Sets the callback function to use when a value needs generated
-     *
-     * @param Callback $callback
-     */
-    public function setValueGenerationCallBack($callback)
-    {
-        $this->valueGenerationCallBack = $callback;
-    }
-
     protected function generateValue($valueName)
     {
-        $newValue = null;
-
-        if (isset($this->valueGenerationCallBack)) {
-            $callBack = $this->valueGenerationCallBack;
-            $newValue = $callBack($valueName);
-        }
+        $newValue = $this->generateValueEvent->raise($valueName);
 
         if ($newValue !== null && $newValue !== false) {
             return $newValue;
         } else {
             return $this->parseStringAsTemplate($valueName);
         }
-    }
-
-    /**
-     * @var Callback
-     */
-    private $validationPlaceholderGenerationCallBack = null;
-
-    /**
-     * Sets the callback function to use when a validation placeholder needs generated
-     *
-     * @param Callback $callback
-     */
-    public function setValidationPlaceholderGenerationCallBack($callback)
-    {
-        $this->validationPlaceholderGenerationCallBack = $callback;
-    }
-
-    /**
-     * Asks the callback to generate a placeholder.
-     *
-     * @param $placeholderName
-     * @return bool|null
-     */
-    protected function generatePlaceholder($placeholderName)
-    {
-        $placeholder = null;
-
-        if (isset($this->validationPlaceholderGenerationCallBack)) {
-            $callBack = $this->validationPlaceholderGenerationCallBack;
-            $placeholder = $callBack($placeholderName);
-        }
-
-        if ($placeholder !== null && $placeholder !== false) {
-            return $placeholder;
-        }
-
-        return false;
     }
 }
