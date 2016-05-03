@@ -22,10 +22,12 @@ use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\Leaf;
+use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
 use Rhubarb\Leaf\Leaves\LeafModel;
 
 /**
@@ -204,7 +206,7 @@ class View implements Deployable
      */
     public function getDeploymentPackage()
     {
-
+        return null;
     }
 
     protected function printViewContent()
@@ -214,6 +216,34 @@ class View implements Deployable
 
     public final function renderContent()
     {
+        $resourcePackage = $this->getDeploymentPackage();
+        $viewBridge = $this->getViewBridgeName();
+
+        if ($viewBridge){
+            $jsAndCssUrls = [];
+
+            if ($resourcePackage != null){
+                $urls = $resourcePackage->getDeployedUrls();
+                $urls = array_merge($this->getAdditionalResourceUrls(), $urls);
+
+                $jsAndCssUrls = [];
+
+                foreach ($urls as $url) {
+                    if (preg_match("/\.js$/", $url) || preg_match("/\.css$/", $url)) {
+                        $jsAndCssUrls[] = $url;
+                    }
+                }
+            }
+            ResourceLoader::addScriptCode(
+                "new window.rhubarb.viewBridgeClasses." . $this->getViewBridgeName() . "( '" . $this->model->leafPath . "' );",
+                $jsAndCssUrls
+            );
+        }
+
+        if ($resourcePackage != null){
+            $resourcePackage->deploy();
+        }
+
         ob_start();
 
         $this->beforeRenderEvent->raise();
@@ -238,6 +268,28 @@ class View implements Deployable
         }
 
         return $content;
+    }
+
+    /**
+     * Returns an array of resource URLs required by this View that don't need deployed.
+     *
+     * Normally these would be externally hosted scripts and css files.
+     *
+     * @return string[]
+     */
+    protected function getAdditionalResourceUrls()
+    {
+        return [];
+    }
+
+    /**
+     * If the leaf requires a view bridge this returns it's name.
+     *
+     * @return string|bool
+     */
+    protected function getViewBridgeName()
+    {
+        return false;
     }
 
     /**

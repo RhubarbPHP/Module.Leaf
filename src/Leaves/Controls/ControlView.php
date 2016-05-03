@@ -49,7 +49,7 @@ abstract class ControlView extends View
         $classes = $this->model->getClassAttribute();
         $otherAttributes = $this->model->getHtmlAttributes();
 
-        $string = 'name="'.$this->model->leafPath.'" '.$classes.$otherAttributes;
+        $string = 'name="'.$this->model->leafPath.'" id="'.$this->model->leafPath.'" '.$classes.$otherAttributes;
 
         if ($includeValue) {
             $string .= ' value="' . htmlentities($this->model->value) . '" ';

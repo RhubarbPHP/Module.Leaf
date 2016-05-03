@@ -16,10 +16,18 @@
  *  limitations under the License.
  */
 
-namespace Rhubarb\Leaf\Presenters;
+namespace Rhubarb\Leaf\Leaves;
 
 use Rhubarb\Crown\Deployment\ResourceDeploymentPackage;
 
-class PresenterDeploymentPackage extends ResourceDeploymentPackage
+class LeafDeploymentPackage extends ResourceDeploymentPackage
 {
+    /**
+     * @param string[] ...$localFileToDeploy Path to a local file to deploy.
+     */
+    public function __construct(...$localFileToDeploy)
+    {
+        $this->resourcesToDeploy[] = __DIR__."/../Views/ViewBridge.js";
+        $this->resourcesToDeploy = array_merge($this->resourcesToDeploy, $localFileToDeploy);
+    }
 }
