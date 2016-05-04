@@ -4,9 +4,11 @@ namespace Rhubarb\Leaf\Leaves;
 
 use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\DependencyInjection\Container;
+use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
+use Rhubarb\Crown\Response\XmlResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
 use Rhubarb\Leaf\Views\View;
@@ -31,6 +33,14 @@ abstract class Leaf implements GeneratesResponseInterface
     private $request;
 
     private $runBeforeRenderCallbacks = [];
+
+    /**
+     * True if during XHR processing the Leaf needs to push new HTML to the client.
+     *
+     * @see reRender();
+     * @var bool
+     */
+    private $reRender = false;
 
     public function __construct($name = "")
     {
@@ -166,6 +176,77 @@ abstract class Leaf implements GeneratesResponseInterface
         if ($this->request) {
             $this->view->setWebRequest($this->request);
         }
+
+        $this->parseRequest($request);
+    }
+
+    /**
+     * Parses the request looking for client side events.
+     *
+     * @param WebRequest $request
+     */
+    protected function parseRequest(WebRequest $request)
+    {
+        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $request->post("_leafEventTarget"));
+
+        if (stripos($targetWithoutIndexes, $this->model->leafPath) !== false) {
+            $requestTargetParts = explode("_", $request->post("_leafEventTarget"));
+            $pathParts = explode("_", $this->model->leafPath);
+
+            if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
+                $this->setIndex($match[1]);
+            }
+        }
+
+        if ($targetWithoutIndexes == $this->model->leafPath) {
+            $eventName = $request->post("_leafEventName");
+            $eventTarget = $request->post("_leafEventTarget");
+            $eventArguments = [];
+
+            if ($request->post("_leafEventArguments")) {
+                $args = $request->post("_leafEventArguments");
+                foreach ($args as $argument) {
+                    $eventArguments[] = json_decode($argument);
+                }
+            }
+
+            if ($request->post("_leafEventArgumentsJson")) {
+                array_push($eventArguments, json_decode($request->post("_leafEventArgumentsJson"), true));
+            }
+
+            // Provide a callback for the event processing.
+            $eventArguments[] = function ($response) use ($eventName, $eventTarget) {
+                if ($response === null) {
+                    return;
+                }
+
+                $type = "";
+
+                if (is_object($response) || is_array($response)) {
+                    $response = json_encode($response);
+                    $type = ' type="json"';
+                }
+
+                print '<eventresponse event="' . $eventName . '" sender="' . $eventTarget . '"' . $type . '>
+<![CDATA[' . $response . ']]>
+</eventresponse>';
+            };
+
+            // First raise the event on the presenter itself
+            $this->runBeforeRender(function() use ($eventName, $eventArguments){
+                $eventProperty = $eventName."Event";
+
+                if (property_exists($this->model, $eventProperty)) {
+                    /**
+                     * @var Event $event
+                     */
+                    $event = $this->model->$eventProperty;
+                    return $event->raise(...$eventArguments);
+                }
+
+                return null;
+            });
+        }
     }
 
     /**
@@ -185,6 +266,11 @@ abstract class Leaf implements GeneratesResponseInterface
 
     }
 
+    protected final function reRender()
+    {
+        $this->reRender = true;
+    }
+
     private final function render()
     {
         $this->runBeforeRenderCallbacks();
@@ -192,6 +278,39 @@ abstract class Leaf implements GeneratesResponseInterface
         $html = $this->view->renderContent();
 
         return $html;
+    }
+
+    private final function renderXhr()
+    {
+        $this->runBeforeRenderCallbacks();
+        $this->beforeRender();
+        $xml = $this->recursiveReRender();
+
+        $xml = '<?xml version="1.0"?>
+<leaf>
+'.$xml;
+
+        $xml .= '
+</leaf>';
+        
+        return $xml;
+    }
+
+    public final function recursiveReRender()
+    {
+        if ($this->reRender) {
+            $html = $this->render();
+            $html = '<htmlupdate id="' . $this->model->leafPath . '">
+<![CDATA[' . $html . ']]>
+</htmlupdate>';
+
+            return $html;
+        } else {
+            // Note that we don't need to call RecursiveRePresent if we are RePresenting ourselves
+            // as that will naturally re present all sub presenters.
+
+            return $this->view->recursiveReRender();
+        }
     }
 
     /**
@@ -204,8 +323,13 @@ abstract class Leaf implements GeneratesResponseInterface
     {
         $this->setWebRequest($request);
 
-        $response = new HtmlResponse($this);
-        $response->setContent($this->render());
+        if ($request->header("Accept") == "application/leaf"){
+            $response = new XmlResponse($this);
+            $response->setContent($this->renderXhr());
+        } else {
+            $response = new HtmlResponse($this);
+            $response->setContent($this->render());
+        }
 
         return $response;
     }
@@ -237,5 +361,27 @@ abstract class Leaf implements GeneratesResponseInterface
 
         // Ask the view to notify sub leaves
         $this->view->runBeforeRenderCallbacks();
+    }
+
+    /**
+     * Provides this Leaf and the passed Leaf a chance to connect events should they recognise the
+     * exposed events.
+     *
+     * @param Leaf $with The leaf with which to bind events.
+     */
+    public function bindEventsWith(Leaf $with)
+    {
+        $this->bindEvents($with);
+        $with->bindEvents($this);
+    }
+
+    /**
+     * A chance to discover if any of the events of the passed Leaf class are understood by this Leaf and
+     * to attach a handler if appropriate.
+     *
+     * @param Leaf $with The Leaf to perform discovery on.
+     */
+    protected function bindEvents(Leaf $with)
+    {
     }
 }

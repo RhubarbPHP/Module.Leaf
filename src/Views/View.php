@@ -195,13 +195,13 @@ class View implements Deployable
                 $event = $subLeaf->getBindingValueChangedEvent();
 
                 $event->attachHandler(function ($index = null) use ($name, $subLeaf) {
-                    $bindingValue = $subLeaf->getBindingValue();
-                    $this->setBindingValue($name, $bindingValue, $index);
+                    $bindingValue = $subLeaf->getValue();
+                    $this->setBindingValueFromSubLeaf($name, $bindingValue, $index);
                 });
                 
                 $event = $subLeaf->getBindingValueRequestedEvent();
                 $event->attachHandler(function($index = null) use ($name){
-                    return $this->getBindingValue($name, $index);
+                    return $this->getBindingValueForSubLeaf($name, $index);
                 });
             }
         }
@@ -213,7 +213,7 @@ class View implements Deployable
      * @param null $index
      * @return null
      */
-    protected function getBindingValue($propertyName, $index = null)
+    protected function getBindingValueForSubLeaf($propertyName, $index = null)
     {
         if ($index !== null ){
             if (isset($this->model->$propertyName[$index])){
@@ -232,7 +232,7 @@ class View implements Deployable
      * @param $propertyValue
      * @param null $index
      */
-    protected function setBindingValue($propertyName, $propertyValue, $index = null)
+    protected function setBindingValueFromSubLeaf($propertyName, $propertyValue, $index = null)
     {
         if ($index !== null){
             if (!isset($this->model->$propertyName) || !is_array($this->model->$propertyName)){
@@ -250,12 +250,30 @@ class View implements Deployable
      */
     public function getDeploymentPackage()
     {
+        if ($this->model->isRootLeaf){
+            // If we're the root leaf, we're also the host for all client side view bridge events.
+            // It's a real chore to have to define a view bridge just to allow child view bridges to
+            // fire events.
+            return new LeafDeploymentPackage();
+        }
+
         return null;
     }
 
     protected function printViewContent()
     {
 
+    }
+
+    public final function recursiveReRender()
+    {
+        $response = "";
+
+        foreach($this->leaves as $subLeaf){
+            $response .= $subLeaf->recursiveReRender();
+        }
+
+        return $response;
     }
 
     public final function renderContent()
@@ -304,8 +322,10 @@ class View implements Deployable
         }
 
         if ($this->requiresContainerDiv) {
-            $content = '<div id="'.$this->model->leafPath.'">'.$content.'</div>';
+            $content = '<div id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
         }
+
+        $content = $this->wrapViewContent($content);
 
         if ($this->model->isRootLeaf){
             $content = '
@@ -315,6 +335,17 @@ class View implements Deployable
 ';
         }
 
+        return $content;
+    }
+
+    /**
+     * Provides and extending View an opportunity to wrap the content with some additional HTML.
+     *
+     * @param string $content The original content
+     * @return string The wrapped content.
+     */
+    protected function wrapViewContent($content)
+    {
         return $content;
     }
 
@@ -337,6 +368,13 @@ class View implements Deployable
      */
     protected function getViewBridgeName()
     {
+        if ($this->model->isRootLeaf){
+            // If we're the root leaf, we're also the host for all client side view bridge events.
+            // It's a real chore to have to define a view bridge just to allow child view bridges to
+            // fire events.
+            return "ViewBridge";
+        }
+
         return false;
     }
 

@@ -124,8 +124,14 @@ class LeafModel
 
     public function getClassAttribute()
     {
-        if (sizeof($this->cssClassNames)) {
-            return " class=\"" . implode(" ", $this->cssClassNames) . "\"";
+        $classes = $this->cssClassNames;
+
+        if ($this->isRootLeaf){
+            $classes[] = "event-host";
+        }
+
+        if (sizeof($classes)) {
+            return " class=\"" . implode(" ", $classes) . "\"";
         }
 
         return "";

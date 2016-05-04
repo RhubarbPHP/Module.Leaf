@@ -153,9 +153,9 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
     /**
      * True if when processing through AJAX this presenter should push it's view back to the client.
      *
-     * This should only be set to true by calling RePresent()
+     * This should only be set to true by calling reRender()
      *
-     * @see Presenter::rePresent()
+     * @see Presenter::reRender()
      * @var bool
      */
     private $rePresent = false;
@@ -527,7 +527,7 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
     /**
      * Call to make sure this presenter pushes it's view back to the client.
      */
-    public function rePresent()
+    public function reRender()
     {
         $this->rePresent = true;
     }
@@ -631,19 +631,19 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
     /**
      * Looks for an event that should be raised on this presenter within the HTTP request data.
      *
-     * An event is recognised if the _mvpEventTarget matches this presenter's path. If it does
-     * the event name should be stored in _mvpEventName
+     * An event is recognised if the _leafEventTarget matches this presenter's path. If it does
+     * the event name should be stored in _leafEventName
      */
     private function parseRequestForEvent()
     {
-        if (!isset($_REQUEST["_mvpEventTarget"])) {
+        if (!isset($_REQUEST["_leafEventTarget"])) {
             return;
         }
 
-        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_mvpEventTarget"]);
+        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_leafEventTarget"]);
 
         if (stripos($targetWithoutIndexes, $this->model->presenterPath) !== false) {
-            $requestTargetParts = explode("_", $_REQUEST["_mvpEventTarget"]);
+            $requestTargetParts = explode("_", $_REQUEST["_leafEventTarget"]);
             $pathParts = explode("_", $this->model->presenterPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
@@ -652,18 +652,18 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
         }
 
         if ($targetWithoutIndexes == $this->model->presenterPath) {
-            $eventName = $_REQUEST["_mvpEventName"];
-            $eventTarget = $_REQUEST["_mvpEventTarget"];
+            $eventName = $_REQUEST["_leafEventName"];
+            $eventTarget = $_REQUEST["_leafEventTarget"];
             $eventArguments = [$eventName];
 
-            if (isset($_REQUEST["_mvpEventArguments"])) {
-                foreach ($_REQUEST["_mvpEventArguments"] as $argument) {
+            if (isset($_REQUEST["_leafEventArguments"])) {
+                foreach ($_REQUEST["_leafEventArguments"] as $argument) {
                     $eventArguments[] = json_decode($argument);
                 }
             }
 
-            if (isset($_REQUEST["_mvpEventArgumentsJson"])) {
-                array_push($eventArguments, json_decode($_REQUEST["_mvpEventArgumentsJson"], true));
+            if (isset($_REQUEST["_leafEventArgumentsJson"])) {
+                array_push($eventArguments, json_decode($_REQUEST["_leafEventArgumentsJson"], true));
             }
 
             // Provide a callback for the event processing.
@@ -743,7 +743,7 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
         }
     }
 
-    public final function recursiveRePresent()
+    public final function recursivereRender()
     {
         if ($this->rePresent) {
             $context = Application::current()->context();
@@ -772,7 +772,7 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
             // Note that we don't need to call RecursiveRePresent if we are RePresenting ourselves
             // as that will naturally re present all sub presenters.
 
-            $this->view->recursiveRePresent();
+            $this->view->recursivereRender();
         }
     }
 
@@ -832,14 +832,14 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
         //
         // Should events be slower than necessary the first thing to consider is whether the presenter involved can
         // be flagged as atomic or redesigned so that it can be flagged as atomic.
-        if ($isAjax && $request && ($className = $request->post("_mvpEventClass")) && $className != get_class($this)) {
+        if ($isAjax && $request && ($className = $request->post("_leafEventClass")) && $className != get_class($this)) {
             if (!$this->isPermitted()) {
                 throw new PermissionException();
             }
 
             /** @var Leaf $correctPresenter */
             $correctPresenter = new $className();
-            $correctPresenter->setPresenterPath($request->post("_mvpEventpresenterPath"));
+            $correctPresenter->setPresenterPath($request->post("_leafEventpresenterPath"));
 
             return $correctPresenter->generateResponse($request);
         }
@@ -882,7 +882,7 @@ abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterf
         }
 
         if ($this->isExecutionTarget && $isAjax) {
-            $this->recursiveRePresent();
+            $this->recursivereRender();
             $newState = $this->model->getState();
         } else {
             $this->present();

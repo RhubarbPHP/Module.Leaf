@@ -6,8 +6,7 @@ use Rhubarb\Crown\Events\Event;
 
 interface BindableLeafInterface
 {
-    public function getBindingValue();
-    public function setBindingValue($bindingValue);
+    public function getValue();
 
     /**
      * @return Event

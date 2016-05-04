@@ -36,15 +36,15 @@ class Control extends Leaf implements BindableLeafInterface
 
     protected function beforeRender()
     {
-        $this->model->value = $this->getBindingValueRequestedEvent()->raise($this->model->leafIndex);
+        $this->setValue($this->getBindingValueRequestedEvent()->raise($this->model->leafIndex));
     }
 
-    public function getBindingValue()
+    public function getValue()
     {
         return $this->model->value;
     }
 
-    public function setBindingValue($bindingValue)
+    public function setValue($bindingValue)
     {
         $this->model->value = $bindingValue;
     }

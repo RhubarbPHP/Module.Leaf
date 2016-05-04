@@ -89,7 +89,7 @@ function ViewBridge(presenter) {
     this.model = [];
 
     if (this.viewNode) {
-        this.host = ( this.viewNode.className.indexOf("host") > -1 );
+        this.host = ( this.viewNode.className.indexOf("event-host") > -1 );
     }
 
     this.loadState();
@@ -545,15 +545,15 @@ ViewBridge.prototype.findEventHost = function () {
 
         var className = ( testNode.className ) ? testNode.className : "";
 
-        if (className.indexOf("host") == 0 || className.indexOf("host") > 0) {
+        if (className.indexOf("event-host") == 0 || className.indexOf("event-host") > 0) {
             if (!testNode.viewBridge) {
                 if (!testNode.id) {
-                    testNode.id = "host";
+                    testNode.id = "event-host";
                 }
 
                 new window.ViewBridge(testNode.id);
 
-                if (testNode.className.indexOf("host") == 0 || testNode.className.indexOf("host") > 0) {
+                if (testNode.className.indexOf("event-host") == 0 || testNode.className.indexOf("event-host") > 0) {
                     testNode.viewBridge.host = true;
                 }
             }
@@ -630,16 +630,16 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
     if (hostPresenter) {
         var formData = new FormData();
 
-        formData.append("_mvpEventName", eventName);
-        formData.append("_mvpEventTarget", target);
+        formData.append("_leafEventName", eventName);
+        formData.append("_leafEventTarget", target);
 
         if (index) {
-            formData.append("_mvpEventTargetIndex", index);
+            formData.append("_leafEventTargetIndex", index);
         }
 
         if (hostPresenter.eventHostClassName != "") {
-            formData.append("_mvpEventClass", hostPresenter.eventHostClassName);
-            formData.append("_mvpEventpresenterPath", hostPresenter.presenterPath);
+            formData.append("_leafEventClass", hostPresenter.eventHostClassName);
+            formData.append("_leafEventpresenterPath", hostPresenter.presenterPath);
         }
 
         formData.append(this.presenterPath, file);
@@ -723,12 +723,12 @@ ViewBridge.prototype.raisePostBackEvent = function (eventName) {
             }
         };
 
-        var eventNameInput = createOrFindHiddenInput("_mvpEventName");
-        var eventTargetInput = createOrFindHiddenInput("_mvpEventTarget");
-        var eventTargetIndexInput = createOrFindHiddenInput("_mvpTargetIndex");
-        var eventClassInput = createOrFindHiddenInput("_mvpClass");
-        var eventpresenterPathInput = createOrFindHiddenInput("_mvppresenterPath");
-        var eventArgumentsInput = createOrFindHiddenInput("_mvpEventArgumentsJson");
+        var eventNameInput = createOrFindHiddenInput("_leafEventName");
+        var eventTargetInput = createOrFindHiddenInput("_leafEventTarget");
+        var eventTargetIndexInput = createOrFindHiddenInput("_leafTargetIndex");
+        var eventClassInput = createOrFindHiddenInput("_leafClass");
+        var eventpresenterPathInput = createOrFindHiddenInput("_leafpresenterPath");
+        var eventArgumentsInput = createOrFindHiddenInput("_leafEventArgumentsJson");
 
         eventNameInput.value = eventName;
         eventTargetInput.value = target;
@@ -834,14 +834,14 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
     if (hostPresenter) {
         var formData = hostPresenter.findInputsAndSerialize(hostPresenter.viewNode);
 
-        formData += "_mvpEventName=" + eventName + "&_mvpEventTarget=" + target;
+        formData += "_leafEventName=" + eventName + "&_leafEventTarget=" + target;
 
         if (index) {
-            formData += "&_mvpEventTargetIndex=" + index;
+            formData += "&_leafEventTargetIndex=" + index;
         }
 
         if (hostPresenter.eventHostClassName != "") {
-            formData += "&_mvpEventClass=" + hostPresenter.eventHostClassName + "&_mvpEventpresenterPath=" + hostPresenter.presenterPath;
+            formData += "&_leafEventClass=" + hostPresenter.eventHostClassName + "&_leafEventpresenterPath=" + hostPresenter.presenterPath;
         }
 
         for (i = 1; i < arguments.length; i++) {
@@ -849,22 +849,15 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
 
             if (!(argument instanceof ViewBridge ) && !( argument instanceof Function )) {
                 argument = JSON.stringify(argument);
-                formData += "&_mvpEventArguments[]=" + encodeURIComponent(argument);
+                formData += "&_leafEventArguments[]=" + encodeURIComponent(argument);
             }
         }
 
         var ajaxUrl = "";
 
-        if (hostPresenter.presenterUrl) {
-            ajaxUrl = hostPresenter.presenterUrl;
-        }
-        else {
-            ajaxUrl = hostPresenter.presenterPhpClass.replace(/\\/g, "/");
-        }
-
         xmlhttp.open("POST", ajaxUrl, true);
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xmlhttp.setRequestHeader('Accept', 'application/core');
+        xmlhttp.setRequestHeader('Accept', 'application/leaf');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');
         xmlhttp.send(formData);
 
