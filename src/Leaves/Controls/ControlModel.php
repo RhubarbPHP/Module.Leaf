@@ -21,9 +21,12 @@ class ControlModel extends LeafModel
      */
     public $valueChangedEvent;
 
-    public $cssClassNames = [];
-
-    public $htmlAttributes = [];
+    /**
+     * Placeholder text for controls
+     *
+     * @var string
+     */
+    public $placeholderText = "";
 
     /**
      * Some auto layout features may ask a Control leaf to supply a label. If this property has
@@ -39,40 +42,6 @@ class ControlModel extends LeafModel
         parent::__construct();
         
         $this->valueChangedEvent = new Event();
-    }
-
-    public function addCssClassNames(...$classNames)
-    {
-        $this->cssClassNames = array_merge($this->cssClassNames, $classNames);
-    }
-
-    public function addHtmlAttribute($attributeName, $attributeValue)
-    {
-        $this->htmlAttributes[$attributeName] = $attributeValue;
-    }
-
-    public function getClassAttribute()
-    {
-        if (sizeof($this->cssClassNames)) {
-            return " class=\"" . implode(" ", $this->cssClassNames) . "\"";
-        }
-
-        return "";
-    }
-
-    public function getHtmlAttributes()
-    {
-        if (sizeof($this->htmlAttributes)) {
-            $attributes = [];
-
-            foreach ($this->htmlAttributes as $key => $value) {
-                $attributes[] = $key . "=\"" . htmlentities($value) . "\"";
-            }
-
-            return " " . implode(" ", $attributes);
-        }
-
-        return "";
     }
 
     /**

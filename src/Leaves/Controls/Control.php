@@ -49,6 +49,16 @@ class Control extends Leaf implements BindableLeafInterface
         $this->model->value = $bindingValue;
     }
 
+    public function setLabel($labelText)
+    {
+        $this->model->label = $labelText;
+    }
+
+    public function setPlaceholderText($placeholderText)
+    {
+        $this->model->placeholderText = $placeholderText;
+    }
+
     public function addCssClassNames(...$classNames)
     {
         $this->model->addCssClassNames(...$classNames);

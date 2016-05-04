@@ -58,6 +58,10 @@ class LeafModel
      */
     public $createSubLeafFromNameEvent;
 
+    public $cssClassNames = [];
+
+    public $htmlAttributes = [];
+
     public function __construct()
     {
         $this->createSubLeafFromNameEvent = new Event();
@@ -106,5 +110,39 @@ class LeafModel
                 $this->$key = $stateData[$key];
             }
         }
+    }
+
+    public function addCssClassNames(...$classNames)
+    {
+        $this->cssClassNames = array_merge($this->cssClassNames, $classNames);
+    }
+
+    public function addHtmlAttribute($attributeName, $attributeValue)
+    {
+        $this->htmlAttributes[$attributeName] = $attributeValue;
+    }
+
+    public function getClassAttribute()
+    {
+        if (sizeof($this->cssClassNames)) {
+            return " class=\"" . implode(" ", $this->cssClassNames) . "\"";
+        }
+
+        return "";
+    }
+
+    public function getHtmlAttributes()
+    {
+        if (sizeof($this->htmlAttributes)) {
+            $attributes = [];
+
+            foreach ($this->htmlAttributes as $key => $value) {
+                $attributes[] = $key . "=\"" . htmlentities($value) . "\"";
+            }
+
+            return " " . implode(" ", $attributes);
+        }
+
+        return "";
     }
 }
