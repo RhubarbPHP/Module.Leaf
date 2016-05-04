@@ -17,6 +17,7 @@
  */
 
 namespace Rhubarb\Leaf\Leaves;
+use Rhubarb\Crown\Events\Event;
 
 /**
  * The foundation of all model objects
@@ -49,6 +50,18 @@ class LeafModel
      * @var bool True if the view is the root leaf on the page.
      */
     public $isRootLeaf = true;
+
+    /**
+     * Raised when a View needs a sub leaf created for a given name.
+     *
+     * @var Event
+     */
+    public $createSubLeafFromNameEvent;
+
+    public function __construct()
+    {
+        $this->createSubLeafFromNameEvent = new Event();
+    }
 
     /**
      * Returns an array of **publicly viewable** state data required to persist the state or provide state

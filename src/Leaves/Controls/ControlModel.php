@@ -36,6 +36,8 @@ class ControlModel extends LeafModel
 
     public function __construct()
     {
+        parent::__construct();
+        
         $this->valueChangedEvent = new Event();
     }
 

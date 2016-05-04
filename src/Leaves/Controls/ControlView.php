@@ -7,6 +7,8 @@ use Rhubarb\Leaf\Views\View;
 
 abstract class ControlView extends View
 {
+    protected $requiresContainerDiv = false;
+
     /**
      * @var ControlModel
      */

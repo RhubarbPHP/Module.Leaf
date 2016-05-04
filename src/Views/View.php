@@ -22,6 +22,7 @@ use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\Exceptions\RhubarbException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
@@ -63,6 +64,13 @@ class View implements Deployable
      * @var bool
      */
     protected $requiresStateInput = true;
+
+    /**
+     * True if the leaf needs a surrounding div for JS to target.
+     *
+     * @var bool
+     */
+    protected $requiresContainerDiv = true;
 
     /**
      * Tracks the number of times a leaf name has occurred for sub leafs
@@ -156,6 +164,20 @@ class View implements Deployable
     protected final function registerSubLeaf(...$subLeaves)
     {
         foreach($subLeaves as $subLeaf) {
+
+            // If the sub leaf isn't a Leaf but a string - we see if our Leaf host can create a leaf for us.
+            // This facility allows for auto creation of control leaves for rapid form development in connection
+            // with Stem models.
+            if (is_string($subLeaf)){
+                $response = $this->model->createSubLeafFromNameEvent->raise($subLeaf);
+
+                if (!($response instanceof Leaf)){
+                    continue;
+                }
+
+                $subLeaf = $response;
+            }
+
             $name = $subLeaf->getName();
 
             if (isset($this->namesUsed[$name])) {
@@ -174,30 +196,52 @@ class View implements Deployable
 
                 $event->attachHandler(function ($index = null) use ($name, $subLeaf) {
                     $bindingValue = $subLeaf->getBindingValue();
-                    if ($index !== null){
-                        if (!isset($this->model->$name) || !is_array($this->model->$name)){
-                            $this->model->$name = [];
-                        }
-
-                        $this->model->$name[$index] = $bindingValue;
-                    } else {
-                        $this->model->$name = $bindingValue;
-                    }
+                    $this->setBindingValue($name, $bindingValue, $index);
                 });
                 
                 $event = $subLeaf->getBindingValueRequestedEvent();
                 $event->attachHandler(function($index = null) use ($name){
-                    if ($index !== null ){
-                        if (isset($this->model->$name[$index])){
-                            return $this->model->$name[$index];
-                        } else {
-                            return null;
-                        }
-                    } else {
-                        return isset($this->model->$name) ? $this->model->$name : null;
-                    }
+                    return $this->getBindingValue($name, $index);
                 });
             }
+        }
+    }
+
+    /**
+     * Gets the binding value for a sub leaf using a property name.
+     * @param $propertyName
+     * @param null $index
+     * @return null
+     */
+    protected function getBindingValue($propertyName, $index = null)
+    {
+        if ($index !== null ){
+            if (isset($this->model->$propertyName[$index])){
+                return $this->model->$propertyName[$index];
+            } else {
+                return null;
+            }
+        } else {
+            return isset($this->model->$propertyName) ? $this->model->$propertyName : null;
+        }
+    }
+
+    /**
+     * Sets the binding value for a sub leaf using a property name.
+     * @param $propertyName
+     * @param $propertyValue
+     * @param null $index
+     */
+    protected function setBindingValue($propertyName, $propertyValue, $index = null)
+    {
+        if ($index !== null){
+            if (!isset($this->model->$propertyName) || !is_array($this->model->$propertyName)){
+                $this->model->$propertyName = [];
+            }
+
+            $this->model->$propertyName[$index] = $propertyValue;
+        } else {
+            $this->model->$propertyName = $propertyValue;
         }
     }
 
@@ -257,6 +301,10 @@ class View implements Deployable
         if ($this->requiresStateInput) {
             $content .= '
 <input type="hidden" name="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
+        }
+
+        if ($this->requiresContainerDiv) {
+            $content = '<div id="'.$this->model->leafPath.'">'.$content.'</div>';
         }
 
         if ($this->model->isRootLeaf){

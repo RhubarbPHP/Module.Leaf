@@ -41,7 +41,7 @@ use Rhubarb\Leaf\Views\View;
  *
  * @property string $PresenterName
  */
-abstract class Presenter extends PresenterViewBase implements GeneratesResponseInterface
+abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterface
 {
     /**
      * True if this presenter is the target of the invocation, false if it is a sub presenter.
@@ -304,9 +304,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     /**
      * Creates and sets a sub presenters path.
      *
-     * @param Presenter $subPresenter
+     * @param Leaf $subPresenter
      */
-    private function setSubPresenterPath(Presenter $subPresenter)
+    private function setSubPresenterPath(Leaf $subPresenter)
     {
         $this->hostedPresenterCount++;
 
@@ -324,11 +324,11 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     }
 
     /**
-     * @var Presenter[]
+     * @var Leaf[]
      */
     protected $subPresenters = [];
 
-    public function addSubPresenter(Presenter $presenter)
+    public function addSubPresenter(Leaf $presenter)
     {
         $this->setSubPresenterPath($presenter);
 
@@ -421,7 +421,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     protected final function registerView(View $view)
     {
         $view->setModel($this->model);
-        $view->presenterAddedEvent->attachHandler(function(Presenter $presenter){
+        $view->presenterAddedEvent->attachHandler(function(Leaf $presenter){
             $this->addSubPresenter($presenter);
         });
 
@@ -463,9 +463,9 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     /**
      * Called when a presenter has been added to this presenters view.
      *
-     * @param Presenter $presenter
+     * @param Leaf $presenter
      */
-    protected function onPresenterAdded(Presenter $presenter)
+    protected function onPresenterAdded(Leaf $presenter)
     {
 
     }
@@ -837,7 +837,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
                 throw new PermissionException();
             }
 
-            /** @var Presenter $correctPresenter */
+            /** @var Leaf $correctPresenter */
             $correctPresenter = new $className();
             $correctPresenter->setPresenterPath($request->post("_mvpEventpresenterPath"));
 
@@ -1190,9 +1190,9 @@ JS;
     /**
      * Override this to attach events to another presenter
      *
-     * @param Presenter $presenter
+     * @param Leaf $presenter
      */
-    protected function bindEvents(Presenter $presenter)
+    protected function bindEvents(Leaf $presenter)
     {
 
     }
@@ -1202,9 +1202,9 @@ JS;
      *
      * This method provides both parties with a chance to register event handlers.
      *
-     * @param Presenter $presenter
+     * @param Leaf $presenter
      */
-    public final function bindEventsWith(Presenter $presenter)
+    public final function bindEventsWith(Leaf $presenter)
     {
         $this->bindEvents($presenter);
         $presenter->bindEvents($this);
