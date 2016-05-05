@@ -41,7 +41,7 @@ use Rhubarb\Leaf\Views\View;
  *
  * @property string $PresenterName
  */
-abstract class Leaf extends PresenterViewBase implements GeneratesResponseInterface
+abstract class Presenter extends PresenterViewBase implements GeneratesResponseInterface
 {
     /**
      * True if this presenter is the target of the invocation, false if it is a sub presenter.

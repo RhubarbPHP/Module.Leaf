@@ -339,13 +339,19 @@ abstract class Leaf implements GeneratesResponseInterface
         return $this->render();
     }
 
+    private $runningEventsBeforeRender = false;
+
     /**
      * Register a callback to run just before leaf rendering takes place.
      * @param callable $callback
      */
     protected final function runBeforeRender(Callable $callback)
     {
-        $this->runBeforeRenderCallbacks[] = $callback;
+        if ($this->runningEventsBeforeRender){
+            $callback();
+        } else {
+            $this->runBeforeRenderCallbacks[] = $callback;
+        }
     }
 
     /**
@@ -353,6 +359,8 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     public function runBeforeRenderCallbacks()
     {
+        $this->runningEventsBeforeRender = true;
+
         foreach($this->runBeforeRenderCallbacks as $callback){
             $callback();
         }
@@ -361,6 +369,8 @@ abstract class Leaf implements GeneratesResponseInterface
 
         // Ask the view to notify sub leaves
         $this->view->runBeforeRenderCallbacks();
+
+        $this->runningEventsBeforeRender = false;
     }
 
     /**
