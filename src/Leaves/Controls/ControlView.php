@@ -35,12 +35,12 @@ abstract class ControlView extends View
 
         foreach($postData as $key => $value){
             if (preg_match("/".$this->model->leafPath."\(([^)]+)\)$/", $key, $match)){
-                $this->setControlViewWithIndex($match[1], $value);
+                $this->setControlValueForIndex($match[1], $value);
             }
         }
     }
 
-    private function setControlViewWithIndex($index, $value)
+    private function setControlValueForIndex($index, $value)
     {
         $this->model->value = $value;
         $this->model->valueChangedEvent->raise($index);
