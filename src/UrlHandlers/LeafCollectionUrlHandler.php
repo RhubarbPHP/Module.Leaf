@@ -111,7 +111,7 @@ class LeafCollectionUrlHandler extends UrlHandler
     {
         $leafClass = $this->getPresenterClassName();
         $leaf = new $leafClass();
-        $leaf->ItemIdentifier = $this->resourceIdentifier;
+        $leaf->itemIdentifier = $this->resourceIdentifier;
 
         $response = $leaf->generateResponse($request);
 
