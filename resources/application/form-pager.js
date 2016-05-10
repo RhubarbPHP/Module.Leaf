@@ -1,4 +1,4 @@
-var formPager = function (presenterPath) {
+var formPager = function (leafPath) {
     window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 

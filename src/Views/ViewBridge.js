@@ -2,14 +2,14 @@ if (!window.rhubarb) {
     window.rhubarb = {};
 }
 
-window.rhubarb.registeredPresenters = {};
+window.rhubarb.registeredLeaves = {};
 window.rhubarb.viewBridgeClasses = {};
 
-window.rhubarb.spawn = function (spawnSettings, viewIndex, parentpresenterPath) {
+window.rhubarb.spawn = function (spawnSettings, viewIndex, parentleafPath) {
     var viewBridgeClass = window.rhubarb.viewBridgeClasses[spawnSettings.ViewBridgeClass];
 
     if (viewBridgeClass.spawn) {
-        var element = viewBridgeClass.spawn(spawnSettings, viewIndex, parentpresenterPath);
+        var element = viewBridgeClass.spawn(spawnSettings, viewIndex, parentleafPath);
 
         var bridge = new viewBridgeClass(element);
 
@@ -30,21 +30,22 @@ window.rhubarb.spawn = function (spawnSettings, viewIndex, parentpresenterPath) 
  * using jQuery. By not relying on jQuery we ensure that we aren't going to be upset by
  * jQuery version conflicts and our foot print is smaller.
  *
- * @param presenter Either an ID string or an HTMLElement
  * @constructor
+ * @param leafPath
+ * @param onCreatedCallback
  */
-function ViewBridge(presenter) {
+function ViewBridge(leafPath, onCreatedCallback) {
     if (arguments.length == 0) {
         return;
     }
 
-    if (typeof presenter == "string") {
-        this.leafPath = presenter;
-        this.leafName = presenter;
+    if (typeof leafPath == "string") {
+        this.leafPath = leafPath;
+        this.leafName = leafPath;
         this.viewNode = document.getElementById(this.leafPath);
     }
     else {
-        this.viewNode = presenter;
+        this.viewNode = leafPath;
 
         this.leafPath = this.viewNode.id;
         this.leafName = this.viewNode.id;
@@ -64,7 +65,7 @@ function ViewBridge(presenter) {
         this.viewNode.viewBridge = this;
     }
 
-    if (presenter == "host") {
+    if (leafPath == "host") {
         this.leafPath = this.leafName;
     }
 
@@ -86,14 +87,28 @@ function ViewBridge(presenter) {
         this.host = true;
     }
 
-    this.registerPresenter();
-
     if (this.viewNode && this.viewNode.serverEventResponseHandlers) {
         this.serverEventResponseHandlers = this.viewNode.serverEventResponseHandlers;
     }
 
     this.attachDomChangeEventHandler();
+
+    if (onCreatedCallback){
+        onCreatedCallback();
+    }
+
+    this.registerLeaf();
+    this.onReady();
 }
+
+/**
+ * Called when the view bridge has been instantiated and the creation callback has been called.
+ *
+ * Under normal conditions all children should be ready at this point.
+ */
+ViewBridge.prototype.onReady = function() {
+
+};
 
 ViewBridge.prototype.selectAndIterateElements = function(selector, callback) {
     var nodes = this.viewNode.querySelectorAll(selector);
@@ -168,9 +183,9 @@ ViewBridge.prototype.getViewIndex = function () {
  *
  * @param spawnData
  * @param [index]
- * @param [parentpresenterPath]
+ * @param [parentleafPath]
  */
-ViewBridge.spawn = function (spawnData, index, parentpresenterPath) {
+ViewBridge.spawn = function (spawnData, index, parentleafPath) {
 
 };
 
@@ -182,8 +197,8 @@ ViewBridge.spawn = function (spawnData, index, parentpresenterPath) {
  * @param node
  * @param [index]
  */
-ViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index, parentpresenterPath) {
-    var id = parentpresenterPath ? parentpresenterPath + '_' + spawnData.PresenterName : spawnData.leafPath;
+ViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, index, parentleafPath) {
+    var id = parentleafPath ? parentleafPath + '_' + spawnData.PresenterName : spawnData.leafPath;
 
     if (index !== null && index !== false && (typeof index !== "undefined")) {
         id += "(" + index + ")";
@@ -194,8 +209,8 @@ ViewBridge.applyStandardAttributesToSpawnedElement = function (node, spawnData, 
     node.setAttribute("presenter-name", spawnData.PresenterName);
 };
 
-ViewBridge.prototype.registerPresenter = function () {
-    window.rhubarb.registeredPresenters[this.leafPath] = this;
+ViewBridge.prototype.registerLeaf = function () {
+    window.rhubarb.registeredLeaves[this.leafPath] = this;
 
     this.onRegistered();
     this.attachEvents();
@@ -262,25 +277,25 @@ ViewBridge.prototype.attachServerEventResponseHandlerTo = function (domElement, 
  *                      you'll get the first it comes across.
  */
 ViewBridge.prototype.findChildViewBridge = function (presenterName, viewIndex) {
-    var presenterPaths = [];
+    var leafPaths = [];
 
-    for (var i in window.rhubarb.registeredPresenters) {
-        presenterPaths.push(i);
+    for (var i in window.rhubarb.registeredLeaves) {
+        leafPaths.push(i);
     }
 
-    presenterPaths.sort();
+    leafPaths.sort();
 
-    var thispresenterPath = this.leafPath + '_';
+    var thisleafPath = this.leafPath + '_';
 
-    for (i in presenterPaths) {
-        var presenter = window.rhubarb.registeredPresenters[presenterPaths[i]];
+    for (i in leafPaths) {
+        var presenter = window.rhubarb.registeredLeaves[leafPaths[i]];
 
         if (presenter.leafName == presenterName) {
-            var presenterPath = presenter.leafPath;
+            var leafPath = presenter.leafPath;
 
             // Check the viewBridge we're considering is a child of this one.
-            if (presenterPath.indexOf(thispresenterPath) == 0) {
-                if (presenterPath.replace(thispresenterPath, '').indexOf("_") == -1) {
+            if (leafPath.indexOf(thisleafPath) == 0) {
+                if (leafPath.replace(thisleafPath, '').indexOf("_") == -1) {
                     return presenter;
                 }
             }
@@ -298,23 +313,23 @@ ViewBridge.prototype.findChildViewBridge = function (presenterName, viewIndex) {
  *                    you'll get the first it comes across.
  */
 ViewBridge.prototype.findViewBridge = function (presenterName, viewIndex) {
-    var presenterPaths = [];
+    var leafPaths = [];
 
-    for (var i in window.rhubarb.registeredPresenters) {
-        presenterPaths.push(i);
+    for (var i in window.rhubarb.registeredLeaves) {
+        leafPaths.push(i);
     }
 
-    presenterPaths.sort();
+    leafPaths.sort();
 
-    var thispresenterPath = this.leafPath + '_';
+    var thisleafPath = this.leafPath + '_';
 
-    for (i in presenterPaths) {
-        var presenter = window.rhubarb.registeredPresenters[presenterPaths[i]];
+    for (i in leafPaths) {
+        var presenter = window.rhubarb.registeredLeaves[leafPaths[i]];
 
         if (presenter.leafName == presenterName) {
             // This viewBridge is indexed, so check the viewBridge we're considering matches this one's index
             // Check the viewBridge we're considering is a child of this one.
-            if (presenter.leafPath.indexOf(thispresenterPath) == 0) {
+            if (presenter.leafPath.indexOf(thisleafPath) == 0) {
                 return presenter;
             }
         }
@@ -404,34 +419,34 @@ ViewBridge.prototype.onStateLoaded = function () {
 
 };
 
-ViewBridge.prototype.getSubPresenters = function () {
+ViewBridge.prototype.getSubLeaves = function () {
     var subPresenters = [];
 
-    for (var subPath in window.rhubarb.registeredPresenters) {
+    for (var subPath in window.rhubarb.registeredLeaves) {
         if (subPath == this.leafPath) {
             // We are not a child of ourselves
             continue;
         }
 
         if (subPath.indexOf(this.leafPath + "_") == 0) {
-            subPresenters[subPresenters.length] = window.rhubarb.registeredPresenters[subPath];
+            subPresenters[subPresenters.length] = window.rhubarb.registeredLeaves[subPath];
         }
     }
 
     return subPresenters;
 };
 
-ViewBridge.prototype.onSubPresenterValueChanged = function () {
+ViewBridge.prototype.onSubLeafValueChanged = function () {
 
 };
 
-ViewBridge.prototype.subPresenterValueChanged = function (viewBridge, newValue) {
-    this.onSubPresenterValueChanged.apply(this, arguments);
+ViewBridge.prototype.subLeafValueChanged = function (viewBridge, newValue) {
+    this.onSubLeafValueChanged.apply(this, arguments);
 
     var container = this.getContainingViewBridge();
 
     if (container) {
-        container.subPresenterValueChanged(viewBridge, newValue);
+        container.subLeafValueChanged(viewBridge, newValue);
     }
 };
 
@@ -441,7 +456,7 @@ ViewBridge.prototype.valueChanged = function () {
     var container = this.getContainingViewBridge();
 
     if (container) {
-        container.subPresenterValueChanged(this, newValue);
+        container.subLeafValueChanged(this, newValue);
     }
 
     this.raiseClientEvent("ValueChanged", this, newValue);
@@ -476,9 +491,9 @@ ViewBridge.prototype.setValue = function (value) {
     }
 };
 
-ViewBridge.prototype.getSubPresenterValues = function () {
+ViewBridge.prototype.getSubLeafValues = function () {
     // Get all the values from all the sub presenters to build our model to validate.
-    var subPresenters = this.getSubPresenters();
+    var subPresenters = this.getSubLeaves();
     var model = {};
 
     for (var i in subPresenters) {
@@ -491,7 +506,7 @@ ViewBridge.prototype.getSubPresenterValues = function () {
 };
 
 ViewBridge.prototype.validate = function (validator) {
-    var model = this.getSubPresenterValues();
+    var model = this.getSubLeafValues();
 
     var placeholders = document.getElementsByTagName("em");
 
@@ -632,7 +647,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         if (hostPresenter.eventHostClassName != "") {
             formData.append("_leafEventClass", hostPresenter.eventHostClassName);
-            formData.append("_leafEventpresenterPath", hostPresenter.leafPath);
+            formData.append("_leafEventleafPath", hostPresenter.leafPath);
         }
 
         formData.append(this.leafPath, file);
@@ -720,7 +735,7 @@ ViewBridge.prototype.raisePostBackEvent = function (eventName) {
         var eventTargetInput = createOrFindHiddenInput("_leafEventTarget");
         var eventTargetIndexInput = createOrFindHiddenInput("_leafTargetIndex");
         var eventClassInput = createOrFindHiddenInput("_leafClass");
-        var eventpresenterPathInput = createOrFindHiddenInput("_leafpresenterPath");
+        var eventleafPathInput = createOrFindHiddenInput("_leafleafPath");
         var eventArgumentsInput = createOrFindHiddenInput("_leafEventArgumentsJson");
 
         eventNameInput.value = eventName;
@@ -732,7 +747,7 @@ ViewBridge.prototype.raisePostBackEvent = function (eventName) {
 
         if (hostPresenter.eventHostClassName != "") {
             eventClassInput.value = hostPresenter.eventHostClassName;
-            eventpresenterPathInput.value = hostPresenter.leafPath;
+            eventleafPathInput.value = hostPresenter.leafPath;
         }
 
         var flatArguments = [];
@@ -834,7 +849,7 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
         }
 
         if (hostPresenter.eventHostClassName != "") {
-            formData += "&_leafEventClass=" + hostPresenter.eventHostClassName + "&_leafEventpresenterPath=" + hostPresenter.leafPath;
+            formData += "&_leafEventClass=" + hostPresenter.eventHostClassName + "&_leafEventleafPath=" + hostPresenter.leafPath;
         }
 
         for (i = 1; i < arguments.length; i++) {
@@ -1039,8 +1054,8 @@ ViewBridge.prototype.parseEventResponse = function (eventName, responseCode, res
             eventParams.push(paramNode.textContent);
         }
 
-        if (window.rhubarb.registeredPresenters[target]) {
-            var registeredPresenter = window.rhubarb.registeredPresenters[target];
+        if (window.rhubarb.registeredLeaves[target]) {
+            var registeredPresenter = window.rhubarb.registeredLeaves[target];
             registeredPresenter.raiseClientEvent.apply(registeredPresenter, eventParams);
         }
     }
@@ -1066,8 +1081,8 @@ ViewBridge.prototype.onModelUpdatedByEvent = function () {
 
 ViewBridge.prototype.reAttachViewBridges = function () {
 
-    for (var path in window.rhubarb.registeredPresenters) {
-        var presenter = window.rhubarb.registeredPresenters[path];
+    for (var path in window.rhubarb.registeredLeaves) {
+        var presenter = window.rhubarb.registeredLeaves[path];
         var viewNode = document.getElementById(path);
 
         if (viewNode) {
@@ -1091,7 +1106,7 @@ ViewBridge.prototype.reAttachViewBridges = function () {
  * @return {String}
  */
 ViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
-    var subPresenters = this.getSubPresenters();
+    var subPresenters = this.getSubLeaves();
 
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
@@ -1113,7 +1128,7 @@ ViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
  * @return {String}
  */
 ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
-    var subPresenters = this.getSubPresenters();
+    var subPresenters = this.getSubLeaves();
     var serialString = "";
 
     for (var i in subPresenters) {
@@ -1233,9 +1248,9 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
 
     var matchedPresenters = new Array(presenterNames.length);
 
-    var containingpresenterPath = containingPresenter.leafPath;
+    var containingleafPath = containingPresenter.leafPath;
 
-    containingpresenterPath += '_';
+    containingleafPath += '_';
 
     for (var i = 0; i < presenterNames.length; i++) {
         var presenterName = presenterNames[i];
@@ -1249,8 +1264,8 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
             continue;
         }
 
-        for (var p in window.rhubarb.registeredPresenters) {
-            var registeredPresenter = window.rhubarb.registeredPresenters[p];
+        for (var p in window.rhubarb.registeredLeaves) {
+            var registeredPresenter = window.rhubarb.registeredLeaves[p];
 
             if (registeredPresenter.leafPath == containingPresenter.leafPath) {
                 continue;
@@ -1259,7 +1274,7 @@ window.rhubarb.getPresentersByName = function (presenterNames, containingPresent
             if (registeredPresenter.leafName == presenterName) {
                 if (containingPresenter) {
                     // We must be a parent of this viewBridge
-                    if (registeredPresenter.leafPath.indexOf(containingpresenterPath) != 0) {
+                    if (registeredPresenter.leafPath.indexOf(containingleafPath) != 0) {
                         continue;
                     }
                 }

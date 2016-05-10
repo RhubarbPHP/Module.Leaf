@@ -91,6 +91,15 @@ class View implements Deployable
         $this->model = $model;
         $this->beforeRenderEvent = new Event();
         $this->createSubLeaves();
+        $this->attachModelEventHandlers();
+    }
+
+    /**
+     * An opportunity for extending classes to register handlers for model events.
+     */
+    protected function attachModelEventHandlers()
+    {
+
     }
 
     public final function setWebRequest(WebRequest $request)
@@ -276,40 +285,26 @@ class View implements Deployable
         return $response;
     }
 
+    private static $viewBridgeRegistrationCallback = null;
+
     public final function renderContent()
     {
-        $resourcePackage = $this->getDeploymentPackage();
-        $viewBridge = $this->getViewBridgeName();
-
-        if ($viewBridge){
-            $jsAndCssUrls = [];
-
-            if ($resourcePackage != null){
-                $urls = $resourcePackage->getDeployedUrls();
-                $urls = array_merge($this->getAdditionalResourceUrls(), $urls);
-
-                $jsAndCssUrls = [];
-
-                foreach ($urls as $url) {
-                    if (preg_match("/\.js$/", $url) || preg_match("/\.css$/", $url)) {
-                        $jsAndCssUrls[] = $url;
-                    }
-                }
-            }
-            ResourceLoader::addScriptCode(
-                "new window.rhubarb.viewBridgeClasses." . $this->getViewBridgeName() . "( '" . $this->model->leafPath . "' );",
-                $jsAndCssUrls
-            );
-        }
-
-        if ($resourcePackage != null){
-            $resourcePackage->deploy();
-        }
+        $allDeployedUrls = [];
+        $viewBridges = [];
 
         ob_start();
 
+        $oldCallback = self::$viewBridgeRegistrationCallback;
+
+        self::$viewBridgeRegistrationCallback = function($viewBridgeName, $leafPath, $childViewBridges, $deployedUrls) use (&$viewBridges, &$allDeployedUrls){
+            $viewBridges[$leafPath] = [ $viewBridgeName, $childViewBridges ];
+            $allDeployedUrls = array_merge($allDeployedUrls, $deployedUrls);
+        };
+
         $this->beforeRenderEvent->raise();
         $this->printViewContent();
+
+        self::$viewBridgeRegistrationCallback = $oldCallback;
 
         $content = ob_get_clean();
 
@@ -333,6 +328,67 @@ class View implements Deployable
 '.$content.'
 </form>
 ';
+        }
+
+        $resourcePackage = $this->getDeploymentPackage();
+        $viewBridge = $this->getViewBridgeName();
+
+        if ($viewBridge){
+
+            $allDeployedUrls = array_merge($allDeployedUrls, $resourcePackage->deploy(), $this->getAdditionalResourceUrls());
+
+            if (self::$viewBridgeRegistrationCallback != null){
+                $callback = self::$viewBridgeRegistrationCallback;
+                $callback(
+                    $this->getViewBridgeName(),
+                    $this->model->leafPath,
+                    $viewBridges,
+                    $allDeployedUrls);
+            } else {
+                $recursiveViewBridgerPrinter = function($viewBridgeClass, $leafPath, $childViewBridges, $recursiveViewBridgerPrinter){
+                    $jsCode = "new window.rhubarb.viewBridgeClasses." . $viewBridgeClass . "( '" . $leafPath . "' ";
+                    $childCodes = [];
+                    foreach($childViewBridges as $childPath => $childViewBridgeDetails){
+                        $childCodes[] = $recursiveViewBridgerPrinter(
+                            $childViewBridgeDetails[0],
+                            $childPath,
+                            $childViewBridgeDetails[1],
+                            $recursiveViewBridgerPrinter);
+                    }
+                    if (count($childCodes)){
+                        $jsCode .= ", function(){\r\n".implode(",\r\n",$childCodes)."\r\n}";
+                    }
+
+                    $jsCode .=  ")";
+
+                    return $jsCode;
+                };
+
+                $jsCode = $recursiveViewBridgerPrinter(
+                    $this->getViewBridgeName(),
+                    $this->model->leafPath,
+                    $viewBridges,
+                    $recursiveViewBridgerPrinter);
+
+                $jsAndCssUrls = [];
+
+                if ($resourcePackage != null){
+                    $jsAndCssUrls = [];
+
+                    foreach ($allDeployedUrls as $url) {
+                        if (preg_match("/\.js$/", $url) || preg_match("/\.css$/", $url)) {
+                            $jsAndCssUrls[] = $url;
+                        }
+                    }
+                }
+
+                ResourceLoader::addScriptCode($jsCode, array_unique($jsAndCssUrls));
+            }
+
+        }
+
+        if ($resourcePackage != null){
+            $resourcePackage->deploy();
         }
 
         return $content;

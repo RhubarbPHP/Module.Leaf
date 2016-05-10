@@ -109,7 +109,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
     /**
      * @var string The path within the hierarchy of sub presenters to identify this presenter.
      */
-    public $presenterPath;
+    public $leafPath;
 
     /**
      * A collection of events to run after all other events have ran.
@@ -195,7 +195,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
         $this->model = $this->createModel();
         $this->model->presenterName = $name;
-        $this->model->presenterPath = $name;
+        $this->model->leafPath = $name;
 
         $this->initialise();
     }
@@ -218,7 +218,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     public function getPresenterPath()
     {
-        return $this->model->presenterPath;
+        return $this->model->leafPath;
     }
 
     /**
@@ -242,7 +242,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      */
     protected function setPresenterPath($path)
     {
-        $this->model->presenterPath = $path;
+        $this->model->leafPath = $path;
     }
 
     /**
@@ -437,10 +437,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
      * should not know any specifics about the view. If you're attempting to raise an event on the view bridge you
      * are coupling this presenter with a specific view and so there are usually better approaches to the problem.
      *
-     * @param $presenterPath
+     * @param $leafPath
      * @param $eventName
      */
-    public static function raiseEventOnViewBridge($presenterPath, $eventName)
+    public static function raiseEventOnViewBridge($leafPath, $eventName)
     {
         self::$viewBridgeEvents[] = func_get_args();
     }
@@ -642,16 +642,16 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
         $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $_REQUEST["_leafEventTarget"]);
 
-        if (stripos($targetWithoutIndexes, $this->model->presenterPath) !== false) {
+        if (stripos($targetWithoutIndexes, $this->model->leafPath) !== false) {
             $requestTargetParts = explode("_", $_REQUEST["_leafEventTarget"]);
-            $pathParts = explode("_", $this->model->presenterPath);
+            $pathParts = explode("_", $this->model->leafPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
                 $this->viewIndex = $match[1];
             }
         }
 
-        if ($targetWithoutIndexes == $this->model->presenterPath) {
+        if ($targetWithoutIndexes == $this->model->leafPath) {
             $eventName = $_REQUEST["_leafEventName"];
             $eventTarget = $_REQUEST["_leafEventTarget"];
             $eventArguments = [$eventName];
@@ -763,7 +763,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             $html = ob_get_clean();
 
-            $html = '<htmlupdate id="' . $this->model->presenterPath . '">
+            $html = '<htmlupdate id="' . $this->model->leafPath . '">
 <![CDATA[' . $html . ']]>
 </htmlupdate>';
 
@@ -839,7 +839,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
 
             /** @var Leaf $correctPresenter */
             $correctPresenter = new $className();
-            $correctPresenter->setPresenterPath($request->post("_leafEventpresenterPath"));
+            $correctPresenter->setPresenterPath($request->post("_leafEventleafPath"));
 
             return $correctPresenter->generateResponse($request);
         }
@@ -938,7 +938,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponseI
                 $eventParams = json_encode($eventParams);
 
                 $javascript = <<<JS
-                    var registeredPresenter = window.rhubarb.registeredPresenters[$target];
+                    var registeredPresenter = window.rhubarb.registeredLeaves[$target];
                     if (registeredPresenter) {
                         registeredPresenter.raiseClientEvent.apply(registeredPresenter, $eventParams);
                     }
@@ -986,7 +986,7 @@ JS;
         if (!$this->initialised) {
             $this->initialised = true;
             $this->initialiseModel();
-            $this->model->indexedPresenterPath = $this->model->presenterPath;
+            $this->model->indexedPresenterPath = $this->model->leafPath;
             $this->initialiseView();
         }
     }
@@ -1044,7 +1044,7 @@ JS;
         $state = $this->view->getPropagatedState();
 
         $request = Request::current();
-        $state = $request->post($this->model->presenterPath . "State");
+        $state = $request->post($this->model->leafPath . "State");
 
         if ($state != null) {
             if (is_string($state)) {
@@ -1055,7 +1055,7 @@ JS;
 
     public function getRestoredModel()
     {
-        $id = $this->model->presenterPath;
+        $id = $this->model->leafPath;
 
 
     }

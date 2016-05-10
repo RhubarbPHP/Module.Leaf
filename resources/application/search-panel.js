@@ -1,4 +1,4 @@
-var searchPanel = function (presenterPath) {
+var searchPanel = function (leafPath) {
     window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 

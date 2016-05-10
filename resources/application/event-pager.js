@@ -1,4 +1,4 @@
-var eventPager = function (presenterPath) {
+var eventPager = function (leafPath) {
     window.rhubarb.viewBridgeClasses.JqueryViewBridge.apply(this, arguments);
 };
 
