@@ -266,7 +266,7 @@ abstract class Leaf implements GeneratesResponseInterface
 
     }
 
-    protected final function reRender()
+    public final function reRender()
     {
         $this->reRender = true;
     }
@@ -282,9 +282,13 @@ abstract class Leaf implements GeneratesResponseInterface
 
     private final function renderXhr()
     {
+        ob_start();
+
         $this->runBeforeRenderCallbacks();
         $this->beforeRender();
-        $xml = $this->recursiveReRender();
+
+        $xml = ob_get_clean();
+        $xml .= $this->recursiveReRender();
 
         $xml = '<?xml version="1.0"?>
 <leaf>
