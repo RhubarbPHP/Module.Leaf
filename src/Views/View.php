@@ -313,7 +313,7 @@ class View implements Deployable
 
         if ($this->requiresStateInput) {
             $content .= '
-<input type="hidden" name="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
+<input type="hidden" name="' . $this->getStateKey() . '" id="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
         }
 
         if ($this->requiresContainerDiv) {
@@ -439,7 +439,7 @@ class View implements Deployable
      */
     private function getStateKey()
     {
-        return $this->model->leafPath . "_state";
+        return $this->model->leafPath . "State";
     }
 
     /**
