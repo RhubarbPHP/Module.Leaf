@@ -135,6 +135,8 @@ class {$name}Model extends LeafModel
 
     public function __construct()
     {
+        parent::__construct();
+        
         // Here you should initialise any event handlers to a new Event object
         // e.g.
         // \$this->selectedUserChangedEvent = new Event();
