@@ -317,7 +317,7 @@ class View implements Deployable
         }
 
         if ($this->requiresContainerDiv) {
-            $content = '<div id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
+            $content = '<div leaf-name="'.$this->model->leafName.'" id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
         }
 
         $content = $this->wrapViewContent($content);
@@ -356,7 +356,7 @@ class View implements Deployable
                             $recursiveViewBridgerPrinter);
                     }
                     if (count($childCodes)){
-                        $jsCode .= ", function(){\r\n".implode(",\r\n",$childCodes)."\r\n}";
+                        $jsCode .= ", function(){\r\n".implode(";\r\n",$childCodes)."\r\n}";
                     }
 
                     $jsCode .=  ")";

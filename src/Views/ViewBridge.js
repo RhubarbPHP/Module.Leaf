@@ -41,25 +41,25 @@ function ViewBridge(leafPath, onCreatedCallback) {
 
     if (typeof leafPath == "string") {
         this.leafPath = leafPath;
-        this.leafName = leafPath;
         this.viewNode = document.getElementById(this.leafPath);
     }
     else {
         this.viewNode = leafPath;
-
         this.leafPath = this.viewNode.id;
-        this.leafName = this.viewNode.id;
     }
 
+    this.leafName = this.leafPath;
+
     if (this.viewNode) {
+
         if (this.viewNode.viewBridge) {
             // This element already has a viewBridge attached. For some reason this bridge is being
             // constructed a second time for the same
             // return;
         }
 
-        if (this.viewNode.attributes["presenter-name"]) {
-            this.leafName = this.viewNode.attributes["presenter-name"].value;
+        if (this.viewNode.attributes["leaf-name"]) {
+            this.leafName = this.viewNode.attributes["leaf-name"].value;
         }
 
         this.viewNode.viewBridge = this;
