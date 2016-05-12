@@ -324,7 +324,7 @@ class View implements Deployable
 
         if ($this->model->isRootLeaf){
             $content = '
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 '.$content.'
 </form>
 ';

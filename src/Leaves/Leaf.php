@@ -92,6 +92,18 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
+     * Returns the model object for use in unit testing.
+     *
+     * DO NOT USE THIS TO SET PROPERTIES EXTERNALLY IN PRODUCTION CODE.
+     *
+     * @return LeafModel
+     */
+    public final function getModelForTesting()
+    {
+        return $this->model;
+    }
+
+    /**
      * Sets the name of the leaf.
      *
      * @param $name string The new name for the leaf
