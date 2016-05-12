@@ -56,7 +56,7 @@ class Control extends Leaf implements BindableLeafInterface
 
     public function setPlaceholderText($placeholderText)
     {
-        $this->model->placeholderText = $placeholderText;
+        $this->model->addHtmlAttribute("placeholder", $placeholderText);
     }
 
     public function addCssClassNames(...$classNames)
