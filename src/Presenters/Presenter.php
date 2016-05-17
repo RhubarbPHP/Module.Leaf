@@ -1150,10 +1150,6 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
         ob_start();
 
         if ($this->isExecutionTarget) {
-            if ($isAjax) {
-                print "<?xml version=\"1.0\"?><mvp>\r\n";
-            }
-
             // Process events and if based on those events our view setup might change we
             // will reinitialise them and run the events again. This is because a new view
             // configuration may involve different presenters that will need a chance to run their
@@ -1189,6 +1185,10 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
         if ($isAjax) {
             $response = new HtmlResponse($this);
+
+            if ($isAjax) {
+                $html = "<?xml version=\"1.0\"?><mvp>\r\n" . $html;
+            }
 
             if ($this->isExecutionTarget) {
                 foreach ($modelChanges as $path => $modelChange) {
