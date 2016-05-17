@@ -21,7 +21,7 @@ class Control extends Leaf implements BindableLeafInterface
     {
         return ControlView::class;
     }
-    
+
     protected function createModel()
     {
         return new ControlModel();
@@ -42,6 +42,11 @@ class Control extends Leaf implements BindableLeafInterface
     public function getValue()
     {
         return $this->model->value;
+    }
+
+    public function getHtmlId()
+    {
+        return $this->model->leafPath;
     }
 
     public function setValue($bindingValue)
