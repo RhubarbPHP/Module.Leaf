@@ -44,7 +44,7 @@ class Control extends Leaf implements BindableLeafInterface
         return $this->model->value;
     }
 
-    public function getHtmlId()
+    public function getPath()
     {
         return $this->model->leafPath;
     }
