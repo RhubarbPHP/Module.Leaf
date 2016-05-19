@@ -410,4 +410,9 @@ abstract class Leaf implements GeneratesResponseInterface
     protected function bindEvents(Leaf $with)
     {
     }
+
+    public function addCssClassNames(...$classNames)
+    {
+        $this->model->addCssClassNames(...$classNames);
+    }
 }
