@@ -273,7 +273,18 @@ abstract class Leaf implements GeneratesResponseInterface
         print $this->render();
     }
 
+    /**
+     * Called just before the view is rendered.
+     */
     protected function beforeRender()
+    {
+
+    }
+
+    /**
+     * Called after events have finished processing but before beforeRender()
+     */
+    protected function afterEvents()
     {
 
     }
@@ -286,6 +297,7 @@ abstract class Leaf implements GeneratesResponseInterface
     private final function render()
     {
         $this->runBeforeRenderCallbacks();
+        $this->afterEvents();
         $this->beforeRender();
         $html = $this->view->renderContent();
 
@@ -297,6 +309,7 @@ abstract class Leaf implements GeneratesResponseInterface
         ob_start();
 
         $this->runBeforeRenderCallbacks();
+        $this->afterEvents();
         $this->beforeRender();
 
         $xml = ob_get_clean();
