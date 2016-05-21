@@ -19,6 +19,7 @@
 namespace Rhubarb\Leaf\Views;
 
 use Codeception\Lib\Interfaces\Web;
+use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
@@ -335,7 +336,12 @@ class View implements Deployable
 
         if ($viewBridge){
 
-            $allDeployedUrls = array_merge($allDeployedUrls, $resourcePackage->deploy(), $this->getAdditionalResourceUrls());
+            if (Application::current()->developerMode){
+                $urls = $resourcePackage->deploy();
+            } else {
+                $urls = $resourcePackage->getDeployedUrls();
+            }
+            $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
 
             if (self::$viewBridgeRegistrationCallback != null){
                 $callback = self::$viewBridgeRegistrationCallback;
@@ -387,7 +393,7 @@ class View implements Deployable
 
         }
 
-        if ($resourcePackage != null){
+        if (($resourcePackage != null) && (Application::current()->developerMode)){
             $resourcePackage->deploy();
         }
 
