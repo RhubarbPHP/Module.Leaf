@@ -226,11 +226,15 @@ class View implements Deployable
     protected function getBindingValueForSubLeaf($propertyName, $index = null)
     {
         if ($index !== null ){
-            if (isset($this->model->$propertyName[$index])){
-                return $this->model->$propertyName[$index];
-            } else {
-                return null;
+            if (isset($this->model->$propertyName)) {
+                $property = $this->model->$propertyName;
+
+                if (isset($property[$index])) {
+                    return $property[$index];
+                }
             }
+
+            return null;
         } else {
             return isset($this->model->$propertyName) ? $this->model->$propertyName : null;
         }
@@ -245,11 +249,13 @@ class View implements Deployable
     protected function setBindingValueFromSubLeaf($propertyName, $propertyValue, $index = null)
     {
         if ($index !== null){
+
             if (!isset($this->model->$propertyName) || !is_array($this->model->$propertyName)){
                 $this->model->$propertyName = [];
             }
 
-            $this->model->$propertyName[$index] = $propertyValue;
+            $property = $this->model->$propertyName;
+            $property[$index] = $propertyValue;
         } else {
             $this->model->$propertyName = $propertyValue;
         }
