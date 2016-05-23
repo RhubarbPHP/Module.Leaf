@@ -1,5 +1,10 @@
-### 1.0.x
+### 1.0.0
 
+* Views now loaded using DI
+* Leaf and View share a model class
+* Overhaul of data binding
+* Removal of jquery
+* Removal of controls and patterns
 * Added a changelog
 * Refactored to support stem 1.0.0
 * Added codeception

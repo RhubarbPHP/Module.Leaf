@@ -30,7 +30,7 @@ class SubLeavesTest extends LeafTestCase
         $this->assertContains("name=forename", $response);
         $this->assertTrue($this->leaf->getModel()->isRootLeaf);
         $this->assertFalse($this->leaf->getView()->secondForename->getModel()->isRootLeaf);
-        $this->assertContains("LeafWithSubLeaves_forename_state", $response);
+        $this->assertContains("LeafWithSubLeaves_forenameState", $response);
     }
 
     public function testSubLeavesWithBinding()

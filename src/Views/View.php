@@ -254,7 +254,7 @@ class View implements Deployable
                 $this->model->$propertyName = [];
             }
 
-            $property = $this->model->$propertyName;
+            $property = &$this->model->$propertyName;
             $property[$index] = $propertyValue;
         } else {
             $this->model->$propertyName = $propertyValue;

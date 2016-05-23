@@ -14,7 +14,7 @@ class StateTest extends LeafTestCase
     {
         $request = $this->getRequestWithPostData(
             [
-                "LeafWithState_state" => json_encode(["forename" => "John"])
+                "LeafWithStateState" => json_encode(["forename" => "John"])
             ]
         );
 
@@ -30,7 +30,7 @@ class StateTest extends LeafTestCase
     {
         $response = $this->renderLeafAndGetContent();
 
-        $this->assertContains("LeafWithState_state", $response);
+        $this->assertContains("LeafWithStateState", $response);
         $this->assertContains(':&quot;Billy&quot;', $response);
     }
     
