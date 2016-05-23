@@ -40,9 +40,18 @@ abstract class ControlView extends View
         }
     }
 
+    /**
+     * An opportunity for the control to sanitise incoming posted data.
+     * @param $value
+     */
+    protected function parsePostedValue($value)
+    {
+        return $value;
+    }
+
     private function setControlValueForIndex($index, $value)
     {
-        $this->model->value = $value;
+        $this->model->value = $this->parsePostedValue($value);
         $this->model->valueChangedEvent->raise($index);
     }
 
