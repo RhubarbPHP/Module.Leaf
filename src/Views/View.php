@@ -206,58 +206,14 @@ class View implements Deployable
 
                 $event->attachHandler(function ($index = null) use ($name, $subLeaf) {
                     $bindingValue = $subLeaf->getValue();
-                    $this->setBindingValueFromSubLeaf($name, $bindingValue, $index);
+                    $this->model->setBoundValue($name, $bindingValue, $index);
                 });
                 
                 $event = $subLeaf->getBindingValueRequestedEvent();
                 $event->attachHandler(function($index = null) use ($name){
-                    return $this->getBindingValueForSubLeaf($name, $index);
+                    return $this->model->getBoundValue($name, $index);
                 });
             }
-        }
-    }
-
-    /**
-     * Gets the binding value for a sub leaf using a property name.
-     * @param $propertyName
-     * @param null $index
-     * @return null
-     */
-    protected function getBindingValueForSubLeaf($propertyName, $index = null)
-    {
-        if ($index !== null ){
-            if (isset($this->model->$propertyName)) {
-                $property = $this->model->$propertyName;
-
-                if (isset($property[$index])) {
-                    return $property[$index];
-                }
-            }
-
-            return null;
-        } else {
-            return isset($this->model->$propertyName) ? $this->model->$propertyName : null;
-        }
-    }
-
-    /**
-     * Sets the binding value for a sub leaf using a property name.
-     * @param $propertyName
-     * @param $propertyValue
-     * @param null $index
-     */
-    protected function setBindingValueFromSubLeaf($propertyName, $propertyValue, $index = null)
-    {
-        if ($index !== null){
-
-            if (!isset($this->model->$propertyName) || !is_array($this->model->$propertyName)){
-                $this->model->$propertyName = [];
-            }
-
-            $property = &$this->model->$propertyName;
-            $property[$index] = $propertyValue;
-        } else {
-            $this->model->$propertyName = $propertyValue;
         }
     }
 

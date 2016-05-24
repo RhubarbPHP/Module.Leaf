@@ -151,4 +151,32 @@ class LeafModel
 
         return "";
     }
+
+    public function setBoundValue($propertyName, $value, $index = null)
+    {
+        if ($index !== null){
+            if (!isset($this->$propertyName) || !is_array($this->$propertyName)){
+                $this->$propertyName = [];
+            }
+
+            $array = &$this->$propertyName;
+            $array[$index] = $value;
+        } else {
+            $this->$propertyName = $value;
+        }
+    }
+
+    public function getBoundValue($propertyName, $index = null)
+    {
+        if ($index !== null ){
+            $array = &$this->$propertyName;
+            if (isset($array[$index])){
+                return $array[$index];
+            } else {
+                return null;
+            }
+        } else {
+            return isset($this->$propertyName) ? $this->$propertyName : null;
+        }
+    }
 }
