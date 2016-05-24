@@ -1,3 +1,7 @@
+### 1.0.1
+
+* Basic binding logic now moved to LeafModel
+
 ### 1.0.0
 
 * Views now loaded using DI
