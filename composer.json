@@ -19,7 +19,7 @@
   },
   "require": {
     "rhubarbphp/rhubarb": "*",
-    "rhubarbphp/module-image-processing": "1.0.x"
+    "rhubarbphp/module-image-processing": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "3.*"
