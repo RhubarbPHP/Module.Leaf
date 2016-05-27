@@ -1,6 +1,10 @@
+### 1.1.x
+
+* Added:   	CompositeControl pattern.
+
 ### 1.0.1
 
-* Basic binding logic now moved to LeafModel
+* Changed:	Basic binding logic now moved to LeafModel
 
 ### 1.0.0
 
