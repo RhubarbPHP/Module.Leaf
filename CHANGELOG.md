@@ -1,6 +1,8 @@
 ### 1.1.x
 
 * Added:   	CompositeControl pattern.
+* Added:	validation module now required.
+* Added:	Support for view bridge validation integration
 
 ### 1.0.1
 

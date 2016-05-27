@@ -1315,3 +1315,24 @@ if (!String.prototype.trim) {
 }
 
 window.rhubarb.viewBridgeClasses.ViewBridge = ViewBridge;
+
+//// validation support
+
+window.rhubarb.validation.triggers.onViewBridgeValueChanged = function (viewBridge) {
+    var broker = {
+        trigger: function () {
+        }
+    };
+
+    viewBridge.attachClientEventHandler("ValueChanged", function (element, value) {
+        broker.trigger();
+    });
+
+    return broker;
+};
+
+window.rhubarb.validation.sources.fromViewBridge = function (viewBridge) {
+    return function () {
+        return viewBridge.getValue();
+    };
+};
