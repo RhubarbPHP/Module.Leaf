@@ -3,6 +3,7 @@
 * Added:   	CompositeControl pattern.
 * Added:	validation module now required.
 * Added:	Support for view bridge validation integration
+* Added:	findViewBridgesWithIndex() to ViewBridge
 
 ### 1.0.1
 

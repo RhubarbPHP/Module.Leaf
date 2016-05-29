@@ -298,12 +298,15 @@ class View implements Deployable
 
         if ($viewBridge){
 
-            if (Application::current()->developerMode){
-                $urls = $resourcePackage->deploy();
-            } else {
-                $urls = $resourcePackage->getDeployedUrls();
+            if ($resourcePackage) {
+                if (Application::current()->developerMode) {
+                    $urls = $resourcePackage->deploy();
+                } else {
+                    $urls = $resourcePackage->getDeployedUrls();
+                }
+                
+                $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
             }
-            $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
 
             if (self::$viewBridgeRegistrationCallback != null){
                 $callback = self::$viewBridgeRegistrationCallback;

@@ -305,6 +305,32 @@ ViewBridge.prototype.findChildViewBridge = function (presenterName, viewIndex) {
     return false;
 };
 
+ViewBridge.prototype.findViewBridgesWithIndex = function(leafName) {
+    var leafPaths = [];
+
+    for (var i in window.rhubarb.registeredLeaves) {
+        leafPaths.push(i);
+    }
+
+    leafPaths.sort();
+
+    var thisleafPath = this.leafPath + '_';
+    var leaves = [];
+
+    for (i in leafPaths) {
+        var leaf = window.rhubarb.registeredLeaves[leafPaths[i]];
+
+        if (leaf.leafName == leafName) {
+            // Check the viewBridge we're considering is a child of this one.
+            if (leaf.leafPath.indexOf(thisleafPath) == 0) {
+                leaves.push(leaf);
+            }
+        }
+    }
+
+    return leaves;
+};
+
 /**
  * Searches with the inner DOM of the viewBridge looking for a sub viewBridge with the matching name
  *
