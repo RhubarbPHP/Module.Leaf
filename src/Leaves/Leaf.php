@@ -212,7 +212,17 @@ abstract class Leaf implements GeneratesResponseInterface
 
         if ($targetWithoutIndexes == $this->model->leafPath) {
             $eventName = $request->post("_leafEventName");
+            $eventState = $request->post("_leafEventState");
             $eventTarget = $request->post("_leafEventTarget");
+
+            if ($eventState !== null) {
+                $eventState = json_decode($eventState, true);
+
+                if ($eventState) {
+                    $this->model->restoreFromState($eventState);
+                }
+            }
+
             $eventArguments = [];
 
             if ($request->post("_leafEventArguments")) {

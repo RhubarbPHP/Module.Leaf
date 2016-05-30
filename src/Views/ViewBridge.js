@@ -438,7 +438,11 @@ ViewBridge.prototype.saveState = function () {
         return;
     }
 
-    document.getElementById(this.leafPath + 'State').value = JSON.stringify(this.model);
+    var json = JSON.stringify(this.model);
+
+    document.getElementById(this.leafPath + 'State').value = json;
+
+    return json;
 };
 
 ViewBridge.prototype.onStateLoaded = function () {
@@ -869,6 +873,7 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
         var formData = hostPresenter.findInputsAndSerialize(hostPresenter.viewNode);
 
         formData += "_leafEventName=" + eventName + "&_leafEventTarget=" + target;
+        formData += "&_leafEventState=" + hostPresenter.saveState();
 
         if (index) {
             formData += "&_leafEventTargetIndex=" + index;
