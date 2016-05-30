@@ -4,6 +4,7 @@
 * Added:	validation module now required.
 * Added:	Support for view bridge validation integration
 * Added:	findViewBridgesWithIndex() to ViewBridge
+* Added:	raiseServerEvent() now passes back the host leaf's state
 
 ### 1.0.1
 
