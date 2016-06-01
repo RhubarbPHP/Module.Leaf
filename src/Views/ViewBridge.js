@@ -825,9 +825,6 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
         }
     }
 
-    // Give the client side a first look at the event.
-    this.raiseClientEvent.apply(this, argumentsArray);
-
     // Standardise the arguments list by ensuring the targeted viewBridge is the last parameter.
 
     var targetViewBridge;
