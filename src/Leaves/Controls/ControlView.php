@@ -49,7 +49,7 @@ abstract class ControlView extends View
         return $value;
     }
 
-    private function setControlValueForIndex($index, $value)
+    protected function setControlValueForIndex($index, $value)
     {
         $this->model->value = $this->parsePostedValue($value);
         $this->model->valueChangedEvent->raise($index);
