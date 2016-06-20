@@ -280,7 +280,8 @@ class View implements Deployable
         }
 
         if ($this->requiresContainerDiv) {
-            $content = '<div leaf-name="'.$this->model->leafName.'" id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
+            $viewBridge = ($this->getViewBridgeName()) ? ' leaf-bridge="'.$this->getViewBridgeName().'"' : '';
+            $content = '<div leaf-name="'.$this->model->leafName.'" '.$viewBridge.' id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
         }
 
         $content = $this->wrapViewContent($content);

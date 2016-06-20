@@ -1109,6 +1109,37 @@ ViewBridge.prototype.onModelUpdatedByEvent = function () {
 
 ViewBridge.prototype.reAttachViewBridges = function () {
 
+    // First instantiate new instances of view bridges for newly made leaves
+    // This should only be for pre registered leaves that are displaying with
+    // view indexes.
+    var possibleLeaves = document.querySelectorAll('div[leaf-bridge');
+    var sortedLeaves = [];
+
+    for(var x = 0; x < possibleLeaves.length; x++){
+        var node = possibleLeaves[x];
+
+        if (window.rhubarb.registeredLeaves[node.id]){
+            continue;
+        }
+
+        if (!node.viewBridge){
+            sortedLeaves.push(node.id);
+        }
+    }
+
+    // sort the list
+    sortedLeaves.sort();
+    sortedLeaves.reverse();
+
+    for(var i = 0; i < sortedLeaves.length; i++){
+        var leafId = sortedLeaves[i];
+        var node = document.getElementById(leafId);
+        var className = node.getAttribute('leaf-bridge');
+        var bridge = new window.rhubarb.viewBridgeClasses[className](leafId);
+        node.viewBridge = bridge;
+    }
+
+    // Now reattach existing view bridges to their dom elements if necessary.
     for (var path in window.rhubarb.registeredLeaves) {
         var presenter = window.rhubarb.registeredLeaves[path];
         var viewNode = document.getElementById(path);
