@@ -123,7 +123,11 @@ class Pager extends HtmlPresenter
         // that the data our collection uses is modified and because the collection is already
         // fetched, any presenters using the collection won't see the modification.
 
-        $this->setPageNumber($this->model->PageNumber);
+        try {
+            $this->setPageNumber($this->model->PageNumber);
+        } catch (PagerOutOfBoundsException $ex) {
+            $this->setPageNumber(1);
+        }
 
         $this->view->setNumberOfPages($this->NumberOfPages);
         $this->view->setNumberPerPage($this->model->PerPage);
