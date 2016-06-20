@@ -22,8 +22,8 @@ use Rhubarb\Crown\Exceptions\RhubarbException;
 
 class NoViewException extends RhubarbException
 {
-    public function __construct()
+    public function __construct($message = "")
     {
-        parent::__construct();
+        parent::__construct($message);
     }
 }

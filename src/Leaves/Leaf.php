@@ -11,6 +11,7 @@ use Rhubarb\Crown\Response\HtmlResponse;
 use Rhubarb\Crown\Response\XmlResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
+use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Views\View;
 
 abstract class Leaf implements GeneratesResponseInterface
@@ -171,7 +172,11 @@ abstract class Leaf implements GeneratesResponseInterface
 
     private function createView()
     {
-        $view = Container::instance($this->getViewClass(), $this->model);
+        try {
+            $view = Container::instance($this->getViewClass(), $this->model);
+        } catch (\ReflectionException $er ){
+            throw new NoViewException("The Leaf ".get_class($this)." is not configured to use a valid View class. Check `getViewClass`");
+        }
 
         return $view;
     }
