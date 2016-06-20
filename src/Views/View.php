@@ -208,7 +208,7 @@ class View implements Deployable
                     $bindingValue = $subLeaf->getValue();
                     $this->model->setBoundValue($name, $bindingValue, $index);
                 });
-                
+
                 $event = $subLeaf->getBindingValueRequestedEvent();
                 $event->attachHandler(function($index = null) use ($name){
                     return $this->model->getBoundValue($name, $index);
@@ -250,6 +250,14 @@ class View implements Deployable
 
     private static $viewBridgeRegistrationCallback = null;
 
+    /**
+     * An opportunity for extending classes to perform setup before the view is rendered.
+     */
+    protected function beforeRender()
+    {
+
+    }
+
     public final function renderContent()
     {
         $allDeployedUrls = [];
@@ -264,6 +272,7 @@ class View implements Deployable
             $allDeployedUrls = array_merge($allDeployedUrls, $deployedUrls);
         };
 
+        $this->beforeRender();
         $this->beforeRenderEvent->raise();
         $this->printViewContent();
 
@@ -305,7 +314,7 @@ class View implements Deployable
                 } else {
                     $urls = $resourcePackage->getDeployedUrls();
                 }
-                
+
                 $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
             }
 
