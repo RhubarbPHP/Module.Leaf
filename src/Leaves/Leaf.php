@@ -5,6 +5,7 @@ namespace Rhubarb\Leaf\Leaves;
 use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\DependencyInjection\Container;
 use Rhubarb\Crown\Events\Event;
+use Rhubarb\Crown\Logging\Log;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
@@ -12,6 +13,7 @@ use Rhubarb\Crown\Response\XmlResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
 use Rhubarb\Leaf\Views\View;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class Leaf implements GeneratesResponseInterface
 {
@@ -50,11 +52,11 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->initialiseView();
 
         if ($this->model === null || !($this->model instanceof LeafModel)) {
-            throw new InvalidLeafModelException("The call to createModel on ".get_class($this).
+            throw new InvalidLeafModelException("The call to createModel on " . get_class($this) .
                 " didn't return a LeafModel class");
         }
 
-        if ($name == ""){
+        if ($name == "") {
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
@@ -133,9 +135,9 @@ abstract class Leaf implements GeneratesResponseInterface
             $ourPath = $this->model->parentPath . "_" . $ourPath;
         }
 
-        if ($this->model->leafIndex !== null){
+        if ($this->model->leafIndex !== null) {
             // Append the view index if we have one.
-            $ourPath .= "(".$this->model->leafIndex.")";
+            $ourPath .= "(" . $this->model->leafIndex . ")";
         }
 
         $this->model->leafPath = $ourPath;
@@ -255,8 +257,8 @@ abstract class Leaf implements GeneratesResponseInterface
             };
 
             // First raise the event on the presenter itself
-            $this->runBeforeRender(function() use ($eventName, $eventArguments){
-                $eventProperty = $eventName."Event";
+            $this->runBeforeRender(function () use ($eventName, $eventArguments) {
+                $eventProperty = $eventName . "Event";
 
                 if (property_exists($this->model, $eventProperty)) {
                     /**
@@ -327,11 +329,11 @@ abstract class Leaf implements GeneratesResponseInterface
 
         $xml = '<?xml version="1.0"?>
 <leaf>
-'.$xml;
+' . $xml;
 
         $xml .= '
 </leaf>';
-        
+
         return $xml;
     }
 
@@ -362,7 +364,7 @@ abstract class Leaf implements GeneratesResponseInterface
     {
         $this->setWebRequest($request);
 
-        if ($request->header("Accept") == "application/leaf"){
+        if ($request->header("Accept") == "application/leaf") {
             $response = new XmlResponse($this);
             $response->setContent($this->renderXhr());
         } else {
@@ -375,7 +377,18 @@ abstract class Leaf implements GeneratesResponseInterface
 
     function __toString()
     {
-        return $this->render();
+        $levelBefore = ob_get_level();
+        try {
+            return $this->render();
+        } catch (\Throwable $er) {
+            $levelAfter = ob_get_level();
+            while ($levelAfter > $levelBefore) {
+                ob_end_clean();
+                $levelAfter--;
+            }
+            Log::error("Unhandled " . basename(get_class($er)) . " `" . $er->getMessage() . "` in line " . $er->getLine() . " in " . $er->getFile(), 'ERROR');
+            return $er->getMessage();
+        }
     }
 
     private $runningEventsBeforeRender = false;
@@ -386,7 +399,7 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected final function runBeforeRender(Callable $callback)
     {
-        if ($this->runningEventsBeforeRender){
+        if ($this->runningEventsBeforeRender) {
             $callback();
         } else {
             $this->runBeforeRenderCallbacks[] = $callback;
@@ -400,7 +413,7 @@ abstract class Leaf implements GeneratesResponseInterface
     {
         $this->runningEventsBeforeRender = true;
 
-        foreach($this->runBeforeRenderCallbacks as $callback){
+        foreach ($this->runBeforeRenderCallbacks as $callback) {
             $callback();
         }
 
