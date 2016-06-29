@@ -1112,7 +1112,7 @@ ViewBridge.prototype.reAttachViewBridges = function () {
     // First instantiate new instances of view bridges for newly made leaves
     // This should only be for pre registered leaves that are displaying with
     // view indexes.
-    var possibleLeaves = document.querySelectorAll('div[leaf-bridge');
+    var possibleLeaves = document.querySelectorAll('div[leaf-bridge]');
     var sortedLeaves = [];
 
     for(var x = 0; x < possibleLeaves.length; x++){
