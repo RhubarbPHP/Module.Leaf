@@ -3,6 +3,7 @@
 namespace Rhubarb\Leaf\Leaves;
 
 use Codeception\Lib\Interfaces\Web;
+use PhpParser\Error;
 use Rhubarb\Crown\DependencyInjection\Container;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Logging\Log;
@@ -217,10 +218,8 @@ abstract class Leaf implements GeneratesResponseInterface
             }
         }
 
-        if ($targetWithoutIndexes == $this->model->leafPath) {
-            $eventName = $request->post("_leafEventName");
+        if ($this->model->isRootLeaf){
             $eventState = $request->post("_leafEventState");
-            $eventTarget = $request->post("_leafEventTarget");
 
             if ($eventState !== null) {
                 $eventState = json_decode($eventState, true);
@@ -229,6 +228,11 @@ abstract class Leaf implements GeneratesResponseInterface
                     $this->model->restoreFromState($eventState);
                 }
             }
+        }
+
+        if ($targetWithoutIndexes == $this->model->leafPath) {
+            $eventName = $request->post("_leafEventName");
+            $eventTarget = $request->post("_leafEventTarget");
 
             $eventArguments = [];
 

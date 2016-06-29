@@ -1,5 +1,7 @@
 ### 1.1.x
 
+### 1.1.0
+
 * Fix:      reattachViewBridges now supports leaves displayed with view indexes
 * Added:   	CompositeControl pattern.
 * Added:	validation module now required.
