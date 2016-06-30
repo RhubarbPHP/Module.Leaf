@@ -61,6 +61,34 @@ ViewBridge javascript classes)
 4. Default values
 5. Convenience methods to make settings or getting properties simpler.
 
+``` php
+class ProfileModel extends LeafModel
+{
+    /**
+     * @var string
+     */
+    public $name = "";
+
+    /**
+     * @var string
+     */
+    public $email = "";
+
+    /**
+     * @var Event
+     */
+    public $nameChangedEvent;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Create the name changed event object.
+        $this->nameChangedEvent = new Event();
+    }
+}
+```
+
 ### The 'View' class
 
 The view class transforms the LeafModel and its properties into HTML output. The most important function to
@@ -93,11 +121,41 @@ presentation.
 > no reason why a template based view couldn't be created. We generally find that when the state is contained
 > in a single class PHP is an excellent HTML generation tool.
 
+View classes can create any number of sub leaf objects to help it construct it's interface. Common examples would
+be text boxes, buttons, drop downs etc.
+
 ### The 'Leaf' class
 
-The leaf class should be the only class making behavioural decisions in response to user interactions.
+The Leaf class should be the only class making behavioural decisions in response to user interactions. Usually
+it makes these decisions when responding to an event raised by the View.
 
+In addition to responding to user interactions the Leaf class must also declare what View class should be used
+with the Leaf by default and must instantiate its LeafModel class.
 
+``` php
+class Profile extends Leaf
+{
+    /**
+     * @var ProfileModel
+     */
+    protected $model;
 
+    protected function getViewClass()
+    {
+        return ProfileView::class;
+    }
 
+    protected function onModelCreated()
+    {
+        // Attach event handlers to receive notices from the View
+        $this->model->nameChangedEvent->attachHandler(function($newName){
+            $this->model->name = $newName;
+            });
+    }
 
+    protected function createModel()
+    {
+        return new ProfileModel();
+    }
+}
+```
