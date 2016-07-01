@@ -3,6 +3,7 @@ Basic Concepts:
     . Processing user interactions: interaction
     . Nesting leaves: nesting
     . Data Binding: data-binding
+    . Custard Templates: custard-templates
 
 Tutorial:
     . Building a blog: tutorial/index
@@ -11,7 +12,7 @@ View Bridges:
     . Introduction: view-bridges/index
 
 Control Components:
-    . What is a control?:
+    . What is a control?: controls/index
     . Common controls:
         . Textbox
         . Textarea

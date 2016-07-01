@@ -1,5 +1,8 @@
 ### 1.1.x
 
+* Added:    Documentation started
+* Fix:      composer.json issue with module.jsvalidation
+
 ### 1.1.0
 
 * Fix:      reattachViewBridges now supports leaves displayed with view indexes
