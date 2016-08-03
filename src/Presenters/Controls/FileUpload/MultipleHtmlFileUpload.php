@@ -20,8 +20,35 @@ namespace Rhubarb\Leaf\Presenters\Controls\FileUpload;
 
 require_once __DIR__ . '/SimpleHtmlFileUpload.php';
 
+/**
+ * @property int $MaxFileSize
+ */
 class MultipleHtmlFileUpload extends SimpleHtmlFileUpload
 {
+    protected function initialiseModel()
+    {
+        parent::initialiseModel();
+
+        if ($this->MaxFileSize == null) {
+            $returnBytes = function ($val) {
+                $val = trim($val);
+                $last = strtolower($val[strlen($val) - 1]);
+                switch ($last) {
+                    case 'g':
+                        $val *= 1024;
+                    case 'm':
+                        $val *= 1024;
+                    case 'k':
+                        $val *= 1024;
+                }
+
+                return $val;
+            };
+
+            $this->MaxFileSize = min($returnBytes(ini_get('upload_max_filesize')), $returnBytes(ini_get('post_max_size')));
+        }
+    }
+
     protected function getPublicModelPropertyList()
     {
         $properties = parent::getPublicModelPropertyList();
@@ -50,4 +77,4 @@ class MultipleHtmlFileUpload extends SimpleHtmlFileUpload
             }
         );
     }
-} 
+}
