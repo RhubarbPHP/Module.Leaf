@@ -1,4 +1,6 @@
-### 1.1.x
+# Changelog
+
+### 1.1.1
 
 * Added:    Documentation started
 * Fix:      composer.json issue with module.jsvalidation
