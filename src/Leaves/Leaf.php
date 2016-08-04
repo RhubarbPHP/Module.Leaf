@@ -207,17 +207,6 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function parseRequest(WebRequest $request)
     {
-        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $request->post("_leafEventTarget"));
-
-        if (stripos($targetWithoutIndexes, $this->model->leafPath) !== false) {
-            $requestTargetParts = explode("_", $request->post("_leafEventTarget"));
-            $pathParts = explode("_", $this->model->leafPath);
-
-            if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
-                $this->setIndex($match[1]);
-            }
-        }
-
         if ($this->model->isRootLeaf){
             $eventState = $request->post("_leafEventState");
 
@@ -230,7 +219,16 @@ abstract class Leaf implements GeneratesResponseInterface
             }
         }
 
-        if ($targetWithoutIndexes == $this->model->leafPath) {
+        $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $request->post("_leafEventTarget"));
+
+        if (stripos($targetWithoutIndexes, $this->model->leafPath) !== false) {
+            $requestTargetParts = explode("_", $request->post("_leafEventTarget"));
+            $pathParts = explode("_", $this->model->leafPath);
+
+            if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
+                $this->setIndex($match[1]);
+            }
+
             $eventName = $request->post("_leafEventName");
             $eventTarget = $request->post("_leafEventTarget");
 

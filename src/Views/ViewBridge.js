@@ -661,19 +661,11 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
     var target = this.leafPath;
     var index = this.getViewIndex();
 
-    if (index) {
-        target = target.replace(/\(\d+\)$/, '');
-    }
-
     if (hostPresenter) {
         var formData = new FormData();
 
         formData.append("_leafEventName", eventName);
         formData.append("_leafEventTarget", target);
-
-        if (index) {
-            formData.append("_leafEventTargetIndex", index);
-        }
 
         if (hostPresenter.eventHostClassName != "") {
             formData.append("_leafEventClass", hostPresenter.eventHostClassName);
@@ -863,18 +855,11 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
     var target = targetViewBridge.leafPath;
     var index = targetViewBridge.getViewIndex();
 
-    if (index) {
-        target = target.replace(/\(\d+\)$/, '');
-    }
     if (hostPresenter) {
         var formData = hostPresenter.findInputsAndSerialize(hostPresenter.viewNode);
 
         formData += "_leafEventName=" + eventName + "&_leafEventTarget=" + target;
         formData += "&_leafEventState=" + hostPresenter.saveState();
-
-        if (index) {
-            formData += "&_leafEventTargetIndex=" + index;
-        }
 
         if (hostPresenter.eventHostClassName != "") {
             formData += "&_leafEventClass=" + hostPresenter.eventHostClassName + "&_leafEventleafPath=" + hostPresenter.leafPath;
