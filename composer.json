@@ -24,13 +24,14 @@
   },
   "require": {
     "rhubarbphp/rhubarb": "^1.1.0",
-    "rhubarbphp/custard": "^1.0.6",
+    "rhubarbphp/custard": "^1.0.9",
     "rhubarbphp/module-jsvalidation": "^1.0.0"
   },
   "config": {
     "bin-dir": "bin/"
   },
   "require-dev": {
+    "rhubarbphp/module-build-status-updater": "^1.0.5",
     "codeception/codeception": "^2.0.0",
     "tan-tan-kanarek/github-php-client": "^1.0.0",
     "phploc/phploc": "^3.0.0",

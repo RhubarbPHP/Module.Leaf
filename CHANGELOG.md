@@ -1,6 +1,9 @@
 # Changelog
 
-### 1.1.x
+### 1.1.2
+
+* Change:   Updated custard to 1.0.9
+* Fix:      Restored build status updating to github from build script.
 
 ### 1.1.1
 
