@@ -2,6 +2,7 @@
 
 * Added:    Documentation started
 * Fix:      composer.json issue with module.jsvalidation
+* Fix:      Fixed issue with view indexes not being passed as arguments in XHR button callbacks
 
 ### 1.1.0
 
