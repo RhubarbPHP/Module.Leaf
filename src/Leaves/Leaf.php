@@ -198,6 +198,7 @@ abstract class Leaf implements GeneratesResponseInterface
         }
 
         $this->parseRequest($request);
+        $this->model->onAfterRequestSet();
     }
 
     /**

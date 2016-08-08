@@ -88,6 +88,14 @@ class LeafModel
     }
 
     /**
+     * Called by Leaf after the leaf has parsed the request.
+     */
+    public function onAfterRequestSet()
+    {
+
+    }
+
+    /**
      * Return the list of properties that can be exposed publically
      *
      * @return array
