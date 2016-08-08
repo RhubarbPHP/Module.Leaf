@@ -17,11 +17,6 @@
       "Rhubarb\\Leaf\\Tests\\": "tests/unit/"
     }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.x-dev"
-    }
-  },
   "require": {
     "rhubarbphp/rhubarb": "^1.1.0",
     "rhubarbphp/custard": "^1.0.9",
