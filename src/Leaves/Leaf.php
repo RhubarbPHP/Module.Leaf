@@ -222,7 +222,7 @@ abstract class Leaf implements GeneratesResponseInterface
 
         $targetWithoutIndexes = preg_replace('/\([^)]+\)/', "", $request->post("_leafEventTarget"));
 
-        if (stripos($targetWithoutIndexes, $this->model->leafPath) !== false) {
+        if ($targetWithoutIndexes == $this->model->leafPath) {
             $requestTargetParts = explode("_", $request->post("_leafEventTarget"));
             $pathParts = explode("_", $this->model->leafPath);
 

@@ -676,15 +676,8 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         var ajaxUrl = "";
 
-        if (hostPresenter.presenterUrl) {
-            ajaxUrl = hostPresenter.presenterUrl;
-        }
-        else {
-            ajaxUrl = hostPresenter.presenterPhpClass.replace(/\\/g, "/");
-        }
-
         xmlhttp.open("POST", ajaxUrl, true);
-        xmlhttp.setRequestHeader('Accept', 'application/core');
+        xmlhttp.setRequestHeader('Accept', 'application/leaf');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');
         xmlhttp.send(formData);
 
