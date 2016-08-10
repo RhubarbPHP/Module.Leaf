@@ -674,9 +674,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         formData.append(this.leafPath, file);
 
-        var ajaxUrl = "";
-
-        xmlhttp.open("POST", ajaxUrl, true);
+        xmlhttp.open("POST", window.location.href, true);
         xmlhttp.setRequestHeader('Accept', 'application/leaf');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');
         xmlhttp.send(formData);
@@ -867,9 +865,7 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
             }
         }
 
-        var ajaxUrl = "";
-
-        xmlhttp.open("POST", ajaxUrl, true);
+        xmlhttp.open("POST", window.location.href, true);
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xmlhttp.setRequestHeader('Accept', 'application/leaf');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');
