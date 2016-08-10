@@ -2,6 +2,9 @@
 
 ### 1.1.x
 
+### 1.1.5
+
+Fixed:  Issue with IE ajax calls relating to href
 
 ### 1.1.4
 
