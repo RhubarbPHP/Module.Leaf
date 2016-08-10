@@ -61,32 +61,7 @@ ViewBridge javascript classes)
 4. Default values
 5. Convenience methods to make settings or getting properties simpler.
 
-``` php
-class ProfileModel extends LeafModel
-{
-    /**
-     * @var string
-     */
-    public $name = "";
-
-    /**
-     * @var string
-     */
-    public $email = "";
-
-    /**
-     * @var Event
-     */
-    public $nameChangedEvent;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        // Create the name changed event object.
-        $this->nameChangedEvent = new Event();
-    }
-}
+``` php file[examples/HelloWorld/HelloWorldModel.php] lines[6] demo[examples/HelloWorld/HelloWorld]
 ```
 
 ### The 'View' class
@@ -94,24 +69,7 @@ class ProfileModel extends LeafModel
 The view class transforms the LeafModel and its properties into HTML output. The most important function to
 override is `printViewContent()`
 
-``` php
-class ProfileView extends View
-{
-    /**
-     * @var ProfileModel
-     */
-    protected $model;
-
-    public function printViewContent()
-    {
-        ?>
-        <p>
-            Name <?=$this->model->name;?><br/>
-            Email <?=$this->model->email;?>
-        </p>
-        <?php
-    }
-}
+``` php file[examples/HelloWorld/HelloWorldView.php] lines[6] demo[examples/HelloWorld/HelloWorld]
 ```
 
 In this example we're defining the model as a type of `ProfileModel` and accessing its properties during
@@ -132,30 +90,5 @@ it makes these decisions when responding to an event raised by the View.
 In addition to responding to user interactions the Leaf class must also declare what View class should be used
 with the Leaf by default and must instantiate its LeafModel class.
 
-``` php
-class Profile extends Leaf
-{
-    /**
-     * @var ProfileModel
-     */
-    protected $model;
-
-    protected function getViewClass()
-    {
-        return ProfileView::class;
-    }
-
-    protected function onModelCreated()
-    {
-        // Attach event handlers to receive notices from the View
-        $this->model->nameChangedEvent->attachHandler(function($newName){
-            $this->model->name = $newName;
-            });
-    }
-
-    protected function createModel()
-    {
-        return new ProfileModel();
-    }
-}
+``` php file[examples/HelloWorld/HelloWorld.php] lines[6] demo[examples/HelloWorld/HelloWorld]
 ```
