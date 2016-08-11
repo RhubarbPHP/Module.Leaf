@@ -61,9 +61,6 @@ ViewBridge javascript classes)
 4. Default values
 5. Convenience methods to make settings or getting properties simpler.
 
-``` dir[examples/HelloWorld]
-```
-
 ``` php file[examples/HelloWorld/HelloWorldModel.php] lines[6] demo[examples/HelloWorld/HelloWorld]
 ```
 
