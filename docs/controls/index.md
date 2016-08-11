@@ -38,6 +38,32 @@ addCssClassNames(...$className)
 addHtmlAttribute($attributeName, $attributeValue)
 :   Adds a custom HTML attribute to the control's main HTML element.
 
+## View bridges and controls
+
+The [view bridge](../view-bridges/) for every control should have the following Javascript methods:
+
+getValue()
+:   Returns a Javascript representation of the value
+
+setValue(value)
+:   Populates the control interface with a Javascript value
+
+"ValueChanged" [event]
+:   Raised when the control value changes
+
+``` javascript
+// From within the hosting view bridge we can find the control:
+var forename = this.findViewBridge('Forename');
+// Set a value
+forename.setValue('Richard');
+// Retrieve the value
+var value = forename.getValue();
+// Register a handler for the ValueChanged event:
+forename.attachClientEventHandler("ValueChanged", function(viewBridge, newValue){
+    alert("The new value is: " + newValue);
+});
+```
+
 ## Common controls
 
 Some controls are so ubiquitous we've compiled a range of favourites into a separate module called
