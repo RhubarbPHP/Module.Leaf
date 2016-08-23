@@ -2,6 +2,10 @@
 
 ### 1.1.x
 
+### 1.1.6
+
+Fixed:  Added comment to fix error being shown inside PHPStorm
+
 ### 1.1.5
 
 Fixed:  Issue with IE ajax calls relating to href
