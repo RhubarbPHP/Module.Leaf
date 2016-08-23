@@ -320,6 +320,7 @@ class View implements Deployable
 
             if (self::$viewBridgeRegistrationCallback != null){
                 $callback = self::$viewBridgeRegistrationCallback;
+                /** @var callable $callback */
                 $callback(
                     $this->getViewBridgeName(),
                     $this->model->leafPath,
