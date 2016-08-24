@@ -118,6 +118,11 @@ ViewBridge.prototype.selectAndIterateElements = function(selector, callback) {
     }
 };
 
+ViewBridge.prototype.submitForm = function () {
+    var host = this.findEventHost();
+    host.viewNode.parentNode.submit();
+};
+
 ViewBridge.prototype.hasValue = function () {
     if (!this.viewNode) {
         return false;
