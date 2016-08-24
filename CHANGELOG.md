@@ -2,13 +2,15 @@
 
 ### 1.1.x
 
+Added:      ViewBridge::submitForm added
+
 ### 1.1.6
 
-Fixed:  Added comment to fix error being shown inside PHPStorm
+Fixed:      Added comment to fix error being shown inside PHPStorm
 
 ### 1.1.5
 
-Fixed:  Issue with IE ajax calls relating to href
+Fixed:      Issue with IE ajax calls relating to href
 
 ### 1.1.4
 
