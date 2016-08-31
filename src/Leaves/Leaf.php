@@ -19,6 +19,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class Leaf implements GeneratesResponseInterface
 {
+    use CssClassesTrait;
+
     /**
      * @var View
      */
@@ -453,10 +455,5 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function bindEvents(Leaf $with)
     {
-    }
-
-    public function addCssClassNames(...$classNames)
-    {
-        $this->model->addCssClassNames(...$classNames);
     }
 }
