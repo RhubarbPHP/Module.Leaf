@@ -1,6 +1,6 @@
 # Changelog
 
-### 1.1.x
+### 1.1.7
 
 Added:      ViewBridge::submitForm added
 
