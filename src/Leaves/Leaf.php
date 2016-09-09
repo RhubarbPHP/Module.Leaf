@@ -459,4 +459,19 @@ abstract class Leaf implements GeneratesResponseInterface
     {
         $this->model->addCssClassNames(...$classNames);
     }
+
+    public function removeCssClassNames(...$classNames)
+    {
+        $this->model->removeCssClassNames(...$classNames);
+    }
+
+    public function addHtmlAttribute($attributeName, $attributeValue)
+    {
+        $this->model->addHtmlAttribute($attributeName, $attributeValue);
+    }
+
+    public function removeHtmlAttribute($attributeName)
+    {
+        $this->model->removeHtmlAttribute($attributeName);
+    }
 }

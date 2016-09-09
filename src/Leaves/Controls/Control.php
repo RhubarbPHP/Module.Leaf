@@ -64,16 +64,6 @@ class Control extends Leaf implements BindableLeafInterface
         $this->model->addHtmlAttribute("placeholder", $placeholderText);
     }
 
-    public function addCssClassNames(...$classNames)
-    {
-        $this->model->addCssClassNames(...$classNames);
-    }
-
-    public function addHtmlAttribute($attributeName, $attributeValue)
-    {
-        $this->model->addHtmlAttribute($attributeName, $attributeValue);
-    }
-
     /**
      * Returns a label that the hosting view can use in the HTML output.
      *
