@@ -2,6 +2,11 @@
 
 ### 1.1.x
 
+### 1.1.8
+
+Added:     LeafModel now has methods for removing CSS class names and HTML attributes.
+Added:     Leaf has public methods for using add/remove CSS class and HTML attribute methods on model. 
+
 ### 1.1.7
 
 Added:      ViewBridge::submitForm added
