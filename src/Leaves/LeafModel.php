@@ -125,9 +125,19 @@ class LeafModel
         $this->cssClassNames = array_merge($this->cssClassNames, $classNames);
     }
 
+    public function removeCssClassNames(...$classNames)
+    {
+        $this->cssClassNames = array_diff($this->cssClassNames, $classNames);
+    }
+
     public function addHtmlAttribute($attributeName, $attributeValue)
     {
         $this->htmlAttributes[$attributeName] = $attributeValue;
+    }
+
+    public function removeHtmlAttribute($attributeName)
+    {
+        unset($this->htmlAttributes[$attributeName]);
     }
 
     public function getClassAttribute()
