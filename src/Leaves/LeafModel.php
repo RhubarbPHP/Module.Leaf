@@ -62,6 +62,11 @@ class LeafModel
 
     public $htmlAttributes = [];
 
+    /**
+     * @var null|array|object If not null then this value is used as the binding source.
+     */
+    protected $bindingSource;
+
     public function __construct()
     {
         $this->createSubLeafFromNameEvent = new Event();
@@ -170,31 +175,70 @@ class LeafModel
         return "";
     }
 
+    private function &getBindingSource()
+    {
+        if ($this->bindingSource === null){
+            return $this;
+        }
+
+        if (is_object($this->bindingSource) || is_array($this->bindingSource)){
+            return $this->bindingSource;
+        }
+
+        return $this;
+    }
+
     public function setBoundValue($propertyName, $value, $index = null)
     {
+        $source = &$this->getBindingSource();
+
         if ($index !== null){
-            if (!isset($this->$propertyName) || !is_array($this->$propertyName)){
-                $this->$propertyName = [];
+            if (is_array($source)){
+                if (!isset($source[$propertyName]) || !is_array($source[$propertyName])){
+                    $source[$propertyName] = [];
+                }
+
+                $array = &$source[$propertyName];
+                $array[$index] = $value;
+            } else {
+                if (!isset($source->$propertyName) || !is_array($source->$propertyName)){
+                    $source->$propertyName = [];
+                }
+
+                $array = &$source->$propertyName;
+                $array[$index] = $value;
             }
 
-            $array = &$this->$propertyName;
-            $array[$index] = $value;
         } else {
-            $this->$propertyName = $value;
+            if (is_array($source)) {
+                $source[$propertyName] = $value;
+            } else {
+                $source->$propertyName = $value;
+            }
         }
     }
 
     public function getBoundValue($propertyName, $index = null)
     {
+        $source = &$this->getBindingSource();
+        
         if ($index !== null ){
-            $array = &$this->$propertyName;
+            if (is_array($source)){
+                $array = &$source[$propertyName];
+            } else {
+                $array = &$source->$propertyName;
+            }
             if (isset($array[$index])){
                 return $array[$index];
             } else {
                 return null;
             }
         } else {
-            return isset($this->$propertyName) ? $this->$propertyName : null;
+            if (is_array($source)){
+                return isset($source[$propertyName]) ? $source[$propertyName] : null;
+            } else {
+                return isset($source->$propertyName) ? $source->$propertyName : null;
+            }
         }
     }
 }

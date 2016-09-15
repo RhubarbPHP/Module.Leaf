@@ -1,6 +1,8 @@
 # Changelog
 
-### 1.1.x
+### 1.1.9
+
+Added:     LeafModel can perform bindings to a specified array or object instead of $this.
 
 ### 1.1.8
 
