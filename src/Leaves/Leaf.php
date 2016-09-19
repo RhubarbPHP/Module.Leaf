@@ -46,6 +46,11 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     private $reRender = false;
 
+    /**
+     * @var bool If true, objects in the request will be converted to PHP associative arrays. Otherwise they will be stdClass objects.
+     */
+    public $objectsToAssocArrays = false;
+
     public function __construct($name = "")
     {
         $this->model = $this->createModel();
@@ -238,7 +243,7 @@ abstract class Leaf implements GeneratesResponseInterface
             if ($request->post("_leafEventArguments")) {
                 $args = $request->post("_leafEventArguments");
                 foreach ($args as $argument) {
-                    $eventArguments[] = json_decode($argument);
+                    $eventArguments[] = json_decode($argument, $this->objectsToAssocArrays);
                 }
             }
 
