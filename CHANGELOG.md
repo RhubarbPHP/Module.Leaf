@@ -2,32 +2,35 @@
 
 ### 1.1.x
 
+### 1.1.10
+
+* Added:   Added flag to Leaf to parse json responses as an associated array
 
 ### 1.1.9
 
-Added:     LeafModel can perform bindings to a specified array or object instead of $this.
+* Added:     LeafModel can perform bindings to a specified array or object instead of $this.
 
 ### 1.1.8
 
-Added:     LeafModel now has methods for removing CSS class names and HTML attributes.
-Added:     Leaf has public methods for using add/remove CSS class and HTML attribute methods on model. 
+* Added:     LeafModel now has methods for removing CSS class names and HTML attributes.
+* Added:     Leaf has public methods for using add/remove CSS class and HTML attribute methods on model. 
 
 ### 1.1.7
 
-Added:      ViewBridge::submitForm added
+* Added:      ViewBridge::submitForm added
 
 ### 1.1.6
 
-Fixed:      Added comment to fix error being shown inside PHPStorm
+* Fixed:      Added comment to fix error being shown inside PHPStorm
 
 ### 1.1.5
 
-Fixed:      Issue with IE ajax calls relating to href
+* Fixed:      Issue with IE ajax calls relating to href
 
 ### 1.1.4
 
-Fixed:		Event processing could run for another sibling if it's name included the other
-Fixed:		ViewBridge.sendFileAsEvent migrated from 0.9
+* Fixed:		Event processing could run for another sibling if it's name included the other
+* Fixed:		ViewBridge.sendFileAsEvent migrated from 0.9
 
 ### 1.1.3
 
