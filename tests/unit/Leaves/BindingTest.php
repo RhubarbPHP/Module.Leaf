@@ -17,7 +17,7 @@
 
 namespace Rhubarb\Leaf\Tests\Leaves;
 
-use Rhubarb\Leaf\Controls\Common\Text\TextBox;
+use Rhubarb\Leaf\Leaves\Controls\Control;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
 use Rhubarb\Leaf\Tests\Fixtures\LeafTestCase;
@@ -107,8 +107,13 @@ class BindingLeafModel extends LeafModel
     }
 }
 
-class BindingTextBox extends TextBox
+class BindingTextBox extends Control
 {
+    protected function getViewClass()
+    {
+        return View::class;
+    }
+
     public function pushValue($value)
     {
         $this->model->setValue($value);
