@@ -125,14 +125,32 @@ class LeafModel
         }
     }
 
+    /**
+     * Ensures an array of string css class names only contains one class per element, by splitting
+     * all elements on spaces and merging the parts into one big array of all class names.
+     *
+     * @param string[] $classNames
+     * @return string[]
+     */
+    private static function arrayifyCssClassNames(array $classNames)
+    {
+        $newClassNames = [];
+        foreach ($classNames as $className) {
+            $splitClassNames = preg_split('/\s+/', $className);
+            $newClassNames = array_merge($newClassNames, $splitClassNames);
+        }
+
+        return $newClassNames;
+    }
+
     public function addCssClassNames(...$classNames)
     {
-        $this->cssClassNames = array_merge($this->cssClassNames, $classNames);
+        $this->cssClassNames = array_merge($this->cssClassNames, self::arrayifyCssClassNames($classNames));
     }
 
     public function removeCssClassNames(...$classNames)
     {
-        $this->cssClassNames = array_diff($this->cssClassNames, $classNames);
+        $this->cssClassNames = array_diff($this->cssClassNames, self::arrayifyCssClassNames($classNames));
     }
 
     public function addHtmlAttribute($attributeName, $attributeValue)
@@ -221,7 +239,7 @@ class LeafModel
     public function getBoundValue($propertyName, $index = null)
     {
         $source = &$this->getBindingSource();
-        
+
         if ($index !== null ){
             if (is_array($source)){
                 $array = &$source[$propertyName];

@@ -52,6 +52,22 @@ class LeafTest extends LeafTestCase
         $this->assertContains("A different message", $response);
     }
 
+    public function testCssClassManipulation()
+    {
+        $model = $this->leaf->getModelForTesting();
+
+        $this->assertEquals($model->cssClassNames, [], "cssClassNames is not an empty array");
+
+        $model->addCssClassNames('a-class b-class c-class');
+
+        $this->assertEquals($model->cssClassNames, ["a-class", "b-class", "c-class"], "cssClassNames does not have the expected elements after adding");
+
+        $model->removeCssClassNames('a-class c-class');
+
+        // Only checking the values here because the indexes will be different - b-class will have index 1 in the existing array, but we don't care about that
+        $this->assertEquals(array_values($model->cssClassNames), ["b-class"], "cssClassNames does not have the expected elements after removing");
+    }
+
     /**
      * @return Leaf
      */
