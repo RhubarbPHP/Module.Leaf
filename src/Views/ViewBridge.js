@@ -1387,7 +1387,7 @@ ViewBridge.create = function (name, creator, parent) {
     viewBridge.prototype = new parent();
     viewBridge.prototype.constructor = viewBridge;
 
-    var properties = creator.call(viewBridge);
+    var properties = creator.call(viewBridge, parent.prototype);
 
     for (var property in properties) {
         viewBridge.prototype[property] = properties[property];
