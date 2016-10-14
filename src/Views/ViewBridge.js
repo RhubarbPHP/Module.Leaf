@@ -1377,10 +1377,10 @@ window.rhubarb.validation.sources.fromViewBridge = function (viewBridge) {
 
 //// ViewBridge creation methods
 
-ViewBridge.create = function (creator, parent) {
+ViewBridge.create = function (name, creator, parent) {
     parent = parent || ViewBridge;
 
-    var viewBridge = function(leafPath) {
+    var viewBridge = function() {
         parent.apply(this, arguments);
     };
 
@@ -1393,9 +1393,9 @@ ViewBridge.create = function (creator, parent) {
         viewBridge.prototype[property] = properties[property];
     }
 
-    return viewBridge;
+    return window.rhubarb.viewBridgeClasses[name] = viewBridge;
 };
 
-ViewBridge.prototype.extend = function (creator) {
-    return ViewBridge.create(creator, this);
+ViewBridge.prototype.extend = function (name, creator) {
+    return ViewBridge.create(name, creator, this);
 };
