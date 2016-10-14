@@ -5,12 +5,6 @@ var bridge = function (presenterPath) {
 bridge.prototype = new window.rhubarb.viewBridgeClasses.SimpleHtmlFileUploadViewBridge();
 bridge.prototype.constructor = bridge;
 
-bridge.prototype.onStateLoaded = function () {
-    if (!this.model.MaxFileSize) {
-        this.model.MaxFileSize = 5 * 1024 * 1024;
-    }
-};
-
 bridge.prototype.supportsHtml5Uploads = function () {
     var xhr = new XMLHttpRequest();
 
@@ -49,7 +43,12 @@ bridge.prototype.filesSelected = function (files) {
     var self = this;
 
     for (var i = 0, file; file = files[i]; i++) {
-        var uploadFunction = function (file) {
+        if (this.model.MaxFileSize && file.size > this.model.MaxFileSize) {
+            this.onUploadFailed(file.name + ' is over the maximum file size of ' + this.formatBytes(this.model.MaxFileSize, 0));
+            continue;
+        }
+
+        var uploadFile = function (file) {
             self.sendFileAsServerEvent("FileUploadedXhr", file, function (e) {
                 var progress =
                 {
@@ -132,6 +131,22 @@ bridge.prototype.onUploadComplete = function (progressIndicator) {
     }, 3000);
 };
 
+bridge.prototype.onUploadFailed = function (message) {
+    var upiDom = document.createElement("div");
+    upiDom.className = "upload-failed";
+
+    var upiLabel = document.createElement("label");
+    upiLabel.innerHTML = message;
+
+    upiDom.appendChild(upiLabel);
+
+    this.attachUploadProgressIndicator(upiDom);
+
+    setTimeout(function () {
+        upiDom.parentNode.removeChild(upiDom);
+    }, 3000);
+};
+
 bridge.prototype.addClass = function (nodes, className) {
     if (!nodes.length) {
         nodes = [nodes];
@@ -155,6 +170,16 @@ bridge.prototype.removeClass = function (nodes, className) {
         var node = nodes[n];
         node.className = node.className.replace(className, '').trim();
     }
+};
+
+bridge.prototype.formatBytes = function (bytes, decimals) {
+    if (bytes == 0) {
+        return '0B';
+    }
+    var k = 1000;
+    var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    var i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + sizes[i];
 };
 
 window.rhubarb.viewBridgeClasses.MultipleHtmlFileUploadViewBridge = bridge;

@@ -14,4 +14,15 @@ bridge.spawn = function (spawnSettings, viewIndex, parentPresenterPath) {
     return element;
 };
 
+bridge.prototype.reset = function ()
+{
+    var form = document.createElement("FORM");
+    var currentParent = this.viewNode.parentNode;
+    currentParent.insertBefore(form, this.viewNode);
+    form.appendChild(this.viewNode);
+    form.reset();
+    currentParent.insertBefore(this.viewNode, form);
+    currentParent.removeChild(form);
+};
+
 window.rhubarb.viewBridgeClasses.SimpleHtmlFileUploadViewBridge = bridge;
