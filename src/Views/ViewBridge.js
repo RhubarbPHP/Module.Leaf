@@ -637,7 +637,7 @@ ViewBridge.prototype.raiseClientEvent = function (eventName) {
 };
 
 
-ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete) {
+ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete, onFailure) {
     if (!this.eventHost) {
         this.eventHost = this.findEventHost();
     }
@@ -658,7 +658,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
             presenter.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
-                self.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, onComplete, null);
+                self.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, onComplete, onFailure);
             }
         }
     };
