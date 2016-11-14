@@ -11,12 +11,12 @@ var dropDown = function (presenterPath) {
     var selectedItems = [];
 
     this.element.find("option").each(function () {
-        if (!$(this).data("item")) {
-            $(this).data("item", {value: this.value, label: this.text});
+        if (!jQuery(this).data("item")) {
+            jQuery(this).data("item", {value: this.value, label: this.text});
         }
 
         if (this.selected) {
-            selectedItems.push($(this).data('item'));
+            selectedItems.push(jQuery(this).data('item'));
         }
     });
 
@@ -52,7 +52,7 @@ dropDown.prototype.valueChanged = function () {
 
     this.element.find("option").each(function () {
         if (this.selected) {
-            selectedItems.push($(this).data('item'));
+            selectedItems.push(jQuery(this).data('item'));
         }
     });
 
@@ -63,7 +63,7 @@ dropDown.prototype.valueChanged = function () {
 };
 
 dropDown.prototype.getDisplayView = function () {
-    return $("option:selected", this.element).text();
+    return jQuery("option:selected", this.element).text();
 };
 
 dropDown.prototype.setCurrentlyAvailableSelectionItems = function (items) {
@@ -72,7 +72,7 @@ dropDown.prototype.setCurrentlyAvailableSelectionItems = function (items) {
 
     for (var i in items) {
         var item = items[i];
-        var itemDom = $('<option value="' + item.value + '">' + item.label + '</option>');
+        var itemDom = jQuery('<option value="' + item.value + '">' + item.label + '</option>');
 
         itemDom.data("item", item);
 

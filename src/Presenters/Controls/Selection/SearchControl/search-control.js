@@ -68,15 +68,15 @@ searchControl.prototype.attachSearchInterfaceToDom = function(){
 };
 
 searchControl.prototype.createDom = function () {
-    this.interfaceContainer = $("<div class='search-control'></div>");
+    this.interfaceContainer = jQuery("<div class='search-control'></div>");
 
-    this.phraseBox = $("<input type='text' value='' class='phrase-box'/>");
-    this.selectedLabel = $("<span />");
-    this.clearButton = $("<input type='button' value='Clear' />");
-    this.resultsTable = $("<table width='100%' class='results-list'><tbody></tbody></table>");
-    this.resultsList = $("tbody", this.resultsTable);
-    this.resultsContainer = $("<div class='results drop-down' style='z-index: 1000'></div>");
-    this.buttonsContainer = $("<div class='button-container inline'></div>");
+    this.phraseBox = jQuery("<input type='text' value='' class='phrase-box'/>");
+    this.selectedLabel = jQuery("<span />");
+    this.clearButton = jQuery("<input type='button' value='Clear' />");
+    this.resultsTable = jQuery("<table width='100%' class='results-list'><tbody></tbody></table>");
+    this.resultsList = jQuery("tbody", this.resultsTable);
+    this.resultsContainer = jQuery("<div class='results drop-down' style='z-index: 1000'></div>");
+    this.buttonsContainer = jQuery("<div class='button-container inline'></div>");
 
     this.resultsContainer.append(this.resultsTable);
     this.buttonsContainer.append(this.clearButton);
@@ -198,10 +198,10 @@ searchControl.prototype.attachEvents = function () {
         self.onClearPressed();
     });
 
-    $(document).on('click.searchControl', function (e) {
+    jQuery(document).on('click.searchControl', function (e) {
         // If the user has clicked outside of the control elements we make sure the search results
         // are closed.
-        if ($(e.target).parents().filter(self.interfaceContainer).length == 0) {
+        if (jQuery(e.target).parents().filter(self.interfaceContainer).length == 0) {
             self.resultsContainer.hide();
         }
     });
@@ -209,7 +209,7 @@ searchControl.prototype.attachEvents = function () {
 
 searchControl.prototype.keyboardSelect = function () {
     // Get the item represented by index and call itemDomSelected
-    this.itemDomSelected($(this.resultsList.children()[this.keyboardSelection]));
+    this.itemDomSelected(jQuery(this.resultsList.children()[this.keyboardSelection]));
 };
 
 searchControl.prototype.keyboardUp = function () {
@@ -239,7 +239,7 @@ searchControl.prototype.highlightKeyboardSelection = function () {
         return;
     }
 
-    $(this.resultsList.children()[this.keyboardSelection]).addClass('active');
+    jQuery(this.resultsList.children()[this.keyboardSelection]).addClass('active');
 };
 
 searchControl.prototype.changeState = function (newState) {
@@ -369,7 +369,7 @@ searchControl.prototype.setInternalValue = function (value) {
 };
 
 searchControl.prototype.createResultItemDom = function (item) {
-    var itemDom = $('<tr class="-item"></tr>');
+    var itemDom = jQuery('<tr class="-item"></tr>');
 
     for (var i = 0; i < this.model.ResultColumns.length; i++) {
         var column = this.model.ResultColumns[i];
@@ -390,7 +390,7 @@ searchControl.prototype.createResultItemDom = function (item) {
     // This would be more efficient as an event on the outer list, however that would mean knowing the correct
     // child selector which might change and also fragments the code a little.
     itemDom.on('click', function () {
-        self.itemDomSelected($(this));
+        self.itemDomSelected(jQuery(this));
     });
 
     return itemDom;

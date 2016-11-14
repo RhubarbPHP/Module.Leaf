@@ -37,8 +37,8 @@ selectionControl.prototype.getValue = function () {
     else {
         var values = [];
 
-        $(this.viewNode).find("input:checked").each(function () {
-            values.push($(this).val());
+        jQuery(this.viewNode).find("input:checked").each(function () {
+            values.push(jQuery(this).val());
         });
 
         return values;
