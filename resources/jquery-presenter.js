@@ -6,7 +6,7 @@ jqueryHtmlViewBridge.prototype = new window.rhubarb.viewBridgeClasses.HtmlViewBr
 jqueryHtmlViewBridge.prototype.constructor = jqueryHtmlViewBridge;
 
 jqueryHtmlViewBridge.prototype.onRegistered = function () {
-    this.element = $(this.viewNode);
+    this.element = jQuery(this.viewNode);
 };
 
 jqueryHtmlViewBridge.prototype.hide = function () {
