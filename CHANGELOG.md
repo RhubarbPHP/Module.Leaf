@@ -1,10 +1,12 @@
 # Changelog
 
-### 1.1.x
+### 1.2.0
+
+* Added:     New ViewBridge creation pattern, window.rhubarb.vb.create()	     
 
 ### 1.1.10
 
-* Added:   Added flag to Leaf to parse json responses as an associated array
+* Added:     Added flag to Leaf to parse json responses as an associated array
 
 ### 1.1.9
 
