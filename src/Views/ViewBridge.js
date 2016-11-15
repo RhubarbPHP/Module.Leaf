@@ -1374,3 +1374,33 @@ window.rhubarb.validation.sources.fromViewBridge = function (viewBridge) {
         return viewBridge.getValue();
     };
 };
+
+//// ViewBridge creation methods
+
+ViewBridge.create = function (name, creator, parent) {
+    parent = parent || ViewBridge;
+
+    var viewBridge = function() {
+        parent.apply(this, arguments);
+    };
+
+    viewBridge.prototype = new parent();
+    viewBridge.prototype.constructor = viewBridge;
+
+    var properties = creator.call(viewBridge, parent.prototype);
+
+    for (var property in properties) {
+        viewBridge.prototype[property] = properties[property];
+    }
+
+    return window.rhubarb.viewBridgeClasses[name] = viewBridge;
+};
+
+ViewBridge.prototype.extend = function (name, creator) {
+    return ViewBridge.create(name, creator, this);
+};
+
+
+//// shorthand
+
+window.rhubarb.vb = ViewBridge;
