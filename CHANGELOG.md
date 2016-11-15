@@ -1,5 +1,7 @@
 # Changelog
 
+### 1.2.x
+
 ### 1.2.0
 
 * Added:     New ViewBridge creation pattern, window.rhubarb.vb.create()	     
