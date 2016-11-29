@@ -2,6 +2,8 @@
 
 ### 1.2.x
 
+* Fixed:     Calling failedCallback if the response is supposed to be JSON but can't be parsed as JSON
+
 ### 1.2.0
 
 * Added:     New ViewBridge creation pattern, window.rhubarb.vb.create()	     

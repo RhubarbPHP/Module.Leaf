@@ -1016,7 +1016,14 @@ ViewBridge.prototype.parseEventResponse = function (eventName, responseCode, res
             var response = ( eventResponse.textContent ) ? eventResponse.textContent : eventResponse.text;
 
             if (eventResponse.getAttribute("type") == "json") {
-                response = JSON.parse(response);
+                try {
+                    response = JSON.parse(response);
+                } catch (exception) {
+                    if (failureCallback) {
+                        failureCallback(response, responseCode, exception);
+                        callBackCalled = true;
+                    }
+                }
             }
             else {
                 response = response.trim();
