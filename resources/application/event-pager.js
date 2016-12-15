@@ -6,7 +6,7 @@ eventPager.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge
 eventPager.prototype.constructor = eventPager;
 
 eventPager.prototype.attachEvents = function () {
-    var self = this;
+    var self = this, $ = jQuery;
 
     this.element.find(".pages a").click(function () {
         self.element.find(".page-input").val($(this).data('page'));
