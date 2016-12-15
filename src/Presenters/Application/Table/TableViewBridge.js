@@ -6,7 +6,7 @@ table.prototype = new window.rhubarb.viewBridgeClasses.JqueryHtmlViewBridge();
 table.prototype.constructor = table;
 
 table.prototype.attachEvents = function () {
-    var self = this;
+    var self = this, $ = jQuery;
 
     this.element.find('thead th.sortable').click(function () {
         var index = $.inArray(this, $('thead th'));
