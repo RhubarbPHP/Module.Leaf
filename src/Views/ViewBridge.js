@@ -1137,6 +1137,7 @@ ViewBridge.prototype.reAttachViewBridges = function () {
 
                 presenter.onReattached();
                 presenter.onRegistered();
+                presenter.loadState();
                 presenter.attachDomChangeEventHandler(true);
                 presenter.attachEvents();
             }

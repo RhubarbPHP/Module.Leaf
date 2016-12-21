@@ -58,8 +58,18 @@ class LeafModel
      */
     public $createSubLeafFromNameEvent;
 
+    /**
+     * An array of CSS class names to apply
+     *
+     * @var array
+     */
     public $cssClassNames = [];
 
+    /**
+     * An array of key value pairs to apply as custom html attributes.
+     *
+     * @var array
+     */
     public $htmlAttributes = [];
 
     /**
