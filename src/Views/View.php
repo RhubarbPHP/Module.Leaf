@@ -91,6 +91,7 @@ class View implements Deployable
     {
         $this->model = $model;
         $this->beforeRenderEvent = new Event();
+
         $this->createSubLeaves();
         $this->attachModelEventHandlers();
     }
@@ -138,6 +139,13 @@ class View implements Deployable
                 }
             }
         }
+
+        $this->onStateRestored();
+    }
+
+    protected function onStateRestored()
+    {
+
     }
 
     /**
@@ -215,6 +223,14 @@ class View implements Deployable
                 });
             }
         }
+    }
+
+    /**
+     * The view should update any child leaves based upon changed model state.
+     */
+    public function reconfigure()
+    {
+
     }
 
     /**

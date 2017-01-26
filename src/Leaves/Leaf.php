@@ -2,8 +2,6 @@
 
 namespace Rhubarb\Leaf\Leaves;
 
-use Codeception\Lib\Interfaces\Web;
-use PhpParser\Error;
 use Rhubarb\Crown\DependencyInjection\Container;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Logging\Log;
@@ -15,7 +13,6 @@ use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
 use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Views\View;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class Leaf implements GeneratesResponseInterface
 {
@@ -97,6 +94,11 @@ abstract class Leaf implements GeneratesResponseInterface
         $view = $this->createView();
 
         $this->view = $view;
+    }
+
+    protected final function reconfigureView()
+    {
+        $this->view->reconfigure();
     }
 
     /**
@@ -212,7 +214,14 @@ abstract class Leaf implements GeneratesResponseInterface
         }
 
         $this->parseRequest($request);
+
         $this->model->onAfterRequestSet();
+        $this->onStateRestored();
+    }
+
+    protected function onStateRestored()
+    {
+
     }
 
     /**
@@ -333,6 +342,7 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->runBeforeRenderCallbacks();
         $this->afterEvents();
         $this->beforeRender();
+
         $html = $this->view->renderContent();
 
         return $html;
