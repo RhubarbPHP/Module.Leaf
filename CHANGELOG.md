@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.1
+
+* Added:     Support for view reconfiguration
+
 ### 1.3.0
 
 * Added:     URL State for leaves (used by table, pager and search panel leaf modules)
