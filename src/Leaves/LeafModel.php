@@ -111,7 +111,7 @@ class LeafModel
     }
 
     /**
-     * Return the list of properties that can be exposed publically
+     * Return the list of properties that can be exposed publicly
      *
      * @return array
      */
@@ -231,7 +231,7 @@ class LeafModel
     public function getBoundValue($propertyName, $index = null)
     {
         $source = &$this->getBindingSource();
-        
+
         if ($index !== null ){
             if (is_array($source)){
                 $array = &$source[$propertyName];

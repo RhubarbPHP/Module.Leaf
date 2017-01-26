@@ -51,19 +51,30 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     public $objectsToAssocArrays = false;
 
-    public function __construct($name = "")
+    /**
+     * @param string $name A name used to reference the leaf. If not provided it will be automatically set to the class name (without namespace)
+     * @param callable|null $initialiseModelBeforeView A callback which will be called before onModelCreated, allowing Leaf constructors to take
+     *                                                 arguments which can be added to the model's data before the View is initialised.
+     * @throws InvalidLeafModelException
+     */
+    public function __construct($name = null, callable $initialiseModelBeforeView = null)
     {
         $this->model = $this->createModel();
-        $this->onModelCreated();
-
-        $this->initialiseView();
 
         if ($this->model === null || !($this->model instanceof LeafModel)) {
             throw new InvalidLeafModelException("The call to createModel on " . get_class($this) .
                 " didn't return a LeafModel class");
         }
 
-        if ($name == "") {
+        if ($initialiseModelBeforeView) {
+            $initialiseModelBeforeView($this->model);
+        }
+
+        $this->onModelCreated();
+
+        $this->initialiseView();
+
+        if ($name == null) {
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
@@ -76,7 +87,6 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function onModelCreated()
     {
-
     }
 
     /**
@@ -117,7 +127,6 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @param $name string The new name for the leaf
      * @param $parentPath string The leaf path for the containing leaf
-     * @return string
      */
     public final function setName($name, $parentPath = "")
     {
