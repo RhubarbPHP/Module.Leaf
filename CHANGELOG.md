@@ -1,6 +1,6 @@
 # Changelog
 
-### 1.3
+### 1.3.0
 
 * Added:     URL State for leaves (used by table, pager and search panel leaf modules)
 * Added:     Callable param in Leaf constructor allowing leaves to set model data from their params before the view is initialised
