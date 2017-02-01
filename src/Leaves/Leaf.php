@@ -358,6 +358,7 @@ abstract class Leaf implements GeneratesResponseInterface
 
         $xml = ob_get_clean();
         $xml .= $this->recursiveReRender();
+        $xml .= $this->recursivePushModelChanges();
 
         $xml = '<?xml version="1.0"?>
 <leaf>
@@ -369,6 +370,17 @@ abstract class Leaf implements GeneratesResponseInterface
         return $xml;
     }
 
+    /**
+     * Recursively descends the tree of leaves and returns a string of model changes to push to the client.
+     * @return string
+     */
+    public final function recursivePushModelChanges()
+    {
+        $xml = $this->view->recursivePushModelChanges();
+        
+        return $xml;
+    }
+    
     public final function recursiveReRender()
     {
         if ($this->reRender) {

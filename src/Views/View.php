@@ -124,20 +124,61 @@ class View implements Deployable
     {
     }
 
-    private final function restoreStateIntoModel()
+    public final function recursivePushModelChanges()
+    {
+        $xml = '';
+
+        // Only consider model pushing if state inputs are being used to persist state.
+        if ($this->requiresStateInput) {
+            $oldState = $this->getStateString();
+            $newState = json_encode($this->model->getState());
+
+            if ($newState != $oldState) {
+                $xml .= '<model id="' . $this->model->leafPath . '">' . $newState . '</model>';
+            }
+        }
+
+        foreach($this->leaves as $leaf){
+            $subXml = $leaf->recursivePushModelChanges();
+
+            if ($subXml){
+                $xml .= $subXml;
+            }
+        }
+
+        return $xml;
+    }
+    
+    private final function getStateString()
     {
         $stateKey = $this->getStateKey();
 
-        if ($this->request){
+        if ($this->request) {
             $state = $this->request->post($stateKey);
+            return $state;
+        }
+        
+        return null;
+    }
+    
+    private final function getState()
+    {
+        $state = $this->getStateString();
 
-            if ($state !== null) {
-                $state = json_decode($state, true);
+        if ($state !== null) {
+            $state = json_decode($state, true);
+            return $state;
+        }
+        
+        return null;
+    }
+    
+    private final function restoreStateIntoModel()
+    {
+        $state = $this->getState();
 
-                if ($state) {
-                    $this->model->restoreFromState($state);
-                }
-            }
+        if ($state) {
+            $this->model->restoreFromState($state);
         }
 
         $this->onStateRestored();

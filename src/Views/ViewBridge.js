@@ -679,6 +679,19 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         formData.append(this.leafPath, file);
 
+        // Add all hidden State inputs on the page to ensure event processing can
+        // recover the original state.
+        var inputs = hostPresenter.viewNode.getElementsByTagName("input");
+
+        for (i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            var type = input.type;
+
+            if (type.toLowerCase() == "hidden" && input.name.indexOf('State') != -1) {
+                formData.append(input.name, input.value);
+            }
+        }
+
         xmlhttp.open("POST", window.location.href, true);
         xmlhttp.setRequestHeader('Accept', 'application/leaf');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');

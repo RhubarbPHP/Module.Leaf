@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.3
+
+* Restored:  Model state changes were no longer being pushed to the client from the server during xhr events.
+
 ### 1.3.2
 
 * Fixed:     Fix for adding ? to URL even if there are no params for the URL state
