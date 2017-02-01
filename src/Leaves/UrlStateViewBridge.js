@@ -31,7 +31,8 @@ urlStateBridge.prototype.updateUrlState = function (newParams) {
         }
     }
 
-    window.history.replaceState(null, '', '?' + params);
+    params = '' + params;
+    window.history.replaceState(null, '', params ? '?' + params : location.pathname);
 };
 
 urlStateBridge.prototype.setUrlStateParam = function (value) {

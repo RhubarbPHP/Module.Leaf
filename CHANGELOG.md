@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.2
+
+* Fixed:     Fix for adding ? to URL even if there are no params for the URL state
+
 ### 1.3.1
 
 * Added:     Support for view reconfiguration
