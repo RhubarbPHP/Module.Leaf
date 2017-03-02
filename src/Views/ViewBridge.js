@@ -653,12 +653,14 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
     // Attach the call back wrapper for the AJAX post.
     xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        if (xmlhttp.readyState == 4) {
             document.body.className = document.body.className.replace(" event-processing", "");
             presenter.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
                 self.parseEventResponse(eventName, xmlhttp.status, xmlhttp.responseXML, onComplete, onFailure);
+            } else {
+                onFailure();
             }
         }
     };
