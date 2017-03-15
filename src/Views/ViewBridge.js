@@ -670,6 +670,13 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
     if (hostPresenter) {
         var formData = new FormData();
+        var data = hostPresenter.findInputsAndValues(hostPresenter.viewNode);
+
+        for(var i in data){
+            if (data.hasOwnProperty(i)){
+                formData.append(i, data[i]);
+            }
+        }
 
         formData.append("_leafEventName", eventName);
         formData.append("_leafEventTarget", target);
@@ -680,19 +687,6 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
         }
 
         formData.append(this.leafPath, file);
-
-        // Add all hidden State inputs on the page to ensure event processing can
-        // recover the original state.
-        var inputs = hostPresenter.viewNode.getElementsByTagName("input");
-
-        for (i = 0; i < inputs.length; i++) {
-            var input = inputs[i];
-            var type = input.type;
-
-            if (type.toLowerCase() == "hidden" && input.name.indexOf('State') != -1) {
-                formData.append(input.name, input.value);
-            }
-        }
 
         xmlhttp.open("POST", window.location.href, true);
         xmlhttp.setRequestHeader('Accept', 'application/leaf');
@@ -1160,6 +1154,7 @@ ViewBridge.prototype.reAttachViewBridges = function () {
     }
 };
 
+
 /**
  * Search the container for inputs and serialize their input values.
  *
@@ -1182,15 +1177,10 @@ ViewBridge.prototype.findInputsAndPopulate = function (containingDiv) {
     }
 };
 
-/**
- * Search the container for inputs and serialize their input values.
- *
- * @param containingDiv
- * @return {String}
- */
-ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
+ViewBridge.prototype.findInputsAndValues = function (containingDiv) {
+    var data = {};
+
     var subPresenters = this.getSubLeaves();
-    var serialString = "";
 
     for (var i in subPresenters) {
         if (!subPresenters.hasOwnProperty(i)) {
@@ -1207,13 +1197,17 @@ ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
         if (typeof value == "object") {
             for (var prop in value) {
                 if (value.hasOwnProperty(prop)) {
-                    serialString += subPresenter.leafPath + "[]=" + encodeURIComponent(value[prop]) + "&";
+                    if (!data[subPresenter.leafPath]){
+                        data[subPresenter.leafPath] = [];
+                    }
+
+                    data[subPresenter.leafPath].push(value[prop]);
                 }
             }
         } else if (typeof value == "boolean") {
-            serialString += subPresenter.leafPath + "=" + ( ( value ) ? "1" : "0" ) + "&";
+            data[subPresenter.leafPath] = ( ( value ) ? "1" : "0" );
         } else {
-            serialString += subPresenter.leafPath + "=" + encodeURIComponent(value) + "&";
+            data[subPresenter.leafPath] = value;
         }
     }
 
@@ -1225,7 +1219,38 @@ ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
         var type = input.type;
 
         if (type.toLowerCase() == "hidden") {
-            serialString += encodeURIComponent(input.name) + "=" + encodeURIComponent(input.value) + "&";
+            data[input.name] = input.value;
+        }
+    }
+
+    return data;
+};
+
+/**
+ * Search the container for inputs and serialize their input values.
+ *
+ * @param containingDiv
+ * @return {String}
+ */
+ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
+    var formData = this.findInputsAndValues(containingDiv);
+    var serialString = "";
+
+    for (var i in formData) {
+        if (!formData.hasOwnProperty(i)) {
+            continue;
+        }
+
+        var value = formData[i];
+
+        if (typeof value == "object") {
+            for (var prop in value) {
+                if (value.hasOwnProperty(prop)) {
+                    serialString += i + "[]=" + encodeURIComponent(value[prop]) + "&";
+                }
+            }
+        } else {
+            serialString += i + "=" + encodeURIComponent(value) + "&";
         }
     }
 
