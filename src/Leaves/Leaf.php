@@ -12,6 +12,7 @@ use Rhubarb\Crown\Response\XmlResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
 use Rhubarb\Leaf\Exceptions\NoViewException;
+use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
 use Rhubarb\Leaf\Views\View;
 
 abstract class Leaf implements GeneratesResponseInterface
@@ -406,14 +407,25 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     public final function generateResponse($request = null)
     {
-        $this->setWebRequest($request);
+        $run = true;
 
-        if ($request->header("Accept") == "application/leaf") {
-            $response = new XmlResponse($this);
-            $response->setContent($this->renderXhr());
-        } else {
-            $response = new HtmlResponse($this);
-            $response->setContent($this->render());
+        while($run) {
+
+            $this->setWebRequest($request);
+
+            try {
+                if ($request->header("Accept") == "application/leaf") {
+                    $response = new XmlResponse($this);
+                    $response->setContent($this->renderXhr());
+                } else {
+                    $response = new HtmlResponse($this);
+                    $response->setContent($this->render());
+                }
+
+                $run = false;
+            } catch( RequiresViewReconfigurationException $er){
+                $this->initialiseView();
+            }
         }
 
         return $response;

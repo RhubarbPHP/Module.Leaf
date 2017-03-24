@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.5
+
+* Changed:   Restored use of RequiresViewConfiguration Exception to allow recreation of views
+
 ### 1.3.4
 
 * Fixed:     Errors raised when sending files as events didn't get processed properly as failures
