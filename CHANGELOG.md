@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.6
+
+* Changed:   Control Views can easily override their value for string conversions
+
 ### 1.3.5
 
 * Changed:   Restored use of RequiresViewConfiguration Exception to allow recreation of views

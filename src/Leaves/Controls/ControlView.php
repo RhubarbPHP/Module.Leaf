@@ -24,7 +24,7 @@ abstract class ControlView extends View
 
         $value = $request->post($path);
         if ($value !== null){
-            $this->model->setValue($value);
+            $this->model->setValue($this->parsePostedValue($value));
         }
 
         // Now we search for indexed data. We can't unfortunately guess what the possible indexes are so we
@@ -55,6 +55,11 @@ abstract class ControlView extends View
         $this->model->valueChangedEvent->raise($index);
     }
 
+    protected function getControlValueAsString()
+    {
+        return $this->model->value;
+    }
+
     protected function getNameValueClassAndAttributeString($includeValue = true)
     {
         $classes = $this->model->getClassAttribute();
@@ -63,7 +68,7 @@ abstract class ControlView extends View
         $string = 'leaf-name="'.$this->model->leafName.'" name="'.$this->model->leafPath.'" id="'.$this->model->leafPath.'" '.$classes.$otherAttributes;
 
         if ($includeValue) {
-            $string .= ' value="' . htmlentities($this->model->value) . '" ';
+            $string .= ' value="' . htmlentities($this->getControlValueAsString()) . '" ';
         }
 
         return $string;
