@@ -2,7 +2,7 @@
 
 ### 1.3.7
 
-* Changed:   Ability to suppress the containing form if $isRootLeaf = true
+* Changed:   Ability to suppress the containing form if $suppressContainingForm = true
 
 ### 1.3.6
 
