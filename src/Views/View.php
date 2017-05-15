@@ -352,7 +352,7 @@ class View implements Deployable
 
         $content = $this->wrapViewContent($content);
 
-        if ($this->model->isRootLeaf){
+        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm){
             $content = '
 <form method="post" enctype="multipart/form-data">
 '.$content.'

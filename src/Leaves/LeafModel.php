@@ -52,6 +52,11 @@ class LeafModel
     public $isRootLeaf = true;
 
     /**
+     * @var bool True if the view should suppress the containing form if $isRootLeaf = true
+     */
+    public $suppressContainingForm = false;
+
+    /**
      * Raised when a View needs a sub leaf created for a given name.
      *
      * @var Event

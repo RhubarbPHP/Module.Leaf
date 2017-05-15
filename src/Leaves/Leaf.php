@@ -126,6 +126,13 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
+     * Suppress containing form if root node
+     */
+    public final function suppressContainingForm(){
+        $this->model->suppressContainingForm = true;
+    }
+
+    /**
      * Sets the name of the leaf.
      *
      * @param $name string The new name for the leaf

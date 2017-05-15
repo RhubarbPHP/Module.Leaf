@@ -33,6 +33,15 @@ class SubLeavesTest extends LeafTestCase
         $this->assertContains("LeafWithSubLeaves_forenameState", $response);
     }
 
+    public function testContainingFormCanBeSuppressed()
+    {
+        $this->leaf->suppressContainingForm();
+        $response = $this->renderLeafAndGetContent();
+        $this->assertTrue($this->leaf->getModel()->isRootLeaf);
+        $this->assertTrue($this->leaf->getModel()->suppressContainingForm);
+        $this->assertNotContains("<form method=\"post\" enctype=\"multipart/form-data\">", $response);
+    }
+
     public function testSubLeavesWithBinding()
     {
         $response = $this->renderLeafAndGetContent($this->getRequestWithPostData(["LeafWithSubLeaves_surname" => "Smith"]));

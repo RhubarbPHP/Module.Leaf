@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.7
+
+* Changed:   Ability to suppress the containing form if $isRootLeaf = true
+
 ### 1.3.6
 
 * Changed:   Control Views can easily override their value for string conversions
