@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.8
+
+* Changed:   Ability to suppress the name attribute of the hidden state input
+
 ### 1.3.7
 
 * Changed:   Ability to suppress the containing form if $suppressContainingForm = true

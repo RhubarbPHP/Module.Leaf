@@ -342,7 +342,7 @@ class View implements Deployable
 
         if ($this->requiresStateInput) {
             $content .= '
-<input type="hidden" name="' . $this->getStateKey() . '" id="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
+<input type="hidden"' . ($this->model->suppressStateInputNameAttribute ? '' : ' name="' . $this->getStateKey() . '"') . ' id="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
         }
 
         if ($this->requiresContainerDiv) {
