@@ -57,6 +57,11 @@ class LeafModel
     public $suppressContainingForm = false;
 
     /**
+     * @var bool True if the view should suppress the state inputs 'name' attribute. Useful if you do not want the state submitted as part of a form
+     */
+    public $suppressStateInputNameAttribute = false;
+
+    /**
      * Raised when a View needs a sub leaf created for a given name.
      *
      * @var Event
