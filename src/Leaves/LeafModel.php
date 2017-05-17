@@ -57,7 +57,11 @@ class LeafModel
     public $suppressContainingForm = false;
 
     /**
-     * @var bool True if the view should suppress the state inputs 'name' attribute. Useful if you do not want the state submitted as part of a form
+     * @var bool
+     * Set to true if the view should suppress name attribute on state hidden input. This stops the state being submitted
+     * as part of the form. Ideally used when the leaf is being submitted as part of a get request and you do not want
+     * the state submitted in the URL. If you do not need to propagate the state, please preference overriding the
+     * $requiresStateInput property in your leaf instead.
      */
     public $suppressStateInputNameAttribute = false;
 
