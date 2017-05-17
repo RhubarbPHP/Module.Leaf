@@ -77,7 +77,7 @@ abstract class LayoutProvider
      * @param string $containerTitle
      * @param mixed[] $items
      */
-    public abstract function printItemsWithContainer($containerTitle, ...$items);
+    public abstract function printItemsWithContainer($containerTitle, $items);
 
     public abstract function printContainerTitle($containerTitle);
 
@@ -86,7 +86,7 @@ abstract class LayoutProvider
      *
      * @param $items
      */
-    public function printItems(...$items)
+    public function printItems($items)
     {
         $args = func_get_args();
 
