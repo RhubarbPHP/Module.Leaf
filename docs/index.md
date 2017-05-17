@@ -1,4 +1,4 @@
-Introduction to Leaf
+Introduction to Leaf  [packagist:rhubarbphp/module-leaf]
 ====================
 
 Leaf is a rapid user interface building platform for PHP which allows for a hierarchical componentised approach.
