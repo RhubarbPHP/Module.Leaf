@@ -133,7 +133,10 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
-     * Suppress containing form if root node
+     * Suppress name attribute on state hidden input. This stops the state being submitted as part of the form. Ideally
+     * used when the leaf is being submitted as part of a get request and you do not want the state submitted in the
+     * URL. If you do not need to propagate the state, please preference overriding the $requiresStateInput property
+     * in your leaf instead.
      */
     public final function suppressStateInputNameAttribute(){
         $this->model->suppressStateInputNameAttribute = true;
