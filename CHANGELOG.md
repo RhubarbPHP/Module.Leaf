@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.9
+
+* Added:     Means to override constructor in new ViewBridge creation pattern
+
 ### 1.3.8
 
 * Changed:   Ability to suppress the name attribute of the hidden state input
