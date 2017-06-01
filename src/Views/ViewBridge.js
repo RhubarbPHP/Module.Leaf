@@ -1405,6 +1405,10 @@ ViewBridge.create = function (name, creator, parent) {
 
     var viewBridge = function() {
         parent.apply(this, arguments);
+
+        if (this.onConstructed){
+            this.onConstructed();
+        }
     };
 
     viewBridge.prototype = new parent();
