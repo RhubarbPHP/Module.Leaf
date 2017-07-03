@@ -995,7 +995,7 @@ HtmlViewBridge.prototype.parseEventResponse = function (eventName, responseCode,
         var viewNode = document.getElementById(target);
 
         if (viewNode && viewNode.viewBridge) {
-            viewNode.viewBridge.modelUpdatedByEvent();
+            viewNode.viewBridge.modelUpdatedByEvent(eventName);
         }
     }
 
@@ -1074,15 +1074,15 @@ HtmlViewBridge.prototype.onBeforeUpdateDomUpdateFromServer = function () {
 
 };
 
-HtmlViewBridge.prototype.modelUpdatedByEvent = function () {
+HtmlViewBridge.prototype.modelUpdatedByEvent = function (eventName) {
     this.loadState();
-    this.onModelUpdatedByEvent();
+    this.onModelUpdatedByEvent(eventName);
 };
 
 /**
  * Override this to handle detection of changes to the public model passed back from the server.
  */
-HtmlViewBridge.prototype.onModelUpdatedByEvent = function () {
+HtmlViewBridge.prototype.onModelUpdatedByEvent = function (eventName) {
 };
 
 HtmlViewBridge.prototype.reAttachHtmlViewBridges = function () {
