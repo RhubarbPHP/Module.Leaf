@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Leaf\Crud\Custard;
+namespace Rhubarb\Leaf\CustardCommands;
 
 use Rhubarb\Custard\Command\CustardCommand;
 use Symfony\Component\Console\Input\InputInterface;
