@@ -51,8 +51,8 @@ class CreateLeafCommand extends CustardCommand
 
 		$viewBridgeMethods = $generateViewbridge ? $this->getViewBridgeMethods($name) : "";
 		$viewBridgeUseStatement = $generateViewbridge ? "
-        use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
-        " : "";
+use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
+" : "";
 
 		$namespace = $this->getNamespaceFromPath();
 		$namespaceStatement = "";
