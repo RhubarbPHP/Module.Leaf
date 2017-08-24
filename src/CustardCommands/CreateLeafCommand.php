@@ -9,54 +9,61 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateLeafCommand extends CustardCommand
 {
-    protected function configure()
-    {
-        parent::configure();
+	protected function configure()
+	{
+		parent::configure();
 
-        $this->setName("leaf:create-leaf");
-        $this->addArgument("name", InputOption::VALUE_OPTIONAL, "The name of the leaf class to create.");
-    }
+		$this->setName("leaf:create-leaf")
+			->addArgument("name", InputOption::VALUE_OPTIONAL, "The name of the leaf class to create.")
+			->addOption('viewbridge');
+	}
 
-    private function getNamespaceFromPath()
-    {
-        $map = include(VENDOR_DIR."/composer/autoload_psr4.php");
-        $path = getcwd();
+	protected function getNamespaceFromPath()
+	{
+		$map = include(VENDOR_DIR."/composer/autoload_psr4.php");
+		$path = getcwd();
 
-        foreach($map as $stubNamespace => $stubPaths ){
-            foreach($stubPaths as $stubPath) {
-                if (stripos($path, $stubPath) === 0) {
-                    // Found the right stub.
-                    $folders = str_replace($stubPath, "", $path);
-                    $namespace = rtrim($stubNamespace . trim(str_replace("/", '\\', $folders), "\\"), "\\");
+		foreach($map as $stubNamespace => $stubPaths ){
+			foreach($stubPaths as $stubPath) {
+				if (stripos($path, $stubPath) === 0) {
+					// Found the right stub.
+					$folders = str_replace($stubPath, "", $path);
+					$namespace = rtrim($stubNamespace . trim(str_replace("/", '\\', $folders), "\\"), "\\");
 
-                    return $namespace;
-                }
-            }
-        }
+					return $namespace;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $name = $input->getArgument("name");
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		$name = $input->getArgument("name");
+		$generateViewbridge = $input->getOption('viewbridge') != null;
 
-        if (sizeof($name) == 0) {
-            $name = $this->askQuestion("Enter the name for the Leaf class", "", true);
-        } else {
-            $name = $name[0];
-        }
+		if (sizeof($name) == 0) {
+			$name = $this->askQuestion("Enter the name for the Leaf class", "", true);
+		} else {
+			$name = $name[0];
+		}
 
-        $namespace = $this->getNamespaceFromPath();
-        $namespaceStatement = "";
+		$viewBridgeMethods = $generateViewbridge ? $this->getViewBridgeMethods($name) : "";
+		$viewBridgeUseStatement = $generateViewbridge ? "
+use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
+" : "";
 
-        if ($namespace){
-            $namespaceStatement = "
+		$namespace = $this->getNamespaceFromPath();
+		$namespaceStatement = "";
+
+		if ($namespace){
+			$namespaceStatement = "
 namespace {$namespace};
 ";
-        }
+		}
 
-        file_put_contents($name.".php", <<<END
+		file_put_contents($name.".php", <<<END
 <?php
 $namespaceStatement
 use Rhubarb\Leaf\Leaves\Leaf;
@@ -85,12 +92,12 @@ class {$name} extends Leaf
     }
 }
 END
-);
-        file_put_contents($name."View.php", <<<END
+		);
+		file_put_contents($name."View.php", <<<END
 <?php
 $namespaceStatement
 use Rhubarb\Leaf\Views\View;
-
+{$viewBridgeUseStatement}
 class {$name}View extends View
 {
     /**
@@ -102,11 +109,12 @@ class {$name}View extends View
     {
         // Print your HTML here.
     }
+{$viewBridgeMethods}
 }
 END
-        );
+		);
 
-        file_put_contents($name."Model.php", <<<END
+		file_put_contents($name."Model.php", <<<END
 <?php
 $namespaceStatement
 use Rhubarb\Leaf\Leaves\LeafModel;
@@ -145,6 +153,48 @@ class {$name}Model extends LeafModel
     }
 }
 END
-        );
+		);
+
+		if ($generateViewbridge) {
+			file_put_contents(
+				$name . 'ViewBridge.js',
+				$this->generateViewBridgeContent($name)
+			);
+		}
+	}
+
+	protected function generateViewBridgeContent($name)
+	{
+		return<<<END
+var bridge = function (leafPath) {
+    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
+};
+
+bridge.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
+
+bridge.prototype.attachEvents = function () {
+    // TODO: Implement attachEvents
+};
+
+bridge.prototype.constructor = bridge;
+
+window.rhubarb.viewBridgeClasses.{$name}ViewBridge = bridge;
+END;
+	}
+
+	protected function getViewBridgeMethods($name)
+	{
+		return <<<END
+
+    protected function getViewBridgeName()
+    {
+        return "{$name}ViewBridge";
     }
+
+    public function getDeploymentPackage()
+    {
+        return new LeafDeploymentPackage(__DIR__ . "/" . \$this->getViewBridgeName() . "ViewBridge.js");
+    }
+END;
+	}
 }

@@ -9,8 +9,8 @@ class LeafModule extends Module
 {
     public function getCustardCommands()
     {
-        return [
-            new CreateLeafCommand()
-        ];
+		return [
+			new CreateLeafCommand()
+		];
     }
 }
