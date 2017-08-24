@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.10
+
+* Added:     --viewBridge option added to create-leaf custard command.
+
 ### 1.3.9
 
 * Added:     Means to override constructor in new ViewBridge creation pattern
