@@ -30,6 +30,8 @@ class ControlModel extends LeafModel
      */
     public $label = "";
 
+    public $disabled;
+
     public function __construct()
     {
         parent::__construct();

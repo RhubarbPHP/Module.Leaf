@@ -64,6 +64,16 @@ class Control extends Leaf implements BindableLeafInterface
         $this->model->addHtmlAttribute("placeholder", $placeholderText);
     }
 
+    public function setDisabled($disabled)
+    {
+        if ($disabled) {
+            $this->addHtmlAttribute('disabled', 'disabled');
+        } else {
+            $this->removeHtmlAttribute('disabled');
+        }
+        $this->model->disabled = $disabled;
+    }
+
     /**
      * Returns a label that the hosting view can use in the HTML output.
      *
