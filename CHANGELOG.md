@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.11
+
+* Added:    Adding a help function to disable the input
+
 ### 1.3.10
 
 * Added:     --viewBridge option added to create-leaf custard command.
