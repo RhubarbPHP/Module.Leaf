@@ -131,7 +131,7 @@ class View implements Deployable
             $newState = json_encode($this->model->getState());
 
             if ($newState != $oldState) {
-                $xml .= '<model id="' . $this->model->leafPath . '">' . $newState . '</model>';
+                $xml .= '<model id="' . $this->model->leafPath . '"><![CDATA[' . $newState . ']]></model>';
             }
         }
 
