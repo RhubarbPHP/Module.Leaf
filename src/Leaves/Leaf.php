@@ -60,8 +60,7 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->model = $this->createModel();
 
         if ($this->model === null || !($this->model instanceof LeafModel)) {
-            throw new InvalidLeafModelException("The call to createModel on " . get_class($this) .
-                " didn't return a LeafModel class");
+            throw new InvalidLeafModelException("The call to createModel on " . get_class($this) . " didn't return a LeafModel class");
         }
 
         if ($initialiseModelBeforeView) {
@@ -90,14 +89,14 @@ abstract class Leaf implements GeneratesResponseInterface
     /**
      * Creates and attaches the view.
      */
-    protected final function initialiseView()
+    final protected function initialiseView()
     {
         $view = $this->createView();
 
         $this->view = $view;
     }
 
-    protected final function reconfigureView()
+    final protected function reconfigureView()
     {
         $this->view->reconfigure();
     }
@@ -108,7 +107,7 @@ abstract class Leaf implements GeneratesResponseInterface
      * @see $name
      * @return string
      */
-    public final function getName()
+    final public function getName()
     {
         return $this->model->leafName;
     }
@@ -120,7 +119,7 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @return LeafModel
      */
-    public final function getModelForTesting()
+    final public function getModelForTesting()
     {
         return $this->model;
     }
@@ -128,7 +127,8 @@ abstract class Leaf implements GeneratesResponseInterface
     /**
      * Suppress containing form if root node
      */
-    public final function suppressContainingForm(){
+    final public function suppressContainingForm()
+    {
         $this->model->suppressContainingForm = true;
     }
 
@@ -138,7 +138,8 @@ abstract class Leaf implements GeneratesResponseInterface
      * URL. If you do not need to propagate the state, please preference overriding the $requiresStateInput property
      * in your leaf instead.
      */
-    public final function suppressStateInputNameAttribute(){
+    final public function suppressStateInputNameAttribute()
+    {
         $this->model->suppressStateInputNameAttribute = true;
     }
 
@@ -148,7 +149,7 @@ abstract class Leaf implements GeneratesResponseInterface
      * @param $name string The new name for the leaf
      * @param $parentPath string The leaf path for the containing leaf
      */
-    public final function setName($name, $parentPath = "")
+    final public function setName($name, $parentPath = "")
     {
         $this->model->leafName = $name;
 
@@ -162,7 +163,7 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->updatePath();
     }
 
-    public final function updatePath()
+    final public function updatePath()
     {
         $ourPath = $this->model->leafName;
 
@@ -187,7 +188,7 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @param $index
      */
-    protected final function setIndex($index)
+    final protected function setIndex($index)
     {
         $this->model->leafIndex = $index;
         $this->updatePath();
@@ -198,20 +199,20 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @return string
      */
-    protected abstract function getViewClass();
+    abstract protected function getViewClass();
 
     /**
      * Should return a class that derives from LeafModel
      *
      * @return LeafModel
      */
-    protected abstract function createModel();
+    abstract protected function createModel();
 
     private function createView()
     {
         try {
             $view = Container::instance($this->getViewClass(), $this->model);
-        } catch (\ReflectionException $er ){
+        } catch (\ReflectionException $er) {
             throw new NoViewException("The Leaf ".get_class($this)." is not configured to use a valid View class. Check `getViewClass`");
         }
 
@@ -219,11 +220,11 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
-     * Set's the web request being used to render the tree of leaves.
+     * Sets the web request being used to render the tree of leaves.
      *
      * @param WebRequest $request
      */
-    public final function setWebRequest(WebRequest $request)
+    final public function setWebRequest(WebRequest $request)
     {
         $this->request = $request;
 
@@ -239,7 +240,6 @@ abstract class Leaf implements GeneratesResponseInterface
 
     protected function onStateRestored()
     {
-
     }
 
     /**
@@ -249,7 +249,7 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function parseRequest(WebRequest $request)
     {
-        if ($this->model->isRootLeaf){
+        if ($this->model->isRootLeaf) {
             $eventState = $request->post("_leafEventState");
 
             if ($eventState !== null) {
@@ -310,9 +310,7 @@ abstract class Leaf implements GeneratesResponseInterface
                 $eventProperty = $eventName . "Event";
 
                 if (property_exists($this->model, $eventProperty)) {
-                    /**
-                     * @var Event $event
-                     */
+                    /** @var Event $event */
                     $event = $this->model->$eventProperty;
                     return $event->raise(...$eventArguments);
                 }
@@ -327,7 +325,7 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @param $index
      */
-    public final function printWithIndex($index)
+    final public function printWithIndex($index)
     {
         $this->setIndex($index);
 
@@ -339,7 +337,6 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function beforeRender()
     {
-
     }
 
     /**
@@ -347,15 +344,14 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     protected function afterEvents()
     {
-
     }
 
-    public final function reRender()
+    final public function reRender()
     {
         $this->reRender = true;
     }
 
-    private final function render()
+    final private function render()
     {
         $this->runBeforeRenderCallbacks();
         $this->afterEvents();
@@ -366,7 +362,7 @@ abstract class Leaf implements GeneratesResponseInterface
         return $html;
     }
 
-    private final function renderXhr()
+    final private function renderXhr()
     {
         ob_start();
 
@@ -392,14 +388,12 @@ abstract class Leaf implements GeneratesResponseInterface
      * Recursively descends the tree of leaves and returns a string of model changes to push to the client.
      * @return string
      */
-    public final function recursivePushModelChanges()
+    final public function recursivePushModelChanges()
     {
-        $xml = $this->view->recursivePushModelChanges();
-        
-        return $xml;
+        return $this->view->recursivePushModelChanges();
     }
-    
-    public final function recursiveReRender()
+
+    final public function recursiveReRender()
     {
         if ($this->reRender) {
             $html = $this->render();
@@ -417,17 +411,14 @@ abstract class Leaf implements GeneratesResponseInterface
     }
 
     /**
-     * Renders the Leaf and returns an HtmlReponse to Rhubarb
+     * Renders the Leaf and returns an HtmlResponse to Rhubarb
      *
-     * @param null $request
-     * @return HtmlResponse
+     * @param WebRequest|null $request
+     * @return HtmlResponse|null
      */
-    public final function generateResponse($request = null)
+    final public function generateResponse($request = null)
     {
-        $run = true;
-
-        while($run) {
-
+        while (true) {
             $this->setWebRequest($request);
 
             try {
@@ -439,16 +430,16 @@ abstract class Leaf implements GeneratesResponseInterface
                     $response->setContent($this->render());
                 }
 
-                $run = false;
-            } catch( RequiresViewReconfigurationException $er){
+                return $response;
+            } catch (RequiresViewReconfigurationException $er) {
                 $this->initialiseView();
             }
         }
 
-        return $response;
+        return null;
     }
 
-    function __toString()
+    public function __toString()
     {
         $levelBefore = ob_get_level();
         try {
@@ -470,7 +461,7 @@ abstract class Leaf implements GeneratesResponseInterface
      * Register a callback to run just before leaf rendering takes place.
      * @param callable $callback
      */
-    protected final function runBeforeRender(Callable $callback)
+    final protected function runBeforeRender(callable $callback)
     {
         if ($this->runningEventsBeforeRender) {
             $callback();

@@ -17,6 +17,7 @@
  */
 
 namespace Rhubarb\Leaf\Leaves;
+
 use Rhubarb\Crown\Events\Event;
 
 /**
@@ -107,7 +108,7 @@ class LeafModel
         $state = get_object_vars($this);
 
         $publicState = [];
-        foreach($this->getExposableModelProperties() as $property){
+        foreach ($this->getExposableModelProperties() as $property) {
             if (isset($state[$property])) {
                 $publicState[$property] = $state[$property];
             }
@@ -121,7 +122,6 @@ class LeafModel
      */
     public function onAfterRequestSet()
     {
-
     }
 
     /**
@@ -142,8 +142,8 @@ class LeafModel
     {
         $publicProperties = $this->getExposableModelProperties();
 
-        foreach($publicProperties as $key){
-            if (isset($stateData[$key])){
+        foreach ($publicProperties as $key) {
+            if (isset($stateData[$key])) {
                 $this->$key = $stateData[$key];
             }
         }
@@ -173,12 +173,12 @@ class LeafModel
     {
         $classes = $this->cssClassNames;
 
-        if ($this->isRootLeaf){
+        if ($this->isRootLeaf) {
             $classes[] = "event-host";
         }
 
         if (sizeof($classes)) {
-            return " class=\"" . implode(" ", $classes) . "\"";
+            return ' class="' . implode(" ", $classes) . '"';
         }
 
         return "";
@@ -190,7 +190,7 @@ class LeafModel
             $attributes = [];
 
             foreach ($this->htmlAttributes as $key => $value) {
-                $attributes[] = $key . "=\"" . htmlentities($value) . "\"";
+                $attributes[] = $key . '="' . htmlentities($value) . '"';
             }
 
             return " " . implode(" ", $attributes);
@@ -201,11 +201,11 @@ class LeafModel
 
     private function &getBindingSource()
     {
-        if ($this->bindingSource === null){
+        if ($this->bindingSource === null) {
             return $this;
         }
 
-        if (is_object($this->bindingSource) || is_array($this->bindingSource)){
+        if (is_object($this->bindingSource) || is_array($this->bindingSource)) {
             return $this->bindingSource;
         }
 
@@ -216,16 +216,16 @@ class LeafModel
     {
         $source = &$this->getBindingSource();
 
-        if ($index !== null){
-            if (is_array($source)){
-                if (!isset($source[$propertyName]) || !is_array($source[$propertyName])){
+        if ($index !== null) {
+            if (is_array($source)) {
+                if (!isset($source[$propertyName]) || !is_array($source[$propertyName])) {
                     $source[$propertyName] = [];
                 }
 
                 $array = &$source[$propertyName];
                 $array[$index] = $value;
             } else {
-                if (!isset($source->$propertyName) || !is_array($source->$propertyName)){
+                if (!isset($source->$propertyName) || !is_array($source->$propertyName)) {
                     $source->$propertyName = [];
                 }
 
@@ -233,12 +233,10 @@ class LeafModel
                 $array[$index] = $value;
             }
 
+        } elseif (is_array($source)) {
+            $source[$propertyName] = $value;
         } else {
-            if (is_array($source)) {
-                $source[$propertyName] = $value;
-            } else {
-                $source->$propertyName = $value;
-            }
+            $source->$propertyName = $value;
         }
     }
 
@@ -246,23 +244,21 @@ class LeafModel
     {
         $source = &$this->getBindingSource();
 
-        if ($index !== null ){
-            if (is_array($source)){
+        if ($index !== null) {
+            if (is_array($source)) {
                 $array = &$source[$propertyName];
             } else {
                 $array = &$source->$propertyName;
             }
-            if (isset($array[$index])){
+            if (isset($array[$index])) {
                 return $array[$index];
             } else {
                 return null;
             }
+        } elseif (is_array($source)) {
+            return isset($source[$propertyName]) ? $source[$propertyName] : null;
         } else {
-            if (is_array($source)){
-                return isset($source[$propertyName]) ? $source[$propertyName] : null;
-            } else {
-                return isset($source->$propertyName) ? $source->$propertyName : null;
-            }
+            return isset($source->$propertyName) ? $source->$propertyName : null;
         }
     }
 }

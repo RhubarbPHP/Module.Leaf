@@ -18,12 +18,10 @@
 
 namespace Rhubarb\Leaf\Views;
 
-use Codeception\Lib\Interfaces\Web;
 use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
-use Rhubarb\Crown\Exceptions\RhubarbException;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
@@ -87,7 +85,7 @@ class View implements Deployable
      */
     private $beforeRenderEvent;
 
-    public final function __construct(LeafModel $model)
+    final public function __construct(LeafModel $model)
     {
         $this->model = $model;
         $this->beforeRenderEvent = new Event();
@@ -101,16 +99,15 @@ class View implements Deployable
      */
     protected function attachModelEventHandlers()
     {
-
     }
 
-    public final function setWebRequest(WebRequest $request)
+    final public function setWebRequest(WebRequest $request)
     {
         $this->request = $request;
         $this->restoreStateIntoModel();
         $this->parseRequest($request);
 
-        foreach($this->leaves as $leaf){
+        foreach ($this->leaves as $leaf) {
             $leaf->setWebRequest($request);
         }
     }
@@ -124,7 +121,7 @@ class View implements Deployable
     {
     }
 
-    public final function recursivePushModelChanges()
+    final public function recursivePushModelChanges()
     {
         $xml = '';
 
@@ -138,18 +135,18 @@ class View implements Deployable
             }
         }
 
-        foreach($this->leaves as $leaf){
+        foreach ($this->leaves as $leaf) {
             $subXml = $leaf->recursivePushModelChanges();
 
-            if ($subXml){
+            if ($subXml) {
                 $xml .= $subXml;
             }
         }
 
         return $xml;
     }
-    
-    private final function getStateString()
+
+    final private function getStateString()
     {
         $stateKey = $this->getStateKey();
 
@@ -157,11 +154,11 @@ class View implements Deployable
             $state = $this->request->post($stateKey);
             return $state;
         }
-        
+
         return null;
     }
-    
-    private final function getState()
+
+    final private function getState()
     {
         $state = $this->getStateString();
 
@@ -169,11 +166,11 @@ class View implements Deployable
             $state = json_decode($state, true);
             return $state;
         }
-        
+
         return null;
     }
-    
-    private final function restoreStateIntoModel()
+
+    final private function restoreStateIntoModel()
     {
         $state = $this->getState();
 
@@ -186,7 +183,6 @@ class View implements Deployable
 
     protected function onStateRestored()
     {
-
     }
 
     /**
@@ -194,9 +190,9 @@ class View implements Deployable
      *
      * This cascades down all sub view and leaves.
      */
-    public final function leafPathChanged()
+    final public function leafPathChanged()
     {
-        foreach($this->leaves as $leaf){
+        foreach ($this->leaves as $leaf) {
             $leaf->setName($leaf->getName(), $this->model->leafPath);
         }
     }
@@ -207,12 +203,11 @@ class View implements Deployable
      */
     protected function createSubLeaves()
     {
-
     }
 
     public function runBeforeRenderCallbacks()
     {
-        foreach($this->leaves as $leaf) {
+        foreach ($this->leaves as $leaf) {
             $leaf->runBeforeRenderCallbacks();
         }
     }
@@ -220,17 +215,16 @@ class View implements Deployable
     /**
      * @param Leaf[] ...$subLeaves
      */
-    protected final function registerSubLeaf(...$subLeaves)
+    final protected function registerSubLeaf(...$subLeaves)
     {
-        foreach($subLeaves as $subLeaf) {
-
+        foreach ($subLeaves as $subLeaf) {
             // If the sub leaf isn't a Leaf but a string - we see if our Leaf host can create a leaf for us.
             // This facility allows for auto creation of control leaves for rapid form development in connection
             // with Stem models.
-            if (is_string($subLeaf)){
+            if (is_string($subLeaf)) {
                 $response = $this->model->createSubLeafFromNameEvent->raise($subLeaf);
 
-                if (!($response instanceof Leaf)){
+                if (!($response instanceof Leaf)) {
                     continue;
                 }
 
@@ -259,7 +253,7 @@ class View implements Deployable
                 });
 
                 $event = $subLeaf->getBindingValueRequestedEvent();
-                $event->attachHandler(function($index = null) use ($name){
+                $event->attachHandler(function ($index = null) use ($name) {
                     return $this->model->getBoundValue($name, $index);
                 });
             }
@@ -271,7 +265,6 @@ class View implements Deployable
      */
     public function reconfigure()
     {
-
     }
 
     /**
@@ -279,7 +272,7 @@ class View implements Deployable
      */
     public function getDeploymentPackage()
     {
-        if ($this->model->isRootLeaf){
+        if ($this->model->isRootLeaf) {
             // If we're the root leaf, we're also the host for all client side view bridge events.
             // It's a real chore to have to define a view bridge just to allow child view bridges to
             // fire events.
@@ -291,14 +284,13 @@ class View implements Deployable
 
     protected function printViewContent()
     {
-
     }
 
-    public final function recursiveReRender()
+    final public function recursiveReRender()
     {
         $response = "";
 
-        foreach($this->leaves as $subLeaf){
+        foreach ($this->leaves as $subLeaf) {
             $response .= $subLeaf->recursiveReRender();
         }
 
@@ -312,10 +304,9 @@ class View implements Deployable
      */
     protected function beforeRender()
     {
-
     }
 
-    public final function renderContent()
+    final public function renderContent()
     {
         $allDeployedUrls = [];
         $viewBridges = [];
@@ -324,8 +315,8 @@ class View implements Deployable
 
         $oldCallback = self::$viewBridgeRegistrationCallback;
 
-        self::$viewBridgeRegistrationCallback = function($viewBridgeName, $leafPath, $childViewBridges, $deployedUrls) use (&$viewBridges, &$allDeployedUrls){
-            $viewBridges[$leafPath] = [ $viewBridgeName, $childViewBridges ];
+        self::$viewBridgeRegistrationCallback = function ($viewBridgeName, $leafPath, $childViewBridges, $deployedUrls) use (&$viewBridges, &$allDeployedUrls) {
+            $viewBridges[$leafPath] = [$viewBridgeName, $childViewBridges];
             $allDeployedUrls = array_merge($allDeployedUrls, $deployedUrls);
         };
 
@@ -346,16 +337,17 @@ class View implements Deployable
         }
 
         if ($this->requiresContainerDiv) {
-            $viewBridge = ($this->getViewBridgeName()) ? ' leaf-bridge="'.$this->getViewBridgeName().'"' : '';
-            $content = '<div leaf-name="'.$this->model->leafName.'" '.$viewBridge.' id="'.$this->model->leafPath.'"'.$this->model->getClassAttribute().'>'.$content.'</div>';
+            $viewBridge = ($this->getViewBridgeName()) ? ' leaf-bridge="' . $this->getViewBridgeName() . '"' : '';
+            $content = '<div leaf-name="' . $this->model->leafName . '" ' . $viewBridge . ' id="' . $this->model->leafPath . '"' . $this->model->getHtmlAttributes() .
+                $this->model->getClassAttribute() . '>' . $content . '</div>';
         }
 
         $content = $this->wrapViewContent($content);
 
-        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm){
+        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
             $content = '
 <form method="post" enctype="multipart/form-data">
-'.$content.'
+' . $content . '
 </form>
 ';
         }
@@ -363,8 +355,7 @@ class View implements Deployable
         $resourcePackage = $this->getDeploymentPackage();
         $viewBridge = $this->getViewBridgeName();
 
-        if ($viewBridge){
-
+        if ($viewBridge) {
             if ($resourcePackage) {
                 if (Application::current()->developerMode) {
                     $urls = $resourcePackage->deploy();
@@ -375,7 +366,7 @@ class View implements Deployable
                 $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
             }
 
-            if (self::$viewBridgeRegistrationCallback != null){
+            if (self::$viewBridgeRegistrationCallback != null) {
                 $callback = self::$viewBridgeRegistrationCallback;
                 /** @var callable $callback */
                 $callback(
@@ -384,21 +375,21 @@ class View implements Deployable
                     $viewBridges,
                     $allDeployedUrls);
             } else {
-                $recursiveViewBridgerPrinter = function($viewBridgeClass, $leafPath, $childViewBridges, $recursiveViewBridgerPrinter){
+                $recursiveViewBridgerPrinter = function ($viewBridgeClass, $leafPath, $childViewBridges, $recursiveViewBridgerPrinter) {
                     $jsCode = "new window.rhubarb.viewBridgeClasses." . $viewBridgeClass . "( '" . $leafPath . "' ";
                     $childCodes = [];
-                    foreach($childViewBridges as $childPath => $childViewBridgeDetails){
+                    foreach ($childViewBridges as $childPath => $childViewBridgeDetails) {
                         $childCodes[] = $recursiveViewBridgerPrinter(
                             $childViewBridgeDetails[0],
                             $childPath,
                             $childViewBridgeDetails[1],
                             $recursiveViewBridgerPrinter);
                     }
-                    if (count($childCodes)){
-                        $jsCode .= ", function(){\r\n".implode(";\r\n",$childCodes)."\r\n}";
+                    if (count($childCodes)) {
+                        $jsCode .= ", function(){\r\n" . implode(";\r\n", $childCodes) . "\r\n}";
                     }
 
-                    $jsCode .=  ")";
+                    $jsCode .= ")";
 
                     return $jsCode;
                 };
@@ -411,7 +402,7 @@ class View implements Deployable
 
                 $jsAndCssUrls = [];
 
-                if ($resourcePackage != null){
+                if ($resourcePackage != null) {
                     $jsAndCssUrls = [];
 
                     foreach ($allDeployedUrls as $url) {
@@ -426,7 +417,7 @@ class View implements Deployable
 
         }
 
-        if (($resourcePackage != null) && (Application::current()->developerMode)){
+        if (($resourcePackage != null) && (Application::current()->developerMode)) {
             $resourcePackage->deploy();
         }
 
@@ -463,7 +454,7 @@ class View implements Deployable
      */
     protected function getViewBridgeName()
     {
-        if ($this->model->isRootLeaf){
+        if ($this->model->isRootLeaf) {
             // If we're the root leaf, we're also the host for all client side view bridge events.
             // It's a real chore to have to define a view bridge just to allow child view bridges to
             // fire events.
@@ -486,11 +477,11 @@ class View implements Deployable
      *
      * @return LayoutProvider
      */
-    protected final function getLayoutProvider()
+    final protected function getLayoutProvider()
     {
         $layout = LayoutProvider::getProvider();
-        $layout->generateValueEvent->attachHandler(function($elementName){
-            if (isset($this->leaves[$elementName])){
+        $layout->generateValueEvent->attachHandler(function ($elementName) {
+            if (isset($this->leaves[$elementName])) {
                 return $this->leaves[$elementName];
             }
 
