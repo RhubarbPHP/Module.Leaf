@@ -30,6 +30,16 @@ abstract class Leaf implements GeneratesResponseInterface
     protected $model;
 
     /**
+     * @var bool True to enable Cross Site Request Forgery validation
+     *
+     * DO NOT TURN THIS OFF unless you really really know what you're doing and have read the following
+     * article completely:
+     *
+     * @link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet
+     */
+    protected $csrfValidation = true;
+
+    /**
      * The WebRequest that the presenter is responding to.
      *
      * @var WebRequest
@@ -228,7 +238,7 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     final public function setWebRequest(WebRequest $request)
     {
-        if ($request->server('REQUEST_METHOD') == 'POST'){
+        if ($this->csrfValidation && $request->server('REQUEST_METHOD') == 'POST'){
             CsrfProtection::singleton()->validateHeaders($request);
             CsrfProtection::singleton()->validateCookie($request);
         }
