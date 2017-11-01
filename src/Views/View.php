@@ -337,15 +337,15 @@ class View implements Deployable
 <input type="hidden"' . ($this->model->suppressStateInputNameAttribute ? '' : ' name="' . $this->getStateKey() . '"') . ' id="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
         }
 
+        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
+            $csrfProtector = CsrfProtection::singleton();
+            $content .= '<input type="hidden" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
+        }
+
         if ($this->requiresContainerDiv) {
             $viewBridge = ($this->getViewBridgeName()) ? ' leaf-bridge="' . $this->getViewBridgeName() . '"' : '';
             $content = '<div leaf-name="' . $this->model->leafName . '" ' . $viewBridge . ' id="' . $this->model->leafPath . '"' . $this->model->getHtmlAttributes() .
                 $this->model->getClassAttribute() . '>' . $content . '</div>';
-        }
-
-        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
-            $csrfProtector = CsrfProtection::singleton();
-            $content .= '<input type="hidden" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
         }
 
         $content = $this->wrapViewContent($content);

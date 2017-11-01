@@ -573,19 +573,6 @@ ViewBridge.prototype.attachEvents = function () {
 
 };
 
-ViewBridge.prototype.findFormElement = function(containingDiv) {
-
-    if (!containingDiv){
-        containingDiv = this.viewNode;
-    }
-
-    while(containingDiv && (containingDiv.tagName != "FORM")){
-        containingDiv = containingDiv.parentNode;
-    }
-
-    return containingDiv;
-};
-
 /**
  * Searches through the parents of the viewBridge to find the host viewBridge element.
  *
@@ -1231,7 +1218,7 @@ ViewBridge.prototype.findInputsAndSerialize = function (containingDiv) {
     }
 
     // Add all hidden inputs on the page
-    var inputs = this.findFormElement(containingDiv).getElementsByTagName("input");
+    var inputs = containingDiv.getElementsByTagName("input");
 
     for (i = 0; i < inputs.length; i++) {
         var input = inputs[i];
