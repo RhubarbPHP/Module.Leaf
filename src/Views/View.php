@@ -24,6 +24,7 @@ use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\WebRequest;
+use Rhubarb\Csrf\CsrfProtection;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\Leaf;
@@ -342,9 +343,15 @@ class View implements Deployable
                 $this->model->getClassAttribute() . '>' . $content . '</div>';
         }
 
+        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
+            $csrfProtector = CsrfProtection::singleton();
+            $content .= '<input type="hidden" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
+        }
+
         $content = $this->wrapViewContent($content);
 
         if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
+
             $content = '
 <form method="post" enctype="multipart/form-data">
 ' . $content . '

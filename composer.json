@@ -20,7 +20,8 @@
   "require": {
     "rhubarbphp/rhubarb": "^1.1.0",
     "rhubarbphp/custard": "^1.0.9",
-    "rhubarbphp/module-jsvalidation": "^1.0.0"
+    "rhubarbphp/module-jsvalidation": "^1.0.0",
+    "rhubarbphp/module-csrfprotection": "dev-master"
   },
   "config": {
     "bin-dir": "bin/"
