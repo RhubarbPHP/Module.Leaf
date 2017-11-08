@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.12
+
+* Added:    Inbuilt CSRF protection provided by rhubarbphp/module-csrfprotection
+
 ### 1.3.11
 
 * Added:    Adding a help function to disable the input

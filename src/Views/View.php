@@ -24,6 +24,7 @@ use Rhubarb\Crown\Deployment\Deployable;
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Html\ResourceLoader;
 use Rhubarb\Crown\Request\WebRequest;
+use Rhubarb\Csrf\CsrfProtection;
 use Rhubarb\Leaf\LayoutProviders\LayoutProvider;
 use Rhubarb\Leaf\Leaves\BindableLeafInterface;
 use Rhubarb\Leaf\Leaves\Leaf;
@@ -336,6 +337,11 @@ class View implements Deployable
 <input type="hidden"' . ($this->model->suppressStateInputNameAttribute ? '' : ' name="' . $this->getStateKey() . '"') . ' id="' . $this->getStateKey() . '" value="' . htmlentities($state) . '" />';
         }
 
+        if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
+            $csrfProtector = CsrfProtection::singleton();
+            $content .= '<input type="hidden" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
+        }
+
         if ($this->requiresContainerDiv) {
             $viewBridge = ($this->getViewBridgeName()) ? ' leaf-bridge="' . $this->getViewBridgeName() . '"' : '';
             $content = '<div leaf-name="' . $this->model->leafName . '" ' . $viewBridge . ' id="' . $this->model->leafPath . '"' . $this->model->getHtmlAttributes() .
@@ -345,6 +351,7 @@ class View implements Deployable
         $content = $this->wrapViewContent($content);
 
         if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
+
             $content = '
 <form method="post" enctype="multipart/form-data">
 ' . $content . '

@@ -9,7 +9,9 @@ use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Crown\Response\GeneratesResponseInterface;
 use Rhubarb\Crown\Response\HtmlResponse;
 use Rhubarb\Crown\Response\XmlResponse;
+use Rhubarb\Crown\Settings\WebsiteSettings;
 use Rhubarb\Crown\String\StringTools;
+use Rhubarb\Csrf\CsrfProtection;
 use Rhubarb\Leaf\Exceptions\InvalidLeafModelException;
 use Rhubarb\Leaf\Exceptions\NoViewException;
 use Rhubarb\Leaf\Exceptions\RequiresViewReconfigurationException;
@@ -26,6 +28,16 @@ abstract class Leaf implements GeneratesResponseInterface
      * @var LeafModel
      */
     protected $model;
+
+    /**
+     * @var bool True to enable Cross Site Request Forgery validation
+     *
+     * DO NOT TURN THIS OFF unless you really really know what you're doing and have read the following
+     * article completely:
+     *
+     * @link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet
+     */
+    protected $csrfValidation = true;
 
     /**
      * The WebRequest that the presenter is responding to.
@@ -213,7 +225,7 @@ abstract class Leaf implements GeneratesResponseInterface
         try {
             $view = Container::instance($this->getViewClass(), $this->model);
         } catch (\ReflectionException $er) {
-            throw new NoViewException("The Leaf ".get_class($this)." is not configured to use a valid View class. Check `getViewClass`");
+            throw new NoViewException("The Leaf " . get_class($this) . " is not configured to use a valid View class. Check `getViewClass`");
         }
 
         return $view;
@@ -226,6 +238,11 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     final public function setWebRequest(WebRequest $request)
     {
+        if ($this->csrfValidation && $request->server('REQUEST_METHOD') == 'POST'){
+            CsrfProtection::singleton()->validateHeaders($request);
+            CsrfProtection::singleton()->validateCookie($request);
+        }
+
         $this->request = $request;
 
         if ($this->request) {
