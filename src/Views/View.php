@@ -562,8 +562,6 @@ class View implements Deployable
     public static function getPurifier()
     {
         if(!self::$purifier){
-            //require_once '../../module-leaf/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
-
             $config = HTMLPurifier_Config::createDefault();
             $config->set('Attr.EnableID', true);
 
