@@ -68,7 +68,7 @@ abstract class ControlView extends View
         $string = 'leaf-name="'.$this->model->leafName.'" name="'.$this->model->leafPath.'" id="'.$this->model->leafPath.'" '.$classes.$otherAttributes;
 
         if ($includeValue) {
-            $string .= ' value="' . htmlentities($this->getControlValueAsString()) . '" ';
+            $string .= ' value="' . $this->purify($this->getControlValueAsString()) . '" ';
         }
 
         return $string;
