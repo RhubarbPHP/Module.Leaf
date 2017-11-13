@@ -88,18 +88,6 @@ class View implements Deployable
      */
     private $beforeRenderEvent;
 
-    /**
-     * Decides if entire content should be made XSS safe.
-     * Not suitable if you're wanting to print form elements or script tags, for example.
-     *
-     * @var bool
-     */
-    protected $purifyHtml = false;
-
-    /**
-     * @var HTMLPurifier
-     */
-    private static $purifier;
 
     final public function __construct(LeafModel $model)
     {
@@ -454,10 +442,6 @@ class View implements Deployable
      */
     protected function wrapViewContent($content)
     {
-        if ($this->purifyHtml) {
-            return $this->purify($content);
-        }
-
         return $content;
     }
 
@@ -546,33 +530,7 @@ class View implements Deployable
      */
     public function purify($string)
     {
-        return self::getPurifier()->purify($string);
+        return htmlentities($string,ENT_QUOTES, 'UTF-8', false);
     }
 
-    /**
-     * @param $array
-     *
-     * @return string[]
-     */
-    public function purifyArray($array)
-    {
-        return self::getPurifier()->purifyArray($array);
-    }
-
-    public static function getPurifier()
-    {
-        if(!self::$purifier){
-            $config = HTMLPurifier_Config::createDefault();
-            $config->set('Attr.EnableID', true);
-
-            $definition = $config->getHTMLDefinition(true);
-            $definition->addAttribute('div', 'leaf-name', new \HTMLPurifier_AttrDef_Text());
-            $definition->addAttribute('div', 'leaf-bridge', new \HTMLPurifier_AttrDef_Text());
-            $definition->addElement('header', "Block", "Flow", "Common");
-
-            self::$purifier = new HTMLPurifier($config);
-        }
-
-        return self::$purifier;
-    }
 }
