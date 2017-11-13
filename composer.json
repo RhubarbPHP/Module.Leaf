@@ -21,8 +21,7 @@
     "rhubarbphp/rhubarb": "^1.1.0",
     "rhubarbphp/custard": "^1.0.9",
     "rhubarbphp/module-jsvalidation": "^1.0.0",
-    "rhubarbphp/module-csrfprotection": "dev-hotfix/PortSupport as 1.0.1",
-    "ezyang/htmlpurifier": "^4.9.3"
+    "rhubarbphp/module-csrfprotection": "dev-hotfix/PortSupport as 1.0.1"
   },
   "config": {
     "bin-dir": "bin/"
