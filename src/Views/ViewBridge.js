@@ -689,7 +689,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
             var input = inputs[i];
             var type = input.type;
 
-            if (type.toLowerCase() == "hidden" && input.name.indexOf('State') != -1) {
+            if (type.toLowerCase() == "hidden" && (input.name.indexOf('State') != -1 || input.name == this.model.csrfCookieTokenName)) {
                 formData.append(input.name, input.value);
             }
         }
