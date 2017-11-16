@@ -1,8 +1,12 @@
 # Changelog
 
-### 1.3.13
+### 1.3.14
 
 * Added:    CSRF protection now on a tag.
+
+### 1.3.13
+
+* Added:    Marking model state as CDATA to avoid issues with HTML tags in state
 
 ### 1.3.12
 
