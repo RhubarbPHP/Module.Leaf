@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.13
+
+* Added:    CSRF protection now on a tag.
+
 ### 1.3.12
 
 * Added:    Inbuilt CSRF protection provided by rhubarbphp/module-csrfprotection
