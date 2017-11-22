@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.15
+
+* Fixed:    CSRF protection for sendFileAsServerEvent
+
 ### 1.3.14
 
 * Added:    CSRF protection now on a tag.
