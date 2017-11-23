@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.16
+
+* Fixed:    raisePostbackEvent now splats arguments properly
+
 ### 1.3.15
 
 * Fixed:    CSRF protection for sendFileAsServerEvent
