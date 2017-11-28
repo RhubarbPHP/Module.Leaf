@@ -79,15 +79,15 @@ abstract class Leaf implements GeneratesResponseInterface
             $initialiseModelBeforeView($this->model);
         }
 
-        $this->onModelCreated();
-
-        $this->initialiseView();
-
         if ($name == null) {
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
         $this->setName($name);
+
+        $this->onModelCreated();
+
+        $this->initialiseView();
     }
 
     /**
@@ -172,38 +172,7 @@ abstract class Leaf implements GeneratesResponseInterface
             $this->model->parentPath = "";
         }
 
-        $this->updatePath();
-    }
-
-    final public function updatePath()
-    {
-        $ourPath = $this->model->leafName;
-
-        if ($this->model->parentPath) {
-            // Prepend the parent path if we have one.
-            $ourPath = $this->model->parentPath . "_" . $ourPath;
-        }
-
-        if ($this->model->leafIndex !== null) {
-            // Append the view index if we have one.
-            $ourPath .= "(" . $this->model->leafIndex . ")";
-        }
-
-        $this->model->leafPath = $ourPath;
-
-        // Signal to all or any sub leaves that need to recompute their own path now.
-        $this->view->leafPathChanged();
-    }
-
-    /**
-     * Sets a view index for subsequent renders.
-     *
-     * @param $index
-     */
-    final protected function setIndex($index)
-    {
-        $this->model->leafIndex = $index;
-        $this->updatePath();
+        $this->model->updatePath();
     }
 
     /**
@@ -245,11 +214,8 @@ abstract class Leaf implements GeneratesResponseInterface
 
         $this->request = $request;
 
-        if ($this->request) {
-            $this->view->setWebRequest($this->request);
-        }
-
         $this->parseRequest($request);
+        $this->view->setWebRequest($request);
 
         $this->model->onAfterRequestSet();
         $this->onStateRestored();
@@ -285,7 +251,8 @@ abstract class Leaf implements GeneratesResponseInterface
             $pathParts = explode("_", $this->model->leafPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
-                $this->setIndex($match[1]);
+                $this->model->leafIndex = $match[1];
+                $this->model->updatePath();
             }
 
             $eventName = $request->post("_leafEventName");
@@ -344,9 +311,7 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     final public function printWithIndex($index)
     {
-        $this->setIndex($index);
-
-        print $this->render();
+        print $this->render($index);
     }
 
     /**
@@ -368,13 +333,13 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->reRender = true;
     }
 
-    final private function render()
+    final private function render($viewIndex = null)
     {
         $this->runBeforeRenderCallbacks();
         $this->afterEvents();
         $this->beforeRender();
 
-        $html = $this->view->renderContent();
+        $html = $this->view->renderContent($viewIndex);
 
         return $html;
     }

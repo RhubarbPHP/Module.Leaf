@@ -108,9 +108,42 @@ class View implements Deployable
         $this->restoreStateIntoModel();
         $this->parseRequest($request);
 
-        foreach ($this->leaves as $leaf) {
-            $leaf->setWebRequest($request);
+        // Perform Data Binding
+        $viewIndexes = [];
+
+        // Enumerate view indexes and for each occurrence descend to the children.
+        foreach($request->postData as $key => $value){
+            if (preg_match("/".$this->model->leafPath."\(([^)]+)\)/", $key, $match)){
+                $viewIndexes[$match[1]] = 1;
+            }
         }
+
+        if (count($viewIndexes)) {
+            foreach(array_keys($viewIndexes) as $viewIndex) {
+                $this->setIndex($viewIndex);
+
+                foreach ($this->leaves as $leaf) {
+                    $leaf->setWebRequest($request);
+                }
+            }
+        } else {
+            foreach ($this->leaves as $leaf) {
+                $leaf->setWebRequest($request);
+            }
+        }
+    }
+
+    /**
+     * Sets a view index for subsequent renders.
+     *
+     * @param $index
+     */
+    final protected function setIndex($index)
+    {
+        $this->model->leafIndex = $index;
+        $this->model->updatePath();
+        // Signal to all or any sub leaves that need to recompute their own path now.
+        $this->leafPathChanged();
     }
 
     /**
@@ -120,6 +153,7 @@ class View implements Deployable
      */
     protected function parseRequest(WebRequest $request)
     {
+
     }
 
     final public function recursivePushModelChanges()
@@ -307,8 +341,12 @@ class View implements Deployable
     {
     }
 
-    final public function renderContent()
+    final public function renderContent($viewIndex = null)
     {
+        if ($viewIndex !== null){
+            $this->setIndex($viewIndex);
+        }
+
         $allDeployedUrls = [];
         $viewBridges = [];
 

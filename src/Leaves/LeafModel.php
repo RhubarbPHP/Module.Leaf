@@ -97,6 +97,24 @@ class LeafModel
         $this->createSubLeafFromNameEvent = new Event();
     }
 
+
+    final public function updatePath()
+    {
+        $ourPath = $this->leafName;
+
+        if ($this->parentPath) {
+            // Prepend the parent path if we have one.
+            $ourPath = $this->parentPath . "_" . $ourPath;
+        }
+
+        if ($this->leafIndex !== null) {
+            // Append the view index if we have one.
+            $ourPath .= "(" . $this->leafIndex . ")";
+        }
+
+        $this->leafPath = $ourPath;
+    }
+
     /**
      * Returns an array of **publicly viewable** state data required to persist the state or provide state
      * information to a client side view bridge.

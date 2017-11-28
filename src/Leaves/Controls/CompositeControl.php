@@ -31,7 +31,7 @@ abstract class CompositeControl extends Control
 
         $this->model->childControlValueChangedEvent->attachHandler(function($property, $value){
             $this->model->value = $this->createCompositeValue();
-            $this->model->valueChangedEvent->raise();
+            $this->model->valueChangedEvent->raise($this->model->leafIndex);
         });
     }
 
