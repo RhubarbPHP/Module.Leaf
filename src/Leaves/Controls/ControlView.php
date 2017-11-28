@@ -14,7 +14,7 @@ abstract class ControlView extends View
      */
     protected $model;
 
-    public function parseRequest(WebRequest $request)
+    protected function parseRequest(WebRequest $request)
     {
         parent::parseRequest($request);
 
