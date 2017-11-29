@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.17
+
+* Fixed:    Fix for bindings not working for composite controls used with a view index.
+
 ### 1.3.16
 
 * Fixed:    raisePostbackEvent now splats arguments properly
