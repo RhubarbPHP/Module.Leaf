@@ -335,6 +335,8 @@ abstract class Leaf implements GeneratesResponseInterface
 
     final private function render($viewIndex = null)
     {
+        $this->model->leafIndex = $viewIndex;
+
         $this->runBeforeRenderCallbacks();
         $this->afterEvents();
         $this->beforeRender();
