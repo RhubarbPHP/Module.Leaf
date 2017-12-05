@@ -27,7 +27,7 @@ class LeafDeploymentPackage extends ResourceDeploymentPackage
      */
     public function __construct(...$localFileToDeploy)
     {
-        $this->resourcesToDeploy[] = VENDOR_DIR."/rhubarbphp/module-jsvalidation/src/validation.js";
+        $this->resourcesToDeploy[] = VENDOR_DIR."/rhubarbphp/module-validation/src/validation.js";
         $this->resourcesToDeploy[] = __DIR__."/../Views/ViewBridge.js";
         $this->resourcesToDeploy = array_merge($this->resourcesToDeploy, $localFileToDeploy);
     }
