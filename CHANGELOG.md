@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.18
+
+* Fixed:    Fix for broken name generation of grandchildren.
+
 ### 1.3.17
 
 * Fixed:    Fix for bindings not working for composite controls used with a view index.

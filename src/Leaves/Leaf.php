@@ -173,6 +173,10 @@ abstract class Leaf implements GeneratesResponseInterface
         }
 
         $this->model->updatePath();
+
+        if ($this->view) {
+            $this->view->leafPathChanged();
+        }
     }
 
     /**
