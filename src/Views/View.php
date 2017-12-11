@@ -377,7 +377,7 @@ class View implements Deployable
 
         if ($this->model->isRootLeaf && !$this->model->suppressContainingForm) {
             $csrfProtector = CsrfProtection::singleton();
-            $content .= '<input type="hidden" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
+            $content .= '<input type="hidden" class="js-' . CsrfProtection::TOKEN_COOKIE_NAME . '" name="' . CsrfProtection::TOKEN_COOKIE_NAME . '" value="' . htmlentities($csrfProtector->getCookie()) . '" />';
         }
 
         if ($this->requiresContainerDiv) {

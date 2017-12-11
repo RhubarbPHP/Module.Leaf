@@ -679,6 +679,12 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
             formData.append("_leafEventleafPath", hostPresenter.leafPath);
         }
 
+        var csrfTokenElements = this.eventHost.viewNode.parentElement.getElementsByClassName('js-csrf_tk');
+        if (csrfTokenElements.length > 0) {
+            var csrfToken = csrfTokenElements[0].value;
+            formData.append('csrf_tk', csrfToken);
+        }
+
         formData.append(this.leafPath, file);
 
         // Add all hidden State inputs on the page to ensure event processing can
