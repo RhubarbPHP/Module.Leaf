@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.19
+
+* Fixed:    Issue when viewNode isn't ready
+
 ### 1.3.18
 
 * Fixed:    Fix for broken name generation of grandchildren.

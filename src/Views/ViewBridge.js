@@ -91,14 +91,16 @@ function ViewBridge(leafPath, onCreatedCallback) {
         this.serverEventResponseHandlers = this.viewNode.serverEventResponseHandlers;
     }
 
-    this.attachDomChangeEventHandler();
+    if (this.viewNode) {
+        this.attachDomChangeEventHandler();
 
-    if (onCreatedCallback){
-        onCreatedCallback();
+        if (onCreatedCallback) {
+            onCreatedCallback();
+        }
+
+        this.registerLeaf();
+        this.onReady();
     }
-
-    this.registerLeaf();
-    this.onReady();
 }
 
 /**
