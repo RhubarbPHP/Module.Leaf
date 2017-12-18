@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.20
+
+* Fixed:    CSRF disabling now at a static level
+
 ### 1.3.19
 
 * Fixed:    Issue when viewNode isn't ready
