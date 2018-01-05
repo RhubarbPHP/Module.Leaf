@@ -91,14 +91,16 @@ function ViewBridge(leafPath, onCreatedCallback) {
         this.serverEventResponseHandlers = this.viewNode.serverEventResponseHandlers;
     }
 
-    this.attachDomChangeEventHandler();
+    if (this.viewNode) {
+        this.attachDomChangeEventHandler();
 
-    if (onCreatedCallback){
-        onCreatedCallback();
+        if (onCreatedCallback) {
+            onCreatedCallback();
+        }
+
+        this.registerLeaf();
+        this.onReady();
     }
-
-    this.registerLeaf();
-    this.onReady();
 }
 
 /**
@@ -689,7 +691,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
             var input = inputs[i];
             var type = input.type;
 
-            if (type.toLowerCase() == "hidden" && (input.name.indexOf('State') != -1 || input.name == this.model.csrfCookieTokenName)) {
+            if (type.toLowerCase() == "hidden") {
                 formData.append(input.name, input.value);
             }
         }

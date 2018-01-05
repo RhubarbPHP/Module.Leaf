@@ -16,6 +16,8 @@ abstract class ControlView extends View
 
     protected function parseRequest(WebRequest $request)
     {
+        parent::parseRequest($request);
+
         $path = $this->model->leafPath;
 
         // By default if a control can be represented by a single HTML element then the name of that element
@@ -35,7 +37,7 @@ abstract class ControlView extends View
 
         foreach($postData as $key => $value){
             if (preg_match("/".$this->model->leafPath."\(([^)]+)\)$/", $key, $match)){
-                $this->setControlValueForIndex($match[1], $value);
+                $this->setControlValueForIndex($match[1], $this->parsePostedValue($value));
             }
         }
     }

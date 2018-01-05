@@ -1,5 +1,37 @@
 # Changelog
 
+### 1.3.20
+
+* Fixed:    CSRF disabling now at a static level
+
+### 1.3.19
+
+* Fixed:    Issue when viewNode isn't ready
+
+### 1.3.18
+
+* Fixed:    Fix for broken name generation of grandchildren.
+
+### 1.3.17
+
+* Fixed:    Fix for bindings not working for composite controls used with a view index.
+
+### 1.3.16
+
+* Fixed:    raisePostbackEvent now splats arguments properly
+
+### 1.3.15
+
+* Fixed:    CSRF protection for sendFileAsServerEvent
+
+### 1.3.14
+
+* Added:    CSRF protection now on a tag.
+
+### 1.3.13
+
+* Added:    Marking model state as CDATA to avoid issues with HTML tags in state
+
 ### 1.3.12
 
 * Added:    Inbuilt CSRF protection provided by rhubarbphp/module-csrfprotection

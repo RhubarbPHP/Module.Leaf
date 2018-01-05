@@ -19,7 +19,6 @@
 namespace Rhubarb\Leaf\Leaves;
 
 use Rhubarb\Crown\Events\Event;
-use Rhubarb\Csrf\CsrfProtection;
 
 /**
  * The foundation of all model objects
@@ -57,11 +56,6 @@ class LeafModel
      * @var bool True if the view should suppress the containing form if $isRootLeaf = true
      */
     public $suppressContainingForm = false;
-
-    /**
-     * @var string String with CSRF token name which is used in ViewBridge
-     */
-    public $csrfCookieTokenName = CsrfProtection::TOKEN_COOKIE_NAME;
 
     /**
      * @var bool
@@ -103,6 +97,24 @@ class LeafModel
         $this->createSubLeafFromNameEvent = new Event();
     }
 
+
+    final public function updatePath()
+    {
+        $ourPath = $this->leafName;
+
+        if ($this->parentPath) {
+            // Prepend the parent path if we have one.
+            $ourPath = $this->parentPath . "_" . $ourPath;
+        }
+
+        if ($this->leafIndex !== null) {
+            // Append the view index if we have one.
+            $ourPath .= "(" . $this->leafIndex . ")";
+        }
+
+        $this->leafPath = $ourPath;
+    }
+
     /**
      * Returns an array of **publicly viewable** state data required to persist the state or provide state
      * information to a client side view bridge.
@@ -137,7 +149,7 @@ class LeafModel
      */
     protected function getExposableModelProperties()
     {
-        return ["leafName", "leafPath", "csrfCookieTokenName"];
+        return ["leafName", "leafPath"];
     }
 
     /**

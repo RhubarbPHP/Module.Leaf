@@ -37,7 +37,7 @@ abstract class Leaf implements GeneratesResponseInterface
      *
      * @link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet
      */
-    protected $csrfValidation = true;
+    private static $csrfValidation = true;
 
     /**
      * The WebRequest that the presenter is responding to.
@@ -79,15 +79,15 @@ abstract class Leaf implements GeneratesResponseInterface
             $initialiseModelBeforeView($this->model);
         }
 
-        $this->onModelCreated();
-
-        $this->initialiseView();
-
         if ($name == null) {
             $name = StringTools::getShortClassNameFromNamespace(static::class);
         }
 
         $this->setName($name);
+
+        $this->onModelCreated();
+
+        $this->initialiseView();
     }
 
     /**
@@ -172,38 +172,11 @@ abstract class Leaf implements GeneratesResponseInterface
             $this->model->parentPath = "";
         }
 
-        $this->updatePath();
-    }
+        $this->model->updatePath();
 
-    final public function updatePath()
-    {
-        $ourPath = $this->model->leafName;
-
-        if ($this->model->parentPath) {
-            // Prepend the parent path if we have one.
-            $ourPath = $this->model->parentPath . "_" . $ourPath;
+        if ($this->view) {
+            $this->view->leafPathChanged();
         }
-
-        if ($this->model->leafIndex !== null) {
-            // Append the view index if we have one.
-            $ourPath .= "(" . $this->model->leafIndex . ")";
-        }
-
-        $this->model->leafPath = $ourPath;
-
-        // Signal to all or any sub leaves that need to recompute their own path now.
-        $this->view->leafPathChanged();
-    }
-
-    /**
-     * Sets a view index for subsequent renders.
-     *
-     * @param $index
-     */
-    final protected function setIndex($index)
-    {
-        $this->model->leafIndex = $index;
-        $this->updatePath();
     }
 
     /**
@@ -238,21 +211,33 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     final public function setWebRequest(WebRequest $request)
     {
-        if ($this->csrfValidation && $request->server('REQUEST_METHOD') == 'POST'){
+        if (self::$csrfValidation && $request->server('REQUEST_METHOD') == 'POST'){
             CsrfProtection::singleton()->validateHeaders($request);
             CsrfProtection::singleton()->validateCookie($request);
         }
 
         $this->request = $request;
 
-        if ($this->request) {
-            $this->view->setWebRequest($this->request);
-        }
-
         $this->parseRequest($request);
+        $this->view->setWebRequest($request);
 
         $this->model->onAfterRequestSet();
         $this->onStateRestored();
+    }
+
+    /**
+     * Disables CSRF protection, only for very particular cases.
+     *
+     * DO NOT TURN THIS OFF unless you really really know what you're doing and have read the following
+     * article completely:
+     *
+     * @link https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet
+     *
+     * Once off, it will stay off for the duration of this Leaf and all it's subleaves.
+     */
+    protected static function disableCsrfProtection()
+    {
+        self::$csrfValidation = false;
     }
 
     protected function onStateRestored()
@@ -285,7 +270,8 @@ abstract class Leaf implements GeneratesResponseInterface
             $pathParts = explode("_", $this->model->leafPath);
 
             if (preg_match('/\(([^)]+)\)/', $requestTargetParts[count($pathParts) - 1], $match)) {
-                $this->setIndex($match[1]);
+                $this->model->leafIndex = $match[1];
+                $this->model->updatePath();
             }
 
             $eventName = $request->post("_leafEventName");
@@ -301,7 +287,7 @@ abstract class Leaf implements GeneratesResponseInterface
             }
 
             if ($request->post("_leafEventArgumentsJson")) {
-                array_push($eventArguments, json_decode($request->post("_leafEventArgumentsJson"), true));
+                array_push($eventArguments, ...json_decode($request->post("_leafEventArgumentsJson"), true));
             }
 
             // Provide a callback for the event processing.
@@ -344,9 +330,7 @@ abstract class Leaf implements GeneratesResponseInterface
      */
     final public function printWithIndex($index)
     {
-        $this->setIndex($index);
-
-        print $this->render();
+        print $this->render($index);
     }
 
     /**
@@ -368,13 +352,15 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->reRender = true;
     }
 
-    final private function render()
+    final private function render($viewIndex = null)
     {
+        $this->model->leafIndex = $viewIndex;
+
         $this->runBeforeRenderCallbacks();
         $this->afterEvents();
         $this->beforeRender();
 
-        $html = $this->view->renderContent();
+        $html = $this->view->renderContent($viewIndex);
 
         return $html;
     }
