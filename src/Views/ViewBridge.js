@@ -872,7 +872,7 @@ ViewBridge.prototype.raiseServerEvent = function (eventName) {
         var formData = hostPresenter.findInputsAndSerialize(hostPresenter.viewNode);
 
         formData += "_leafEventName=" + eventName + "&_leafEventTarget=" + target;
-        formData += "&_leafEventState=" + hostPresenter.saveState();
+        formData += "&_leafEventState=" + encodeURIComponent(hostPresenter.saveState());
 
         if (hostPresenter.eventHostClassName != "") {
             formData += "&_leafEventClass=" + hostPresenter.eventHostClassName + "&_leafEventleafPath=" + hostPresenter.leafPath;
