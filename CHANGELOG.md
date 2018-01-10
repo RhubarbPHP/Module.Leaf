@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.21
+
+* Fixed:    model state passing when models contain &'s 
+
 ### 1.3.20
 
 * Fixed:    CSRF disabling now at a static level
