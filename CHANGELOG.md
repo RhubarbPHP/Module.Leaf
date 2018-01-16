@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.22
+
+* Added:    XSS protection methods to the View 
+
 ### 1.3.21
 
 * Fixed:    model state passing when models contain &'s 
