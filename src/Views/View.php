@@ -18,8 +18,6 @@
 
 namespace Rhubarb\Leaf\Views;
 
-use HTMLPurifier;
-use HTMLPurifier_Config;
 use Rhubarb\Crown\Application;
 use Rhubarb\Crown\Deployment\DeploymentPackage;
 use Rhubarb\Crown\Deployment\Deployable;
