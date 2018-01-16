@@ -86,6 +86,7 @@ class View implements Deployable
      */
     private $beforeRenderEvent;
 
+
     final public function __construct(LeafModel $model)
     {
         $this->model = $model;
@@ -547,4 +548,25 @@ class View implements Deployable
         $layout = $this->getLayoutProvider();
         $layout->printItems($items);
     }
+
+    /**
+     * @param $string
+     *
+     * Prints a purified (e.g. XSS safe) version of the
+     */
+    public function print($string)
+    {
+        print $this->purify($string);
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public function purify($string)
+    {
+        return htmlentities($string,ENT_QUOTES, 'UTF-8', false);
+    }
+
 }
