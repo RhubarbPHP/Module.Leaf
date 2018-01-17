@@ -403,13 +403,7 @@ class View implements Deployable
 
         if ($viewBridge) {
             if ($resourcePackage) {
-                if (Application::current()->developerMode) {
-                    $urls = $resourcePackage->deploy();
-                } else {
-                    $urls = $resourcePackage->getDeployedUrls();
-                }
-
-                $allDeployedUrls = array_merge($allDeployedUrls, $urls, $this->getAdditionalResourceUrls());
+                $allDeployedUrls = array_merge($allDeployedUrls, $resourcePackage->deploy(), $this->getAdditionalResourceUrls());
             }
 
             if (self::$viewBridgeRegistrationCallback != null) {
@@ -463,7 +457,7 @@ class View implements Deployable
 
         }
 
-        if (($resourcePackage != null) && (Application::current()->developerMode)) {
+        if ($resourcePackage != null) {
             $resourcePackage->deploy();
         }
 

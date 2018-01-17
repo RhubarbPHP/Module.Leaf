@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.3.23
+
+* Removed:  developerMode control of resource packages
+
 ### 1.3.22
 
 * Added:    XSS protection methods to the View 
