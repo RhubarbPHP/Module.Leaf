@@ -393,12 +393,15 @@ ViewBridge.prototype.attachServerEventResponseHandler = function (event, callbac
  * @param event
  * @param callback
  */
-ViewBridge.prototype.attachClientEventHandler = function (event, callback) {
+ViewBridge.prototype.attachClientEventHandler = function (event, callback, scope) {
     if (!this.clientEventHandlers[event]) {
         this.clientEventHandlers[event] = [];
     }
 
-    this.clientEventHandlers[event][this.clientEventHandlers[event].length] = callback;
+    this.clientEventHandlers[event][this.clientEventHandlers[event].length] = {
+        callback: callback,
+        scope: scope
+    };
 };
 
 ViewBridge.prototype.removeClientEventHandler = function (event, callback) {
@@ -631,8 +634,8 @@ ViewBridge.prototype.raiseClientEvent = function (eventName) {
     var lastResponse;
 
     for (i in this.clientEventHandlers[eventName]) {
-        var callback = this.clientEventHandlers[eventName][i];
-        lastResponse = callback.apply(callback, argumentsArray);
+        var handler = lastResponse = this.clientEventHandlers[eventName][i]
+        handler.callback.apply(handler.scope, argumentsArray);
     }
 
     return lastResponse;
