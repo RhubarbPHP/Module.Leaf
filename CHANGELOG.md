@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.0
+
+* Fixed:    client event handler scope is no longer a function
+
 ### 1.3.23
 
 * Removed:  developerMode control of resource packages
