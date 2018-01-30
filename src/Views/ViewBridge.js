@@ -631,8 +631,8 @@ ViewBridge.prototype.raiseClientEvent = function (eventName) {
     var lastResponse;
 
     for (i in this.clientEventHandlers[eventName]) {
-        var callback = this.clientEventHandlers[eventName][i];
-        lastResponse = callback.apply(callback, argumentsArray);
+        var handler = this.clientEventHandlers[eventName][i];
+        lastResponse = handler.apply(null, argumentsArray);
     }
 
     return lastResponse;
