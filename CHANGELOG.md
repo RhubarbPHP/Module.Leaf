@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.1
+
+* Fixed     RegEx in Viewbridge getViewIndex
+
 ### 1.4.0
 
 * Fixed:    client event handler scope is no longer a function
