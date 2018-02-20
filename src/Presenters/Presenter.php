@@ -884,7 +884,7 @@ abstract class Presenter extends PresenterViewBase implements GeneratesResponse
 
         foreach (array_keys($postData) as $key) {
             // Look for a pattern like Presenter_Path(3)
-            if (preg_match('/^' . $path . '\(([^)]+)\)/', $key, $match)) {
+            if (preg_match('|^' . $path . '\(([^)]+)\)|', $key, $match)) {
                 $matchingIndex = $match[1];
 
                 if (!in_array($matchingIndex, $indexes)) {
