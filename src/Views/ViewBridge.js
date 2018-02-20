@@ -172,7 +172,7 @@ ViewBridge.prototype.attachDomChangeEventHandler = function (triggerChangeEvent)
 };
 
 ViewBridge.prototype.getViewIndex = function () {
-    var pattern = /\((\d+)\)$/;
+    var pattern = /\(([^\)]+)\)$/;
 
     var match = pattern.exec(this.viewNode.id);
 
