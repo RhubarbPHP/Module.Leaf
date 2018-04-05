@@ -111,21 +111,33 @@ class Table extends HtmlPresenter
             $headings
         );
 
-        foreach ($this->collection as $item) {
-            $data = [];
+        $count = $this->collection->count();
+        for($x = 0; $x < $count; $x += 500){
+            $tmpCollection = clone $this->collection;
+            $tmpCollection->setRange($x, 500);
+            $tmpCollection->invalidateList();
 
-            $decorator = DataDecorator::getDecoratorForModel($item);
+            /** @var Model $item */
+            foreach ($tmpCollection as $item) {
+                $data = [];
 
-            if (!$decorator) {
-                $decorator = $item;
+                $decorator = DataDecorator::getDecoratorForModel($item);
+
+                if (!$decorator) {
+                    $decorator = $item;
+                }
+
+                foreach ($columns as $column) {
+                    $data[$column->label] = $column->getCellContent($item, $decorator);
+                }
+
+                $stream->appendItem($data);
             }
-
-            foreach ($columns as $column) {
-                $data[$column->label] = $column->getCellContent($item, $decorator);
+            if ($item) {
+                $item->getRepository()->clearObjectCache();
             }
-
-            $stream->appendItem($data);
         }
+        $stream->close();
 
         // Push this file to the browser.
         throw new ForceResponseException(new FileResponse($file));
