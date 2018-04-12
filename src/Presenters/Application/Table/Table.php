@@ -54,12 +54,12 @@ class Table extends HtmlPresenter
     private $pageSize;
     private $footerProviders = [];
     private $tableCssClassNames = [];
+    public $exportListPageSize = 100;
 
     /**
      * @var Model
      */
     private $currentRow;
-
     public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
         parent::__construct($presenterName);
@@ -112,9 +112,9 @@ class Table extends HtmlPresenter
         );
 
         $count = $this->collection->count();
-        for($x = 0; $x < $count; $x += 500){
+        for($x = 0; $x < $count; $x += $this->exportListPageSize){
             $tmpCollection = clone $this->collection;
-            $tmpCollection->setRange($x, 500);
+            $tmpCollection->setRange($x, $this->exportListPageSize);
             $tmpCollection->invalidateList();
 
             /** @var Model $item */
