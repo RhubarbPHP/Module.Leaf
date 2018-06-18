@@ -54,6 +54,7 @@ class Table extends HtmlPresenter
     private $pageSize;
     private $footerProviders = [];
     private $tableCssClassNames = [];
+    public $exportListPageSize = 100;
     private $forceUTF8Export = false;
 
     /**
@@ -113,21 +114,33 @@ class Table extends HtmlPresenter
             $headings
         );
 
-        foreach ($this->collection as $item) {
-            $data = [];
+        $count = $this->collection->count();
+        for($x = 0; $x < $count; $x += $this->exportListPageSize){
+            $tmpCollection = clone $this->collection;
+            $tmpCollection->setRange($x, $this->exportListPageSize);
+            $tmpCollection->invalidateList();
 
-            $decorator = DataDecorator::getDecoratorForModel($item);
+            /** @var Model $item */
+            foreach ($tmpCollection as $item) {
+                $data = [];
 
-            if (!$decorator) {
-                $decorator = $item;
+                $decorator = DataDecorator::getDecoratorForModel($item);
+
+                if (!$decorator) {
+                    $decorator = $item;
+                }
+
+                foreach ($columns as $column) {
+                    $data[$column->label] = $column->getCellContent($item, $decorator);
+                }
+
+                $stream->appendItem($data);
             }
-
-            foreach ($columns as $column) {
-                $data[$column->label] = $column->getCellContent($item, $decorator);
+            if ($item) {
+                $item->getRepository()->clearObjectCache();
             }
-
-            $stream->appendItem($data);
         }
+        $stream->close();
 
         // Push this file to the browser.
         throw new ForceResponseException(new FileResponse($file));
