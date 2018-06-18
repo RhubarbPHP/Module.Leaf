@@ -9,7 +9,7 @@ table.prototype.attachEvents = function () {
     var self = this, $ = jQuery;
 
     this.element.find('thead th.sortable').click(function () {
-        var index = $.inArray(this, $('thead th'));
+        var index = $.inArray(this, $('thead th', self.viewNode));
 
         self.raiseServerEvent('ColumnClicked', index);
     });

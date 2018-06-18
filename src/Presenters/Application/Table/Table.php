@@ -55,6 +55,7 @@ class Table extends HtmlPresenter
     private $footerProviders = [];
     private $tableCssClassNames = [];
     public $exportListPageSize = 100;
+    private $forceUTF8Export = false;
 
     /**
      * @var Model
@@ -100,6 +101,7 @@ class Table extends HtmlPresenter
         $file = "cache/export.csv";
 
         $stream = new CsvStream($file);
+        $stream->prependUTF8BOM($this->forceUTF8Export);
 
         $columns = $this->inflateColumns($this->ExportColumns);
         $headings = [];
@@ -147,6 +149,11 @@ class Table extends HtmlPresenter
     public function setCollection($collection)
     {
         $this->collection = $collection;
+    }
+
+    public function setForceUTF8Export($force)
+    {
+        $this->forceUTF8Export = $force;
     }
 
     protected function initialiseModel()
