@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.2
+
+* Fixed:    Issue with splat operator for raisePostBackEvent if no arguments passed.
+
 ### 1.4.1
 
 * Fixed     RegEx in Viewbridge getViewIndex

@@ -287,7 +287,10 @@ abstract class Leaf implements GeneratesResponseInterface
             }
 
             if ($request->post("_leafEventArgumentsJson")) {
-                array_push($eventArguments, ...json_decode($request->post("_leafEventArgumentsJson"), true));
+                $jsonArguments = json_decode($request->post("_leafEventArgumentsJson"), true);
+                if (count($jsonArguments)) {
+                    array_push($eventArguments, ...$jsonArguments);
+                }
             }
 
             // Provide a callback for the event processing.
