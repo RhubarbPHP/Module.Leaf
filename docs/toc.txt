@@ -3,7 +3,6 @@ Basic Concepts:
     . Processing user interactions: interaction
     . Nesting leaves: nesting
     . Data Binding: data-binding
-    . Custard Templates: custard-templates
 
 Tutorial:
     . Building a blog: tutorial/index

@@ -43,7 +43,7 @@ class BlogArticleView extends View
 
 Detecting interactions manually involves repeated plumbing code
 and can introduce fragility. The `module-leaf-common-controls` module
-provides that wrap the standard HTML form inputs into a collection of
+wrap the standard HTML form inputs into a collection of
 ready made control components. These components handle the manual
 detection of interaction for you and raise simple events you can
 handle.
