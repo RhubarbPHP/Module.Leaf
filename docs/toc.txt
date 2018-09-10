@@ -9,6 +9,12 @@ Tutorial:
 
 View Bridges:
     . Introduction: view-bridges/index
+    . The model: view-bridges/model
+    . Re-rendering: view-bridges/re-render
+    . Events: view-bridges/events
+    . Handling Children: view-bridges/children
+    . Controls: view-bridges/controls
+    . ViewBridge Reference: view-bridges/reference
 
 Control Components:
     . What is a control?: controls/index

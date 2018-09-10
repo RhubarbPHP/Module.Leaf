@@ -9,10 +9,10 @@ class UrlStateLeafModel extends LeafModel
      */
     public $urlStateName;
 
-    protected function getExposableModelProperties()
-    {
-        $properties = parent::getExposableModelProperties();
-        $properties[] = 'urlStateName';
-        return $properties;
-    }
+        protected function getExposableModelProperties()
+        {
+            $properties = parent::getExposableModelProperties();
+            $properties[] = 'urlStateName';
+            return $properties;
+        }
 }
