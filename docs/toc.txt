@@ -14,7 +14,7 @@ View Bridges:
     . Events: view-bridges/events
     . Handling Children: view-bridges/children
     . Controls: view-bridges/controls
-    . ViewBridge Reference: view-bridges/reference
+    . Extending View Bridges: view-bridges/extending
 
 Control Components:
     . What is a control?: controls/index
