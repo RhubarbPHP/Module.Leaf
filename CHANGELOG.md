@@ -1,5 +1,11 @@
 # Changelog
 
+### 1.4.3
+
+* Changed:  After a client-server reRender, ValueChanged events in View Bridges are no longer forcibly
+            fired.
+* Added:    View Bridge documentation.
+
 ### 1.4.2
 
 * Fixed:    Issue with splat operator for raisePostBackEvent if no arguments passed.
@@ -178,12 +184,12 @@
 
 ### 1.0.0
 
-* Views now loaded using DI
-* Leaf and View share a model class
-* Overhaul of data binding
-* Removal of jquery
-* Removal of controls and patterns
-* Added a changelog
-* Refactored to support stem 1.0.0
-* Added codeception
-* Refactored to support Rhubarb 1.0.0
+* Added:	Views now loaded using DI
+* Added:	Leaf and View share a model class
+* Added:	Overhaul of data binding
+* Removed:	Jquery
+* Removed:	Controls and patterns
+* Added:    Changelog
+* Changed:  Refactored to support stem 1.0.0
+* Added:    codeception
+* Changed:  Refactored to support Rhubarb 1.0.0
