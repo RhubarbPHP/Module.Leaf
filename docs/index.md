@@ -7,7 +7,7 @@ It has been designed with testing and extensibility as a primary goal.
 ## Why 'Leaf'
 
 The leaf is the visible surface of the Rhubarb plant so it seemed to be a fitting name. Beyond the
-Rhubarb plant it also reflects something of its nested nature when thinking of a tree of leaves. Ultimately
+that it also reflects something of its nested nature when thinking of a tree of leaves. Ultimately
 it's just a name which helps us distinguish between classes when talking about them.
 
 ## The Leaf Pattern
