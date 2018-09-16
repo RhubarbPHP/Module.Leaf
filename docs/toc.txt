@@ -27,7 +27,7 @@ Application Components:
     . Table
     . Search Panel
     . Pager
-    . Tabs
+    . Tabs /manual/module.leaf.tabs/index
 
 Advanced Topics:
     . View Indexes:
