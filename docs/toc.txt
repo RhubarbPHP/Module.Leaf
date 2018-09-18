@@ -25,8 +25,8 @@ Control Components:
 Application Components:
     . What is an application component?: application
     . Pager: /manual/module.leaf.paging/index
-    . Table
-    . Search Panel
+    . Table: /manual/module.leaf.table/index
+    . SearchPanel: /manual/module.leaf.searchpanel/index
     . Tabs: /manual/module.leaf.tabs/index
 
 Advanced Topics:
