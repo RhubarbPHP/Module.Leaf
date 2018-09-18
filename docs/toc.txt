@@ -23,10 +23,10 @@ Control Components:
     . Building your own control:
 
 Application Components:
-    . What is an application component?
+    . What is an application component?: application
+    . Pager: /manual/module.leaf.paging/index
     . Table
     . Search Panel
-    . Pager
     . Tabs: /manual/module.leaf.tabs/index
 
 Advanced Topics:
