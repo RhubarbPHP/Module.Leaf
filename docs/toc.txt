@@ -18,8 +18,7 @@ View Bridges:
 
 Control Components:
     . What is a control?: controls/index
-    . Common controls:
-         [docs/modules/module.leaf.commoncontrols/docs/toc.txt]
+    [docs/modules/module.leaf.commoncontrols/docs/toc.txt]
     . Building your own control:
 
 Application Components:
