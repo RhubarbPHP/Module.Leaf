@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.4
+
+* Added:    Support for clearValue() and reset() in ViewBridge
+
 ### 1.4.3
 
 * Changed:  After a client-server reRender, ValueChanged events in View Bridges are no longer forcibly

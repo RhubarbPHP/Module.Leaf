@@ -528,6 +528,21 @@ ViewBridge.prototype.setValue = function (value) {
     }
 };
 
+ViewBridge.prototype.clearValue = function() {
+    this.setValue('');
+};
+
+ViewBridge.prototype.reset = function() {
+    var subLeaves = this.getSubLeaves();
+
+    subLeaves.forEach(function(leaf){
+       if (!(leaf instanceof rhubarb.viewBridgeClasses.ButtonViewBridge)) {
+           leaf.clearValue();
+       }
+    });
+};
+
+
 ViewBridge.prototype.getSubLeafValues = function () {
     // Get all the values from all the sub presenters to build our model to validate.
     var subPresenters = this.getSubLeaves();
