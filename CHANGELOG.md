@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.5
+
+* Added:    Support for getSubLeafValuesByPath() in view bridge
+* Changed:  sendFileAsServerEvent now transmits page data. 
+
 ### 1.4.4
 
 * Added:    Support for clearValue() and reset() in ViewBridge

@@ -542,16 +542,28 @@ ViewBridge.prototype.reset = function() {
     });
 };
 
+ViewBridge.prototype.getSubLeafValuesByPath = function () {
+    return this.getSubLeafValues(true);
+};
 
-ViewBridge.prototype.getSubLeafValues = function () {
+/**
+ * Returns an array of key value pairs of subleaf values.
+ * @param byPath uses the leaf path as the key instead of the name.
+ */
+ViewBridge.prototype.getSubLeafValues = function (byPath) {
+    if (!byPath){
+        byPath = false;
+    }
     // Get all the values from all the sub presenters to build our model to validate.
     var subPresenters = this.getSubLeaves();
     var model = {};
 
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
+        var value = subPresenter.getValue();
 
-        model[subPresenter.leafName] = subPresenter.getValue();
+        var key = (byPath) ? subPresenter.leafPath : subPresenter.leafName;
+        model[key] = value;
     }
 
     return model;
@@ -697,6 +709,20 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
         }
 
         formData.append(this.leafPath, file);
+
+        var leafValues = hostPresenter.getSubLeafValuesByPath();
+
+        for (var name in leafValues) {
+            if (leafValues.hasOwnProperty(name)){
+                var value = leafValues[name];
+
+                if (value instanceof Date){
+                    value = value.toISOString();
+                }
+
+                formData.append(name, value);
+            }
+        }
 
         // Add all hidden State inputs on the page to ensure event processing can
         // recover the original state.
