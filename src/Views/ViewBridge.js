@@ -720,6 +720,10 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
                     value = value.toISOString();
                 }
 
+                if (typeof value == "boolean") {
+                    value = (value) ? "1" : "0";
+                }
+
                 formData.append(name, value);
             }
         }

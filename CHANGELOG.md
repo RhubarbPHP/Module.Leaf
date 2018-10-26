@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.7
+
+* Updated:  Fix for booleans in sendFileAsEvent
+
 ### 1.4.6
 
 * Updated:  Fix for booleans in sendFileAsEvent
