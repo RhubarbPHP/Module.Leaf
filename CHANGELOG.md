@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.6
+
+* Updated:  Fix for booleans in sendFileAsEvent
+
 ### 1.4.5
 
 * Added:    Support for getSubLeafValuesByPath() in view bridge
