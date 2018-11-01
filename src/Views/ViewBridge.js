@@ -560,10 +560,12 @@ ViewBridge.prototype.getSubLeafValues = function (byPath) {
 
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
-        var value = subPresenter.getValue();
 
-        var key = (byPath) ? subPresenter.leafPath : subPresenter.leafName;
-        model[key] = value;
+        if(subPresenter.hasValue()) {
+          var value = subPresenter.getValue();
+          var key = (byPath) ? subPresenter.leafPath : subPresenter.leafName;
+          model[key] = value;
+        }
     }
 
     return model;
@@ -666,13 +668,9 @@ ViewBridge.prototype.raiseClientEvent = function (eventName) {
 };
 
 
-ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete, onFailure, includePageData) {
+ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete, onFailure) {
     if (!this.eventHost) {
         this.eventHost = this.findEventHost();
-    }
-
-    if (!includePageData) {
-      includePageData = false;
     }
 
     // If we're not the host we need to find the host and call it's raise event instead.
@@ -714,22 +712,21 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         formData.append(this.leafPath, file);
 
-        if (includePageData) {
-            var leafValues = hostPresenter.getSubLeafValuesByPath();
-            for (var name in leafValues) {
-                if (leafValues.hasOwnProperty(name)) {
-                    var value = leafValues[name];
+        var leafValues = hostPresenter.getSubLeafValuesByPath();
 
-                    if (value instanceof Date) {
-                        value = value.toISOString();
-                    }
+        for (var name in leafValues) {
+            if (leafValues.hasOwnProperty(name)){
+                var value = leafValues[name];
 
-                    if (typeof value == "boolean") {
-                        value = (value) ? "1" : "0";
-                    }
-
-                    formData.append(name, value);
+                if (value instanceof Date){
+                    value = value.toISOString();
                 }
+
+                if (typeof value == "boolean") {
+                    value = (value) ? "1" : "0";
+                }
+
+                formData.append(name, value);
             }
         }
 

@@ -2,7 +2,7 @@
 
 ### 1.4.8
 
-* Changed:  sendFileAsServerEvent now has flag to enable transmission of page data
+* Update:  sendFileAsServerEvent no longer submits value of buttons causing button events to fire
 
 ### 1.4.7
 
