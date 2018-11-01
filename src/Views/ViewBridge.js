@@ -1474,6 +1474,18 @@ ViewBridge.prototype.extend = function (name, creator) {
     return ViewBridge.create(name, creator, this);
 };
 
+ViewBridge.prototype.disable = function() {
+    this.viewNode.disabled = true;
+};
+
+ViewBridge.prototype.enable = function() {
+    this.viewNode.disabled = false;
+};
+
+ViewBridge.prototype.toggleDisabled = function() {
+    this.viewNode.disabled = !this.viewNode.disabled;
+};
+
 
 //// shorthand
 
