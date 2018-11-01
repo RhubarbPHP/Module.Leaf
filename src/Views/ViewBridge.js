@@ -666,9 +666,13 @@ ViewBridge.prototype.raiseClientEvent = function (eventName) {
 };
 
 
-ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete, onFailure) {
+ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgress, onComplete, onFailure, includePageData) {
     if (!this.eventHost) {
         this.eventHost = this.findEventHost();
+    }
+
+    if (!includePageData) {
+      includePageData = false;
     }
 
     // If we're not the host we need to find the host and call it's raise event instead.
@@ -710,21 +714,22 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
 
         formData.append(this.leafPath, file);
 
-        var leafValues = hostPresenter.getSubLeafValuesByPath();
+        if (includePageData) {
+            var leafValues = hostPresenter.getSubLeafValuesByPath();
+            for (var name in leafValues) {
+                if (leafValues.hasOwnProperty(name)) {
+                    var value = leafValues[name];
 
-        for (var name in leafValues) {
-            if (leafValues.hasOwnProperty(name)){
-                var value = leafValues[name];
+                    if (value instanceof Date) {
+                        value = value.toISOString();
+                    }
 
-                if (value instanceof Date){
-                    value = value.toISOString();
+                    if (typeof value == "boolean") {
+                        value = (value) ? "1" : "0";
+                    }
+
+                    formData.append(name, value);
                 }
-
-                if (typeof value == "boolean") {
-                    value = (value) ? "1" : "0";
-                }
-
-                formData.append(name, value);
             }
         }
 

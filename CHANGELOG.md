@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.8
+
+* Changed:  sendFileAsServerEvent now has flag to enable transmission of page data
+
 ### 1.4.7
 
 * Updated:  Fix for booleans in sendFileAsEvent
