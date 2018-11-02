@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.8
+
+* Update:  sendFileAsServerEvent no longer submits value of buttons causing button events to fire
+
 ### 1.4.7
 
 * Updated:  Fix for booleans in sendFileAsEvent

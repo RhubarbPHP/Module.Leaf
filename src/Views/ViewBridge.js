@@ -560,10 +560,12 @@ ViewBridge.prototype.getSubLeafValues = function (byPath) {
 
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
-        var value = subPresenter.getValue();
 
-        var key = (byPath) ? subPresenter.leafPath : subPresenter.leafName;
-        model[key] = value;
+        if(subPresenter.hasValue()) {
+          var value = subPresenter.getValue();
+          var key = (byPath) ? subPresenter.leafPath : subPresenter.leafName;
+          model[key] = value;
+        }
     }
 
     return model;
