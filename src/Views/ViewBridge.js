@@ -2,8 +2,13 @@ if (!window.rhubarb) {
     window.rhubarb = {};
 }
 
-window.rhubarb.registeredLeaves = {};
-window.rhubarb.viewBridgeClasses = {};
+if (!window.rhubarb.registeredLeaves) {
+    window.rhubarb.registeredLeaves = {};
+}
+
+if (!window.rhubarb.viewBridgeClasses) {
+    window.rhubarb.viewBridgeClasses = {};
+}
 
 window.rhubarb.spawn = function (spawnSettings, viewIndex, parentleafPath) {
     var viewBridgeClass = window.rhubarb.viewBridgeClasses[spawnSettings.ViewBridgeClass];

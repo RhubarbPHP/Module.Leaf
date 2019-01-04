@@ -1,8 +1,14 @@
 # Changelog
 
+### 1.4.9
+
+* Fixed:    Fixed issue where modifying ViewBridge.js (i.e. an inplace deployment) could cause AJAX to reload
+            ViewBridge.js with the side effect of destroying the registeredLeaves array. This fix protects this
+            array in this eventuality (however the JS file may still load twice)
+
 ### 1.4.8
 
-* Update:  sendFileAsServerEvent no longer submits value of buttons causing button events to fire
+* Update:   sendFileAsServerEvent no longer submits value of buttons causing button events to fire
 
 ### 1.4.7
 
