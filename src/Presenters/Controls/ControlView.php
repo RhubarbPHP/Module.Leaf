@@ -38,7 +38,7 @@ class ControlView extends SpawnableByViewBridgeView
 
     protected function getHtmlAttributeTags()
     {
-        if (sizeof($this->htmlAttributes)) {
+        if (is_array($this->htmlAttributes) && sizeof($this->htmlAttributes)) {
             $attributes = [];
 
             foreach ($this->htmlAttributes as $key => $value) {
