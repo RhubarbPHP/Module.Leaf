@@ -29,7 +29,7 @@ class ControlView extends SpawnableByViewBridgeView
 
     protected function getClassTag()
     {
-        if (sizeof($this->cssClassNames)) {
+        if (is_array($this->cssClassNames) && sizeof($this->cssClassNames)) {
             return " class=\"" . implode(" ", $this->cssClassNames) . "\"";
         }
 
