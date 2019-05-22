@@ -1190,8 +1190,10 @@ ViewBridge.prototype.reAttachViewBridges = function () {
         var leafId = sortedLeaves[i];
         var node = document.getElementById(leafId);
         var className = node.getAttribute('leaf-bridge');
-        var bridge = new window.rhubarb.viewBridgeClasses[className](leafId);
-        node.viewBridge = bridge;
+        if (window.rhubarb.viewBridgeClasses[className]) {
+            var bridge = new window.rhubarb.viewBridgeClasses[className](leafId);
+            node.viewBridge = bridge;
+        }
     }
 
     // Now reattach existing view bridges to their dom elements if necessary.
