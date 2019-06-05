@@ -541,7 +541,7 @@ ViewBridge.prototype.reset = function() {
     var subLeaves = this.getSubLeaves();
 
     subLeaves.forEach(function(leaf){
-       if (!(leaf instanceof rhubarb.viewBridgeClasses.ButtonViewBridge)) {
+        if (!rhubarb.viewBridgeClasses.ButtonViewBridge || !(leaf instanceof rhubarb.viewBridgeClasses.ButtonViewBridge)) {
            leaf.clearValue();
        }
     });
