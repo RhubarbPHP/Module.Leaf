@@ -1,5 +1,14 @@
 # Changelog
 
+### 1.4.11
+
+* Update:   Small change to fence reAttachViewBridges from non existant ViewBridge classes
+            Happened rarely when other frameworks cause rendering of Leaf views.
+
+### 1.4.10
+
+* Update:   When we re-attach a view bridge we now raise a client event of 'OnReattached'
+
 ### 1.4.9
 
 * Fixed:    Fixed issue where modifying ViewBridge.js (i.e. an inplace deployment) could cause AJAX to reload
