@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.12
+
+* Update:   No longer must have the button viewbridge class loaded to use the viewbridge reset function.
+
 ### 1.4.11
 
 * Update:   Small change to fence reAttachViewBridges from non existant ViewBridge classes
