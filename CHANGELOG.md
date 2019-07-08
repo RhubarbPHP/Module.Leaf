@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.13
+
+* Added:    Support for getHtmlAttribute() in Leaf.
+
 ### 1.4.12
 
 * Update:   No longer must have the button viewbridge class loaded to use the viewbridge reset function.

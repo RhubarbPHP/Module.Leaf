@@ -536,4 +536,11 @@ abstract class Leaf implements GeneratesResponseInterface
     {
         $this->model->removeHtmlAttribute($attributeName);
     }
+
+    public function getHtmlAttribute($attributeName)
+    {
+        if(isset($this->model->htmlAttributes[$attributeName])) {
+            return $this->model->htmlAttributes[$attributeName];
+        }
+    }
 }
