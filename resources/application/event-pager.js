@@ -15,8 +15,10 @@ eventPager.prototype.attachEvents = function () {
         // server side with an event.
 
         self.raiseServerEvent("PageChanged", $(this).data('page'));
-
+        URLSearchParams.append($(this).data('page'));
         return false;
+
+
     });
 };
 
