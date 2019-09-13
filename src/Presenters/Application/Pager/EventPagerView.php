@@ -26,7 +26,7 @@ class EventPagerView extends PagerView
 {
     protected function getClientSideViewBridgeName()
     {
-        return "EventPager";
+        return "EventPagerViewBridge";
     }
 
     protected function getAdditionalResourceUrls()
@@ -39,6 +39,7 @@ class EventPagerView extends PagerView
         $package = parent::getDeploymentPackage();
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/jquery-presenter.js";
         $package->resourcesToDeploy[] = __DIR__ . "/../../../../resources/application/event-pager.js";
+        $package->resourcesToDeploy[] = __DIR__ . "/EventPagerViewBridge.js";
 
         return $package;
     }

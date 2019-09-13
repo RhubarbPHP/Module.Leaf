@@ -18,7 +18,7 @@
     }
   },
   "require": {
-    "rhubarbphp/rhubarb": "*",
+    "rhubarbphp/rhubarb": ">=1.1.18",
     "rhubarbphp/module-image-processing": "*"
   },
   "require-dev": {

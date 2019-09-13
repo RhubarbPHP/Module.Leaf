@@ -20,11 +20,12 @@ namespace Rhubarb\Leaf\Presenters\Application\Search;
 
 require_once __DIR__ . "/../../../Views/HtmlView.php";
 
+use Rhubarb\Leaf\Presenters\UrlStateView;
+use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Presenters\Controls\Buttons\Button;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
-use Rhubarb\Leaf\Views\HtmlView;
 
-class SearchPanelView extends HtmlView
+class SearchPanelView extends UrlStateView
 {
     protected function getClientSideViewBridgeName()
     {
@@ -38,6 +39,8 @@ class SearchPanelView extends HtmlView
 
         return $package;
     }
+
+    public $urlStateNames = [];
 
     /** @var ControlPresenter[] */
     protected $controls = [];
@@ -54,9 +57,12 @@ class SearchPanelView extends HtmlView
 
         $this->controls = $this->raiseEvent("GetControls");
 
+        $this->urlStateNames = $this->raiseEvent("GetUrlStateNames");
+        $this->raiseEvent("pagerUrlStateNameChanged");
+
         $this->addPresenters($this->controls);
 
-        $searchButton = new Button("Search", "Search", function () {
+        $searchButton = new Button($this->getModel()->SearchButton, "Search", function () {
             $this->raiseEvent("Search");
         }, true);
 
@@ -81,8 +87,30 @@ class SearchPanelView extends HtmlView
             $count++;
         }
 
-        print '<td>' . $this->presenters["Search"] . '</td>';
+        print '<td>' . $this->presenters[$this->getModel()->SearchButton] . '</td>';
 
         print '</tr></table></div>';
+    }
+
+    public function parseUrlState(WebRequest $request)
+    {
+        /**
+         * To ensure child leaves process their raw request values in the normal way we mutate the
+         * post data to change our shortened keys to those that match the leaf path of the child
+         * leaf.
+         */
+        foreach ($this->urlStateNames as $controlName => $paramName) {
+            if ($request->get($paramName) !== null) {
+                foreach ($this->controls as $control) {
+                    if ($control->getName() == $controlName) {
+                        $path = $control->getPresenterPath();
+                        if (!isset($request->modelData['PostData'][$path])) {
+                            $request->modelData['PostData'][$path] = $request->get($paramName);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

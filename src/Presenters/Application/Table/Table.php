@@ -20,8 +20,10 @@ namespace Rhubarb\Leaf\Presenters\Application\Table;
 
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
+use Rhubarb\Leaf\Presenters\UrlStateLeafPresenter;
 use Rhubarb\Crown\DataStreams\CsvStream;
 use Rhubarb\Crown\Exceptions\ForceResponseException;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Response\FileResponse;
 use Rhubarb\Crown\String\StringTools;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\ModelColumn;
@@ -30,7 +32,6 @@ use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\TableColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\Template;
 use Rhubarb\Leaf\Presenters\Application\Table\FooterProviders\FooterProvider;
-use Rhubarb\Leaf\Presenters\HtmlPresenter;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Stem\Collections\Collection;
 use Rhubarb\Stem\Decorators\DataDecorator;
@@ -48,7 +49,7 @@ use Rhubarb\Stem\Schema\SolutionSchema;
  * @property array $Columns            A dictionary of column names.
  * @property array $ExportColumns    A dictionary of column names for export.
  */
-class Table extends HtmlPresenter
+class Table extends UrlStateLeafPresenter
 {
     private $collection;
     private $pageSize;
@@ -56,6 +57,13 @@ class Table extends HtmlPresenter
     private $tableCssClassNames = [];
     public $exportListPageSize = 100;
     private $forceUTF8Export = false;
+
+    /**
+     * @var string The name of the GET param which will provide state for this table in the URL
+     * If you have multiple tables on a page and want URL state to apply to them all independently, you'll need to make this unique.
+     * Set it to null to disable URL state for this table.
+     */
+    public $urlStateName = 'sort';
 
     /**
      * @var Model
@@ -453,5 +461,37 @@ class Table extends HtmlPresenter
 
         $classes = array_merge($classes, $classNames);
         $this->tableCssClassNames = $classes;
+    }
+
+    public function setUrlStateNames($pagerName = "page", $sortName = "sort")
+    {
+        $this->raiseEvent('pagerUrlStateNameChanged');
+        $this->urlStateName = $sortName;
+    }
+
+    protected function parseUrlState(Request $request)
+    {
+        if ($this->getUrlStateName()) {
+            $sort = $request->get($this->getUrlStateName());
+
+            // Need to treat this as string rather than number, as -0 would be seen as the same as 0
+            if (StringTools::startsWith($sort, '-')) {
+                $sort = substr($sort, 1);
+                $asc = false;
+            } else {
+                $asc = true;
+            }
+
+            if (!is_numeric($sort)) {
+                return;
+            }
+
+            $column = $this->inflateColumns($this->Columns)[(int)$sort];
+            if ($column instanceof \Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn) {
+                // Change the sort order. !!Must have to call something for the sort to take place, or maybe calling too early?\
+                $this->SortColumn = $column->getSortableColumnName();
+                $this->SortDirection = $asc;
+            }
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
 require_once __DIR__ . "/../../../Views/HtmlView.php";
 
+use Rhubarb\Leaf\Presenters\UrlStateView;
 use Rhubarb\Crown\Context;
-use Rhubarb\Leaf\Views\HtmlView;
 
-class PagerView extends HtmlView
+class PagerView extends UrlStateView
 {
     public $numberOfPages;
     public $pageNumber;
