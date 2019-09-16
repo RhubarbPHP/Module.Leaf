@@ -20,13 +20,14 @@ namespace Rhubarb\Leaf\Presenters\Application\Table;
 
 require_once __DIR__ . "/../../../Views/JQueryView.php";
 
+use Rhubarb\Leaf\Presenters\UrlStateView;
 use Rhubarb\Leaf\Presenters\Application\Pager\EventPager;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn;
 use Rhubarb\Leaf\Presenters\Application\Table\Columns\Template;
 use Rhubarb\Leaf\Views\JQueryView;
 use Rhubarb\Stem\Decorators\DataDecorator;
 
-class TableView extends JQueryView
+class TableView extends UrlStateView
 {
     /**
      * @var \Rhubarb\Stem\Collections\Collection
@@ -74,6 +75,10 @@ class TableView extends JQueryView
 
         $this->presenters["pager"]->attachEventHandler("PageChanged", function () {
             $this->raiseEvent("PageChanged");
+        });
+
+        $this->presenters["pager"]->attachEventHandler("pagerUrlStateNameChanged", function ($name) use ($pager) {
+            $pager->setUrlStateName($name);
         });
     }
 

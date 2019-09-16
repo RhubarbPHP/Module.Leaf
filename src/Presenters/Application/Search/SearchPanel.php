@@ -20,7 +20,9 @@ namespace Rhubarb\Leaf\Presenters\Application\Search;
 
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
-use Rhubarb\Leaf\Presenters\HtmlPresenter;
+use Rhubarb\Leaf\Presenters\UrlStateLeafPresenter;
+use Rhubarb\Crown\String\StringTools;
+use Rhubarb\Leaf\Leaves\Controls\Control;
 use Rhubarb\Leaf\Presenters\ModelProvider;
 use Rhubarb\Leaf\Presenters\Presenter;
 use Rhubarb\Stem\Filters\Group;
@@ -30,13 +32,29 @@ use Rhubarb\Stem\Filters\Group;
  *
  * @property bool $AutoSubmit True if searching should happen as you type.
  */
-class SearchPanel extends HtmlPresenter
+class SearchPanel extends UrlStateLeafPresenter
 {
     use ModelProvider;
 
     private $defaultControlValues = [];
 
     private $searchControlsColumnCount = 6;
+
+    public $SearchButton = 'Search';
+
+    /**
+     * An array with keys matching search control names and values defining what URL GET param names they should have
+     *
+     * @var string[]
+     */
+    public $urlStateNames = [];
+
+    /**
+     * Data from URL GET params matching controls based on their names in $urlStateNames
+     *
+     * @var array
+     */
+    public $urlStateValues = [];
 
     public function __construct($name = "")
     {
@@ -52,12 +70,22 @@ class SearchPanel extends HtmlPresenter
         if (!isset($this->model->AutoSubmit)) {
             $this->model->AutoSubmit = false;
         }
+
+        if (!isset($this->model->SearchButton)) {
+            $this->model->SearchButton = $this->SearchButton;
+        }
+
+        if (!isset($this->model->urlStateNames)) {
+            $this->model->urlStateNames = $this->urlStateNames;
+        }
     }
 
     protected function getPublicModelPropertyList()
     {
         $list = parent::getPublicModelPropertyList();
         $list[] = "AutoSubmit";
+        $list[] = 'urlStateNames';
+        $list[] = 'SearchButton';
 
         return $list;
     }
@@ -113,7 +141,26 @@ class SearchPanel extends HtmlPresenter
             $this->searchControls = $this->createSearchControls();
         }
 
+        $this->urlStateNames = $this->getUrlStateNames($this->searchControls);
+
         return $this->searchControls;
+    }
+
+    /**
+     * Return URL GET param names for the controls in this panel
+     *
+     * @param Control[] $searchControls
+     * @return \string[] An array with keys matching the control names and values defining the GET param names
+     */
+    protected function getUrlStateNames(array $searchControls)
+    {
+        $names = [];
+        foreach ($searchControls as $control) {
+            $name = $control->getName();
+            $names[$name] = StringTools::camelCaseToSeparated($name);
+        }
+
+        return $names;
     }
 
     protected function applyModelToView()
@@ -173,6 +220,10 @@ class SearchPanel extends HtmlPresenter
 
         $this->view->attachEventHandler("GetControls", function () {
             return $this->getSearchControls();
+        });
+
+        $this->view->attachEventHandler("GetUrlStateNames", function () {
+            return $this->urlStateNames;
         });
 
         $this->view->attachEventHandler("Search", function () {

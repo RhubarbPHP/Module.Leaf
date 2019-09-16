@@ -20,16 +20,25 @@ namespace Rhubarb\Leaf\Presenters\Application\Pager;
 
 require_once __DIR__ . "/../../HtmlPresenter.php";
 
+use Rhubarb\Leaf\Presenters\UrlStateLeafPresenter;
 use Rhubarb\Crown\Context;
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Exceptions\PagerOutOfBoundsException;
-use Rhubarb\Leaf\Presenters\HtmlPresenter;
+use Rhubarb\Leaf\Presenters\UrlStateLeaf;
 use Rhubarb\Stem\Collections\Collection;
 
 /**
  * @property Collection $Collection The collection to page
  */
-class Pager extends HtmlPresenter
+class Pager extends UrlStateLeafPresenter
 {
+    /**
+     * @var string The name of the GET param which will provide state for this pager in the URL
+     * If you have multiple pagers on a page and want URL state to apply to them all independently, you'll need to make this unique.
+     * Set it to null to disable URL state for this pager.
+     */
+    public $urlStateName = 'page';
+
     /**
      * Indicates whether or not the pager has changed the range of the collection.
      *
@@ -94,12 +103,20 @@ class Pager extends HtmlPresenter
 
     protected function parseRequestForCommand()
     {
+        $request = Context::currentRequest();
+
         $key = $this->PresenterPath . "-page";
 
-        $request = Context::currentRequest();
+        if ($request->post($key)) {
+            $this->raiseEvent("PageChanged", $request->request($key));
+        }
 
         if ($request->request($key)) {
             $this->raiseEvent("PageChanged", $request->request($key));
+        }
+
+        if ($this->PageNumber > 0) {
+            $this->raiseEvent("PageChanged", $this->PageNumber);
         }
 
         parent::parseRequestForCommand();
@@ -149,4 +166,21 @@ class Pager extends HtmlPresenter
 
         return $pages;
     }
+
+    protected function parseUrlState(Request $request)
+    {
+        if ($this->getUrlStateName()) {
+            $pageNumber = (int)$request->get($this->getUrlStateName());
+            if ($pageNumber > 1) {
+                try {
+                    $this->setPageNumber($pageNumber);
+                } catch (\Rhubarb\Crown\Exceptions\RhubarbException\PagerOutOfBoundsException $ex) {
+                    // Ignore if the URL specifies a page too far on for this collection
+                    $this->setPageNumber(1);
+                }
+            }
+        }
+    }
+
+
 }
