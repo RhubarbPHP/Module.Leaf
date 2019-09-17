@@ -488,7 +488,7 @@ class Table extends UrlStateLeafPresenter
 
             $column = $this->inflateColumns($this->Columns)[(int)$sort];
             if ($column instanceof \Rhubarb\Leaf\Presenters\Application\Table\Columns\SortableColumn) {
-                // Change the sort order. !!Must have to call something for the sort to take place, or maybe calling too early?\
+                // Change the sort order.
                 $this->SortColumn = $column->getSortableColumnName();
                 $this->SortDirection = $asc;
             }
