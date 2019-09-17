@@ -18,7 +18,6 @@ class UrlStateLeafPresenter extends HtmlPresenter
         parent::__construct($name);
 
         $this->model->urlStateName = $this->urlStateName;
-
     }
 
 
@@ -31,12 +30,12 @@ class UrlStateLeafPresenter extends HtmlPresenter
 
     public function getUrlStateName()
     {
-        return $this->urlStateName;
+        return $this->model->urlStateName;
     }
 
     public function setUrlStateName($name)
     {
-        $this->urlStateName = $name;
+        $this->model->urlStateName = $name;
     }
 
     protected function parseRequestForCommand()

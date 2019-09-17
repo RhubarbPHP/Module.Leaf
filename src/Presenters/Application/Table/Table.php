@@ -465,7 +465,7 @@ class Table extends UrlStateLeafPresenter
 
     public function setUrlStateNames($pagerName = "page", $sortName = "sort")
     {
-        $this->raiseEvent('pagerUrlStateNameChanged');
+        $this->view->raiseEvent('PagerUrlStateNameChanged', $pagerName);
         $this->urlStateName = $sortName;
     }
 
