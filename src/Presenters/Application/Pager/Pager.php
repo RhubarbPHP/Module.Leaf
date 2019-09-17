@@ -115,7 +115,7 @@ class Pager extends UrlStateLeafPresenter
             $this->raiseEvent("PageChanged", $request->request($key));
         }
 
-        if ($this->PageNumber > 0) {
+        if ($this->PageNumber > 1) {
             $this->raiseEvent("PageChanged", $this->PageNumber);
         }
 
