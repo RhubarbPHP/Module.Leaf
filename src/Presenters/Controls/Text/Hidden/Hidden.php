@@ -24,6 +24,6 @@ class Hidden extends ControlPresenter
 {
     protected function createView()
     {
-        return HiddenView::class;
+        return new HiddenView();
     }
 }
