@@ -26,6 +26,7 @@ class ControlView extends SpawnableByViewBridgeView
 {
     public $cssClassNames = [];
     public $htmlAttributes = [];
+    public $boundData;
 
     protected function getClassTag()
     {
@@ -51,12 +52,21 @@ class ControlView extends SpawnableByViewBridgeView
         return "";
     }
 
-    protected function getNameValueClassAndAttributeString()
+    protected function getControlValueAsString()
+    {
+        return $this->boundData;
+    }
+
+    protected function getNameValueClassAndAttributeString($includeValue = true)
     {
         $classes = $this->getClassTag();
         $otherAttributes = $this->getHtmlAttributeTags();
 
         $string = 'leaf-name="'.$this->getClientSideViewBridgeName().'" name="'.$this->getClientSideViewBridgeFilePath().'" id="'.$this->getClientSideViewBridgeFilePath().'" '.$classes.$otherAttributes;
+
+        if ($includeValue) {
+            $string .= ' value="' . $this->purify($this->getControlValueAsString()) . '" ';
+        }
 
         return $string;
     }
