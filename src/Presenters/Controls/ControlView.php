@@ -50,4 +50,14 @@ class ControlView extends SpawnableByViewBridgeView
 
         return "";
     }
+
+    protected function getNameValueClassAndAttributeString()
+    {
+        $classes = $this->getClassTag();
+        $otherAttributes = $this->getHtmlAttributeTags();
+
+        $string = 'leaf-name="'.$this->getClientSideViewBridgeName().'" name="'.$this->getClientSideViewBridgeFilePath().'" id="'.$this->getClientSideViewBridgeFilePath().'" '.$classes.$otherAttributes;
+
+        return $string;
+    }
 }
