@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.13
+
+Fixed:  Added deploy() method for scenarios where advance deployment of the 
+        javascript is required.
+        
 ### 1.4.12
 
 * Update:   No longer must have the button viewbridge class loaded to use the viewbridge reset function.
