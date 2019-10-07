@@ -355,6 +355,12 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->reRender = true;
     }
 
+
+    final public function deploy($viewIndex = null)
+    {
+        $this->view->deploy($viewIndex);
+    }
+
     final private function render($viewIndex = null)
     {
         $this->model->leafIndex = $viewIndex;

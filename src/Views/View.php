@@ -342,7 +342,12 @@ class View implements Deployable
     {
     }
 
-    final public function renderContent($viewIndex = null)
+    final public function deploy($viewIndex = null)
+    {
+        $this->renderContent($viewIndex, true);
+    }
+
+    final public function renderContent($viewIndex = null, $dontRender = false)
     {
         if ($viewIndex !== null){
             $this->setIndex($viewIndex);
@@ -360,9 +365,11 @@ class View implements Deployable
             $allDeployedUrls = array_merge($allDeployedUrls, $deployedUrls);
         };
 
-        $this->beforeRender();
-        $this->beforeRenderEvent->raise();
-        $this->printViewContent();
+        if (!$dontRender) {
+            $this->beforeRender();
+            $this->beforeRenderEvent->raise();
+            $this->printViewContent();
+        }
 
         self::$viewBridgeRegistrationCallback = $oldCallback;
 
