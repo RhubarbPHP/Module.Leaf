@@ -385,4 +385,14 @@ abstract class View extends PresenterViewBase implements Deployable
     {
         return [];
     }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public function purify($string)
+    {
+        return htmlentities($string,ENT_QUOTES, 'UTF-8', false);
+    }
 }
