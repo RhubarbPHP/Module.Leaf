@@ -18,12 +18,16 @@
 
 namespace Rhubarb\Leaf\Presenters\Controls\Text\Hidden;
 
-use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
+require_once __DIR__ . "/../TextBox/TextBox.php";
 
-class Hidden extends ControlPresenter
+use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBox;
+use Rhubarb\Leaf\Presenters\Controls\Text\TextBox\TextBoxView;
+
+class Hidden extends TextBox
 {
     protected function createView()
     {
-        return new HiddenView();
+        return new TextBoxView("hidden");
     }
 }
+
