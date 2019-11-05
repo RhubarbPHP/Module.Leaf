@@ -74,6 +74,7 @@ class ControlPresenter extends SpawnableByViewBridgePresenter
     {
         $this->view->cssClassNames = $this->CssClassNames;
         $this->view->htmlAttributes = $this->HtmlAttributes;
+        $this->view->boundData = $this->extractBoundData();
 
         parent::applyModelToView();
     }

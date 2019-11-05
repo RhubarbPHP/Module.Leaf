@@ -30,3 +30,4 @@ class Hidden extends TextBox
         return new TextBoxView("hidden");
     }
 }
+
