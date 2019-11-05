@@ -73,8 +73,8 @@ class TableView extends UrlStateView
             ]
         );
 
-        $this->presenters["pager"]->attachEventHandler("PageChanged", function () {
-            $this->raiseEvent("PageChanged");
+        $this->presenters["pager"]->attachEventHandler("PageChanged", function ($newPage = null, $oldPage = null) {
+            $this->raiseEvent("PageChanged", $newPage, $oldPage);
         });
 
         $this->attachEventHandler("PagerUrlStateNameChanged", function ($name) use ($pager) {

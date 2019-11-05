@@ -46,6 +46,8 @@ class Pager extends UrlStateLeafPresenter
      */
     public $collectionRangeModified = false;
 
+    private static $pagerCount = 0;
+
     public function __construct(Collection $collection = null, $perPage = 50, $name = "")
     {
         parent::__construct($name);
@@ -54,6 +56,10 @@ class Pager extends UrlStateLeafPresenter
 
         $this->model->PerPage = $perPage;
         $this->model->PageNumber = 1;
+
+        Pager::$pagerCount++;
+
+        $this->setUrlStateName('pager'.Pager::$pagerCount);
 
         $this->attachEventHandler("PageChanged", function ($pageNumber) {
             $this->setPageNumber($pageNumber);
@@ -108,18 +114,23 @@ class Pager extends UrlStateLeafPresenter
         $key = $this->PresenterPath . "-page";
 
         if ($request->post($key)) {
-            $this->raiseEvent("PageChanged", $request->request($key));
+            $this->onChangePage($request->request($key));
         }
 
         if ($request->request($key)) {
-            $this->raiseEvent("PageChanged", $request->request($key));
+            $this->onChangePage($request->request($key));
         }
 
         if ($this->PageNumber > 1) {
-            $this->raiseEvent("PageChanged", $this->PageNumber);
+            $this->onChangePage($this->PageNumber);
         }
 
         parent::parseRequestForCommand();
+    }
+
+    private function onChangePage($newPageNumber)
+    {
+        $this->raiseEvent("PageChanged", $newPageNumber, $this->PageNumber);
     }
 
     public function setNumberPerPage($perPage)
@@ -171,10 +182,11 @@ class Pager extends UrlStateLeafPresenter
     {
         if ($this->getUrlStateName()) {
             $pageNumber = (int)$request->get($this->getUrlStateName());
-            if ($pageNumber > 1) {
+
+            if ($pageNumber > 0) {
                 try {
                     $this->setPageNumber($pageNumber);
-                } catch (\Rhubarb\Crown\Exceptions\RhubarbException\PagerOutOfBoundsException $ex) {
+                } catch (PagerOutOfBoundsException $ex) {
                     // Ignore if the URL specifies a page too far on for this collection
                     $this->setPageNumber(1);
                 }

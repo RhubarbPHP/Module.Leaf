@@ -192,8 +192,10 @@ class Table extends UrlStateLeafPresenter
             $this->currentRow = $row;
         });
 
-        $this->view->attachEventHandler("PageChanged", function () {
-            $this->onRefresh();
+        $this->view->attachEventHandler("PageChanged", function ($newPage = null, $oldPage = null) {
+            if ($newPage != $oldPage) {
+                $this->onRefresh();
+            }
             $this->raiseEventOnViewBridge($this->getPresenterPath(), "OnPageChanged");
         });
 
