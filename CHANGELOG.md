@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.14
+
+* Update:   Composer update for latest dependencies
+
 ### 1.4.13
 
 Fixed:  Added deploy() method for scenarios where advance deployment of the 
