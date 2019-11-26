@@ -691,6 +691,7 @@ ViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onProgre
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
             document.body.className = document.body.className.replace(" event-processing", "");
+            document.body.className = document.body.className.replace("event-processing", "");
             presenter.onEventProcessingFinished();
 
             if (xmlhttp.responseXML != null) {
