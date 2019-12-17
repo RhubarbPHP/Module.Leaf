@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.15
+
+Fixed:      event-processing class was not always removed from the body tag if other code had modified the
+            body class in between xhr start and finish.
+
 ### 1.4.14
 
 Fixed:      event-processing class was not always removed from the body tag if other code had modified the
