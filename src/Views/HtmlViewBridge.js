@@ -491,7 +491,11 @@ HtmlViewBridge.prototype.getSubPresenterValues = function () {
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
 
-        model[subPresenter.presenterName] = subPresenter.getValue();
+        if (subPresenter.hasValue()) {
+            var value = subPresenter.getValue();
+            var key = subPresenter.presenterName;
+            model[key] = value;
+        }
     }
 
     return model;
@@ -643,6 +647,25 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
         }
 
         formData.append(this.presenterPath, file);
+
+        debugger;
+        var leafValues = hostPresenter.getSubPresenterValues();
+
+        for (var name in leafValues) {
+            if (leafValues.hasOwnProperty(name)) {
+                var value = leafValues[name];
+
+                if (value instanceof Date) {
+                    value = value.toISOString();
+                }
+
+                if (typeof value == "boolean") {
+                    value = (value) ? "1" : "0";
+                }
+
+                formData.append(name, value);
+            }
+        }
 
         var ajaxUrl = "";
 
