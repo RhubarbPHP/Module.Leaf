@@ -648,7 +648,6 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
 
         formData.append(this.presenterPath, file);
 
-        debugger;
         var leafValues = hostPresenter.getSubPresenterValues();
 
         for (var name in leafValues) {
