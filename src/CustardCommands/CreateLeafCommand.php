@@ -193,7 +193,7 @@ END;
 
     public function getDeploymentPackage()
     {
-        return new LeafDeploymentPackage(__DIR__ . "/" . \$this->getViewBridgeName() . "ViewBridge.js");
+        return new LeafDeploymentPackage(__DIR__ . "/" . \$this->getViewBridgeName() . ".js");
     }
 END;
 	}
