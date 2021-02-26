@@ -491,11 +491,7 @@ HtmlViewBridge.prototype.getSubPresenterValues = function () {
     for (var i in subPresenters) {
         var subPresenter = subPresenters[i];
 
-        if (subPresenter.hasValue()) {
-            var value = subPresenter.getValue();
-            var key = subPresenter.presenterName;
-            model[key] = value;
-        }
+        model[subPresenter.presenterName] = subPresenter.getValue();
     }
 
     return model;
@@ -647,24 +643,6 @@ HtmlViewBridge.prototype.sendFileAsServerEvent = function (eventName, file, onPr
         }
 
         formData.append(this.presenterPath, file);
-
-        var leafValues = hostPresenter.getSubPresenterValues();
-
-        for (var name in leafValues) {
-            if (leafValues.hasOwnProperty(name)) {
-                var value = leafValues[name];
-
-                if (value instanceof Date) {
-                    value = value.toISOString();
-                }
-
-                if (typeof value == "boolean") {
-                    value = (value) ? "1" : "0";
-                }
-
-                formData.append(name, value);
-            }
-        }
 
         var ajaxUrl = "";
 
@@ -875,7 +853,16 @@ HtmlViewBridge.prototype.raiseServerEvent = function (eventName) {
             }
         }
 
-        xmlhttp.open("POST", window.location.href, true);
+        var ajaxUrl = "";
+
+        if (hostPresenter.presenterUrl) {
+            ajaxUrl = hostPresenter.presenterUrl;
+        }
+        else {
+            ajaxUrl = hostPresenter.presenterPhpClass.replace(/\\/g, "/");
+        }
+
+        xmlhttp.open("POST", ajaxUrl, true);
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xmlhttp.setRequestHeader('Accept', 'application/core');
         xmlhttp.setRequestHeader('X-Requested-With', 'xmlhttprequest');
