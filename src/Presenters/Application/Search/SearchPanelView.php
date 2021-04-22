@@ -20,8 +20,8 @@ namespace Rhubarb\Leaf\Presenters\Application\Search;
 
 require_once __DIR__ . "/../../../Views/HtmlView.php";
 
+use Rhubarb\Crown\Request\Request;
 use Rhubarb\Leaf\Presenters\UrlStateView;
-use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Presenters\Controls\Buttons\Button;
 use Rhubarb\Leaf\Presenters\Controls\ControlPresenter;
 
@@ -92,7 +92,7 @@ class SearchPanelView extends UrlStateView
         print '</tr></table></div>';
     }
 
-    public function parseUrlState(WebRequest $request)
+    public function parseUrlState(Request $request)
     {
         /**
          * To ensure child leaves process their raw request values in the normal way we mutate the
