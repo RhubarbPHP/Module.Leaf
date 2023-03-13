@@ -173,7 +173,7 @@ abstract class View extends PresenterViewBase implements Deployable
         }
     }
 
-    private final function createPresenterByName($presenterName)
+    public final function createPresenterByName($presenterName)
     {
         return $this->raiseEvent("CreatePresenterByName", $presenterName);
     }
@@ -258,7 +258,7 @@ abstract class View extends PresenterViewBase implements Deployable
      * If so the view indexes will be extracted and subsequent event processing will be done for each
      * and every index.
      */
-    private final function checkForViewIndexInRequest()
+    public final function checkForViewIndexInRequest()
     {
 
     }
