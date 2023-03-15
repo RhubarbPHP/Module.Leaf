@@ -109,7 +109,6 @@ class Table extends UrlStateLeafPresenter
         $file = "cache/export.csv";
 
         $stream = new CsvStream($file);
-        $stream->prependUTF8BOM($this->forceUTF8Export);
 
         $columns = $this->inflateColumns($this->ExportColumns);
         $headings = [];
