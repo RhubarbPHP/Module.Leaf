@@ -182,7 +182,7 @@ class View implements Deployable
         return $xml;
     }
 
-    final private function getStateString()
+    private function getStateString()
     {
         $stateKey = $this->getStateKey();
 
@@ -194,7 +194,7 @@ class View implements Deployable
         return null;
     }
 
-    final private function getState()
+    private function getState()
     {
         $state = $this->getStateString();
 
@@ -206,7 +206,7 @@ class View implements Deployable
         return null;
     }
 
-    final private function restoreStateIntoModel()
+    private function restoreStateIntoModel()
     {
         $state = $this->getState();
 
