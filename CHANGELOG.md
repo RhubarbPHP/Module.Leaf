@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.16
+
+Fixed:      Issue causing warnings where private methods were also final.
+
 ### 1.4.15
 
 Fixed:      event-processing class was not always removed from the body tag if other code had modified the
