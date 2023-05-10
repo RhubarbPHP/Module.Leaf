@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.17
+
+Fixed:      Issue causing warnings where private methods were also final.
+
 ### 1.4.16
 
 Fixed:      Issue causing warnings where private methods were also final.

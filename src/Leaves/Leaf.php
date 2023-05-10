@@ -361,7 +361,7 @@ abstract class Leaf implements GeneratesResponseInterface
         $this->view->deploy($viewIndex);
     }
 
-    final private function render($viewIndex = null)
+    private function render($viewIndex = null)
     {
         $this->model->leafIndex = $viewIndex;
 
@@ -374,7 +374,7 @@ abstract class Leaf implements GeneratesResponseInterface
         return $html;
     }
 
-    final private function renderXhr()
+    private function renderXhr()
     {
         ob_start();
 
