@@ -72,6 +72,13 @@ class HtmlView extends View
         return false;
     }
 
+    protected function onBeforePrintViewContent()
+    {
+        ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.5/purify.min.js"></script>
+        <?php
+    }
+
     /**
      * Returns the name of the client side presenter bridge to attach to this presenter.
      *

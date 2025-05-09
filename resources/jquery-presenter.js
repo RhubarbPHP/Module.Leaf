@@ -7,6 +7,22 @@ jqueryHtmlViewBridge.prototype.constructor = jqueryHtmlViewBridge;
 
 jqueryHtmlViewBridge.prototype.onRegistered = function () {
     this.element = jQuery(this.viewNode);
+
+    (function($) {
+        if (typeof DOMPurify !== 'undefined') {
+            const functions = ['html', 'append', 'prepend', 'before', 'after', 'replaceWith'];
+            functions.forEach(function(name) {
+                const func = $.fn[name];
+
+                $.fn[name] = function(...args) {
+                    if (typeof args[0] === 'string') {
+                        args[0] = DOMPurify.sanitize(args[0]);
+                    }
+                    return func.apply(this, args);
+                };
+            });
+        }
+    })(jQuery);
 };
 
 jqueryHtmlViewBridge.prototype.hide = function () {
