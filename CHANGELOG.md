@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.18
+
+Fixed:      Method signatures for UrlHandler abstract/override method implementation
+
 ### 1.4.17
 
 Fixed:      Issue causing warnings where private methods were also final.
