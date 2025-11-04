@@ -107,7 +107,7 @@ class LeafCollectionUrlHandler extends UrlHandler
      * @param mixed $request
      * @return bool
      */
-    protected function generateResponseForRequest($request = null)
+    protected function generateResponseForRequest($request = null, $currentUrlFragment = "")
     {
         $leafClass = $this->getPresenterClassName();
         $leaf = new $leafClass();
