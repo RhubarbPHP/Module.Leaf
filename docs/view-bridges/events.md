@@ -31,7 +31,7 @@ this case it should be called `doSomethingEvent`.
 `raiseServerEvent` returns a reference to the XMLHttpRequest object being used to
 transmit the event to allow it to be cancelled when appropriate.
 
-### raisePostbackEvent
+### raisePostBackEvent
 
 Raises an event on the server by posting the page in much the same way as a normal
 button control would. This is sometimes used when a navigation like feel is actually
