@@ -24,7 +24,7 @@ use Rhubarb\Stem\Collections\Collection;
 
 class EventPager extends Pager
 {
-    public function __construct(Collection $collection = null, $perPage = 50, $name = "")
+    public function __construct(?Collection $collection = null, $perPage = 50, $name = "")
     {
         parent::__construct($collection, $perPage, $name);
     }

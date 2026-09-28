@@ -70,7 +70,7 @@ class Table extends UrlStateLeafPresenter
      */
     private $currentRow;
 
-    public function __construct(Collection $list = null, $pageSize = 50, $presenterName = "Table")
+    public function __construct(?Collection $list = null, $pageSize = 50, $presenterName = "Table")
     {
         parent::__construct($presenterName);
 

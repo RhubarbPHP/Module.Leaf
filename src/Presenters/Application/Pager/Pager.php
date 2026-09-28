@@ -48,7 +48,7 @@ class Pager extends UrlStateLeafPresenter
 
     private static $pagerCount = 0;
 
-    public function __construct(Collection $collection = null, $perPage = 50, $name = "")
+    public function __construct(?Collection $collection = null, $perPage = 50, $name = "")
     {
         parent::__construct($name);
 

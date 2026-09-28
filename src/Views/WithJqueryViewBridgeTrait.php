@@ -29,7 +29,7 @@ trait WithJqueryViewBridgeTrait
 
     protected function getClientSideViewBridgeName()
     {
-        $className = get_class();
+        $className = self::class;
         $className = substr($className, strrpos($className, "\\") + 1);
         return $className . "Bridge";
     }
